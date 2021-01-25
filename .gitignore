@@ -1,0 +1,18 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+**/__pycache__/
+Home/__pycache__
+Home/aerocalc/__pycache__/
+Home/Guidance/__pycache__/
+
+*.pyc
+*.cpython-37.pyc
+
+.settings
+
+Home/BadaAircraftPerformance/SYNONYM.NEW
+Home/Bada381DataFiles/
+Home/Bada381DataFiles/*.OPF
+Home/Bada381DataFiles/*.APF
+Home/Bada381DataFiles/*.PTD
+Home/Bada381DataFiles/*.PTF
