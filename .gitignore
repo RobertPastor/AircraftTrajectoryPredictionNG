@@ -16,3 +16,9 @@ Home/Bada381DataFiles/*.OPF
 Home/Bada381DataFiles/*.APF
 Home/Bada381DataFiles/*.PTD
 Home/Bada381DataFiles/*.PTF
+
+Home/ResultsFiles/*
+
+Home/Airline/AirlineFleet.xls
+Home/Airline/AirlineFleet.xlsx
+

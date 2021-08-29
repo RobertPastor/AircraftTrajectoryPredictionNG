@@ -28,11 +28,7 @@ Created on 8 avr. 2015
 '''
 
 import os
-
-
 from xlrd import open_workbook
-
-
 from Home.Environment.RunWayFile import RunWay
 
 
@@ -94,7 +90,7 @@ class RunWayDataBase(object):
                 else:
                     # string fields
                     runwayDict[column] = str(rowValues[self.ColumnNames[column]]).strip()
-            ''' we have transformed the row values into a Dictionnary => now create the runways '''
+            ''' we have transformed the row values into a Dictionary => now create the run-ways '''
             keyOne = ''
             keyTwo = ''
             runwayOne = None

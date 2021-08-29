@@ -267,6 +267,7 @@ class AircraftPerformance(object):
             raise ValueError('BadaPerformanceFile: error while reading V Stall Speeds {0}'.format(e))
         return VstallKcasKnots
     
+    
     def getMaxClimbThrustCoeff(self, index):
         
         assert (isinstance(index, int) and index >= 0 and index <= 5)

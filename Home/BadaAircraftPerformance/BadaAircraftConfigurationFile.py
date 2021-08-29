@@ -51,8 +51,6 @@ Kilogram2Pounds = 2.20462262 # 1 kilogram = 2.204 lbs
 NauticalMiles2Meters = 1852. # meters
 ThreeDegreesGlideSlope = 3
 GlideSlopeStart2TouchDownNauticalMiles = 5 # 5 nautical miles from start of glide slope to runway touch down
-    
-                   
 
 
 class EnergyShareFactor(object):

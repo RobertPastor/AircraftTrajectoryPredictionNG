@@ -73,6 +73,8 @@ class BadaAircraft(AircraftConfiguration):
     def getLandingLengthMeters(self):
         return self.groundMovement.getLandingLengthMeters()
     
+    def getTakeOffLengthMeters(self):
+        return self.groundMovement.getTakeOffLengthMeters()
 
     def fly(self, elapsedTimeSeconds, 
             deltaTimeSeconds, 

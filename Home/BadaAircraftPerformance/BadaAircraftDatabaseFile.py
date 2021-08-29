@@ -61,15 +61,12 @@ class BadaSynonymAircraft(object):
         return self.OPFfilePrefix
     
 
-    
-    
 class BadaAircraftDatabase(object):
     ''' this class is responsible for reading the synonym file '''
     
     
     def __init__(self):
         self.className = self.__class__.__name__
-        
         
         self.OPFfileExtension = '.OPF'
         self.BadaSynonymFilePath = 'SYNONYM.NEW'
@@ -122,7 +119,7 @@ class BadaAircraftDatabase(object):
                             break
                         
                         elif itemIndex > 3:
-                            aircraftFullName += '-' + item
+                            aircraftFullName += ' ' + item
                             
                         elif itemIndex > 2:
                             aircraftFullName += item
@@ -191,47 +188,12 @@ class BadaAircraftDatabase(object):
         return False
 
 
-class TestMethods(unittest.TestCase):
-#============================================
-    def test_upper(self):
-    
-        t0 = time.clock()
-        print ( '=================================' )
-        acBd = BadaAircraftDatabase()
-        print ( 'file= {0} - exists= {1}'.format(acBd.getSynonymFilePath(), acBd.exists()) )
-        
-        t1 = time.clock()
-        print ( 'duration= {0} seconds'.format(t1-t0) )
-        
-        print ( '=================================' )
-        readReturn = acBd.read()
-        print ( 'file= {0} - read= {1}'.format(acBd.getSynonymFilePath(), readReturn ) )
-        
-        t2 = time.clock() 
-        print ( 'duration= {0} seconds'.format(t2-t1) )
-        print ( '=================================' )
-    
-        print ( acBd.getAircraftFullName('A320') )
-        
-        print ( '=================================' )
-        print ( 'aircraft= {0} - exists= {1}'.format('A320', acBd.aircraftPerformanceFileExists('A320')) )
-        
-        print ( '=================================' )
-        print ( acBd.getAircraftPerformanceFile('A320') )
-        
-        for acICAOcode in ['A10', 'b737', 'A320', 'B747', 'F50', 'B741', 'B742', 'B743', 'A319', 'CL73']:
-            print ( "=================================" )
-            print ( "aircraft= ", acICAOcode )
-            print ( "=================================" )
-            print ( 'aircraft= {0} exists= {1}'.format(acICAOcode, acBd.aircraftExists(acICAOcode)) )
-            if acBd.aircraftExists(acICAOcode):
-                print ( 'aircraft= {0} performance file= {1}'.format(acICAOcode, acBd.getAircraftPerformanceFile(acICAOcode)) )
-                print ( 'aircraft= {0} full name= {1}'.format(acICAOcode, acBd.getAircraftFullName(acICAOcode)) )
-                print  ( acBd.getAircraftPerformanceFile(acICAOcode) )
-                        
-                        
-        assert (True)
-    
+    def dump(self):
+        for key, value in self.aircraftDict.items():
+            print ( key )
+            print ( self.getAircraftFullName(key) )
 
-if __name__ == '__main__':
-    unittest.main()
+
+    def getAircraftICAOcodes(self):
+        for key, value in self.aircraftDict.items():
+            yield key
