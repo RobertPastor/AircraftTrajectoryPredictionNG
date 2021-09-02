@@ -31,13 +31,37 @@ class TestMethods(unittest.TestCase):
             
             airportsDb = AirportsDatabase()
             self.assertTrue (airportsDb.read())
+            print ("------- airports database read correctly --------")
             
-            country = 'United States'
-            for airport in airportsDb.getAirportsFromCountry( Country = country):
-                airportName = str(airport.getName())
-                self.assertTrue ( isinstance(airport, Airport)  )
-                print ( airport.getICAOcode() )
+            for departureAirportICAOcode in routesAirports.getDepartureAirportsICAOcode():
+                
+                country = 'United States'
+                for airport in airportsDb.getAirportsFromCountry( Country = country):
+                    #airportName = str(airport.getName())
+                    self.assertTrue ( isinstance(airport, Airport)  )
+                    if ( departureAirportICAOcode == airport.getICAOcode() ):
+                        print ( "--> found -> {0} --> name = {1}".format( airport.getICAOcode() , airport.getName()) )
             
+            for arrivalAirportICAOcode in routesAirports.getArrivalAirportsICAOcode():
+                
+                country = 'United States'
+                for airport in airportsDb.getAirportsFromCountry( Country = country):
+                    #airportName = str(airport.getName())
+                    self.assertTrue ( isinstance(airport, Airport)  )
+                    if ( arrivalAirportICAOcode == airport.getICAOcode() ):
+                        print ( "--> found -> {0} --> name = {1}".format( airport.getICAOcode() , airport.getName()) )
+            
+            
+            for route in routesAirports.getDepartureArrivalAirportICAOcode():
+                print ( route )
+                departureAirport = airportsDb.getAirportFromICAOCode(route[0])
+                print ( departureAirport )
+                arrivalAirport = airportsDb.getAirportFromICAOCode(route[1])
+                print ( arrivalAirport )
+                
+                distanceMeters = departureAirport.getDistanceMetersTo(arrivalAirport)
+                print ( "distance from {0} - to {1} - dist = {2} meters".format(departureAirport.getICAOcode() , arrivalAirport.getICAOcode() , distanceMeters))
+        
         
         
 if __name__ == '__main__':

@@ -38,6 +38,7 @@ class AirlineRoutesAirportsDataBase(object):
     def exists(self):
         return os.path.exists(self.FilePath) 
     
+    
     def read(self):
         ''' this method reads the whole dataset file - not only the headers '''
         print (self.FilePath)
@@ -75,8 +76,24 @@ class AirlineRoutesAirportsDataBase(object):
         
         return True
     
+    
     def dump(self):
         for route in self.RoutesAirports:
             print ( route )
     
+    
+    def getDepartureArrivalAirportICAOcode(self):
+        for route in self.RoutesAirports:
+            yield route[HeaderNames[1]] , route[HeaderNames[3]]
+    
+    
+    def getDepartureAirportsICAOcode(self):
+        for route in self.RoutesAirports:
+            airportICAOcode = route[HeaderNames[1]]
+            yield airportICAOcode
                 
+
+    def getArrivalAirportsICAOcode(self):
+        for route in self.RoutesAirports:
+            airportICAOcode = route[HeaderNames[3]]
+            yield airportICAOcode

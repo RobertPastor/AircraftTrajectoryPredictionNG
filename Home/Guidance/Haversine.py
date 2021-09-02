@@ -84,6 +84,7 @@ def LatitudeLongitudeAtDistanceBearing(StartLatitudeLongitudeDegrees, DistanceMe
         
     return latitudeDegrees, longitudeDegrees
     
+    
 def points2bearingDegrees (startLatLongDegrees, endLatLongDegrees):
     '''
     In aerial terms, "bearing" means the actual compass direction of the forward course of our aircraft

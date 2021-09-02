@@ -81,18 +81,19 @@ class WayPoint(GeographicalPoint):
         self.Name = Name
     
 
-    
     def getDistanceMetersTo(self, nextWayPoint):
         if isinstance(nextWayPoint, WayPoint)==True:
             return points2distanceMeters([self.LatitudeDegrees,self.LongitudeDegrees],
                                          [nextWayPoint.LatitudeDegrees, nextWayPoint.LongitudeDegrees])
         return 0.0
     
+    
     def getBearingDegreesTo(self, nextWayPoint):
         if isinstance(nextWayPoint, WayPoint)==True:
             return to_positive_angle(points2bearingDegrees([self.LatitudeDegrees,self.LongitudeDegrees],
                                          [nextWayPoint.LatitudeDegrees, nextWayPoint.LongitudeDegrees]))
         return 0.0
+    
     
     def getWayPointAtDistanceBearing(self, Name='', DistanceMeters=0.0, BearingDegrees=0.0):
         '''
@@ -161,9 +162,11 @@ class Airport(WayPoint):
     
         assert isinstance(Country, (str)) and len(Country)>0
         self.Country = Country
+       
         
     def getICAOcode(self):
         return self.ICAOcode
+    
     
     def __str__(self):
         strMsg = self.className + ': Airport: ' + self.ICAOcode + ' - '
@@ -172,8 +175,10 @@ class Airport(WayPoint):
         strMsg += ' - field elevation= {0:.2f} meters'.format(self.fieldElevationAboveSeaLevelMeters)
         return strMsg
     
+    
     def isArrival(self):
         return self.isArrival
+    
     
     def getFieldElevationAboveSeaLevelMeters(self):
         return self.fieldElevationAboveSeaLevelMeters
@@ -184,13 +189,16 @@ class Airport(WayPoint):
         assert isinstance(runwaysDatabase, RunWayDataBase) and not(runwaysDatabase is None)
         return runwaysDatabase.hasRunWays(self.ICAOcode)
     
+    
     def getRunWaysAsDict(self, runwaysDatabase):
         assert isinstance(runwaysDatabase, RunWayDataBase) and not(runwaysDatabase is None)
         return runwaysDatabase.getRunWaysAsDict(self.ICAOcode)
     
+    
     def getRunWays(self, runwaysDatabase):
         assert isinstance(runwaysDatabase, RunWayDataBase) and not(runwaysDatabase is None)
         return runwaysDatabase.getRunWays(self.ICAOcode)
+    
     
     def dump(self):
         WayPoint.dump(self)
