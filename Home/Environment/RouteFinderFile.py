@@ -30,7 +30,9 @@ see route finder website
 
 '''
 import time
-import urllib
+import urllib.request
+import urllib.parse
+#import urllib.urlencode
 
 from html.parser import HTMLParser
 
@@ -85,7 +87,7 @@ class RouteFinder(object):
                "Accept": "text/plain"}
 
     def isConnected(self):
-        response = urllib.request(url = self.base_url)
+        response = urllib.request.urlopen(url = self.base_url)
         the_html_page = response.read()
         print ( the_html_page )
         htmlParser = HtmlParser(searchedTag = 'form')
@@ -114,12 +116,14 @@ class RouteFinder(object):
                     'rnav':'Y',
                     'nats':'',
                     'k':235644007           } 
-        data = urllib.parse(values)
+        #data = urllib.parse(values)
+        data = urllib.parse.urlencode(values).encode("utf-8")
         ''' use the script to retrieve a route '''
-        response = urllib.request(url = self.script_url, data= data)
+        response = urllib.request.urlopen(url = self.script_url, data= data)
         
         #print 'encoding = {0}'.format(response.headers.getparam('charset'))
-        encoding = response.headers.getparam('charset')
+        #encoding = response.headers.getparam('charset')
+        encoding = response.headers.get_content_charset()
         the_html_page = response.read().decode(encoding)
 
         the_html_page= the_html_page.replace('&deg;', u'\xb0')
@@ -171,28 +175,4 @@ class RouteFinder(object):
                                        fix['longitude'])
 
 
-#============================================
-if __name__ == '__main__':
-    
-    wayPointsDb = WayPointsDatabase()
-    assert ( wayPointsDb.read() )
 
-    print ( "=========== Route Finder start  =========== " + time.strftime("%c") )
-
-    routeFinder = RouteFinder()
-    if routeFinder.isConnected():
-        print ( 'route finder is connected' )
-        
-        print ( "=========== Route Finder start  =========== " + time.strftime("%c") )
-        Adep = 'LPPG'
-        Ades = 'EDDT'
-        RFL = 'FL360'
-        
-        if routeFinder.findRoute(Adep, Ades, RFL):
-            routeList = routeFinder.getRouteAsList()
-            print ( routeList )
-             
-            routeFinder.insertWayPointsInDatabase(wayPointsDb)
-
-    
-    print ( "=========== Route Finder start  =========== " + time.strftime("%c") )

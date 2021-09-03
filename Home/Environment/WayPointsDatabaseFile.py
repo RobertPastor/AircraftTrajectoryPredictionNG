@@ -30,10 +30,9 @@ read an EXCEL file containing the way points
 
 import os
 
-
 from Home.Guidance.WayPointFile import WayPoint
-
 from xlrd import open_workbook
+import xlsxwriter
 
 fieldNames = ['WayPoint', 'Country' , 'Type', 'Latitude', 'Longitude' , 'Name']
 
@@ -206,7 +205,7 @@ class WayPointsDatabase(object):
         ''' read it again '''
         if readStatus and not(self.hasWayPoint(wayPointName)):
             ''' new workbook from scratch '''
-            writableBook = Workbook()
+            writableBook = open_workbook()
             
             ''' Create the target worksheet and name it '''
             writableSheet = writableBook.add_sheet(sheet.name) 
