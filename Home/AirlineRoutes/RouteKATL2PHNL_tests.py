@@ -33,8 +33,7 @@ class TestMethods(unittest.TestCase):
         for wayPoint in xroute_KATL_PHNL:
             print ( wayPoint )
             wayPointsDB.insertWayPoint(wayPointName=wayPoint["Name"], Latitude=wayPoint["latitude"], Longitude=wayPoint["longitude"])
-        
-        
+          
         t1 = time.clock()
         print ( 'duration= {0} seconds'.format(t1-t0) )
         
@@ -52,5 +51,6 @@ class TestMethods(unittest.TestCase):
         t1 = time.clock()
         print ( 'duration= {0} seconds'.format(t1-t0) )
         
+
 if __name__ == '__main__':
     unittest.main()

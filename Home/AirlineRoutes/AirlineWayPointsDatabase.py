@@ -51,5 +51,39 @@ class AirlineWayPointsDatabase(object):
         df.to_excel(excel_writer=self.FilePath, sheet_name="WayPoints", index = False, columns=self.ColumnNames)
         
 
+    def hasDuplicates(self):
+        if os.path.exists(self.FilePath):
+            df = pd.DataFrame(pd.read_excel(self.FilePath, sheet_name=self.sheetName))
+            if df is not None:
+                df_dupes = df.df.duplicated()
+                if ( df_dupes is None ):
+                    return False
+                else:
+                    return True
+            else:
+                return False
+        else:
+            return False
+    
+    
+    def getNumberOfRows(self):
+        if os.path.exists(self.FilePath):
+            df = pd.DataFrame(pd.read_excel(self.FilePath, sheet_name=self.sheetName))
+            return df.shape[0]
+        else:
+            return 0
+    
+    
+    def dropDuplicates(self):
         
+        if os.path.exists(self.FilePath):
+            
+            df = pd.DataFrame(pd.read_excel(self.FilePath, sheet_name=self.sheetName))
+            df = df.drop_duplicates()
+            
+            os.remove(self.FilePath)
+            df.to_excel(excel_writer=self.FilePath, sheet_name="WayPoints", index = False, columns=self.ColumnNames)
+            return True
+        else:
+            return False
 

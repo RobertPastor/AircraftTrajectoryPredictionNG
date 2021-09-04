@@ -10,6 +10,23 @@ import unittest
 from Home.Environment.RouteFinderFile import RouteFinder
 from Home.Environment.WayPointsDatabaseFile import WayPointsDatabase
 
+Adep = "KATL" #  US Atlanta-Hartsfield Jackson Atlanta Intl
+Ades = "KLAX" # US Los Angeles-Los Angeles Intl    
+
+#Adep = "PANC" # US Alaska Anchorage
+#Ades = "KATL" #   US Atlanta-Hartsfield Jackson Atlanta Intl
+
+#Adep = "KJFK" # US John F. Kennedy
+#Ades = "KSEA" # US Seattle-Seattle Tacoma Intl
+
+#Adep = "KATL" # Atlanta
+#Ades = "PHNL" # US Honolulu Intl States 
+
+routeDict = {}
+routeDict["Adep"] = Adep
+routeDict["Ades"] = Ades
+
+
 class Test_Main(unittest.TestCase):
 
     def test_one(self):
@@ -25,8 +42,9 @@ class Test_Main(unittest.TestCase):
             print ( 'route finder is connected' )
             
             print ( "=========== Route Finder start  =========== " + time.strftime("%c") )
-            Adep = 'KATL'
-            Ades = 'PHNL'
+            #Adep = 'KATL'
+            #Ades = 'PHNL'
+            
             RFL = 'FL360'
             
             if routeFinder.findRoute(Adep, Ades, RFL):
@@ -34,15 +52,11 @@ class Test_Main(unittest.TestCase):
                 print ( routeList )
                  
                 routeFinder.insertWayPointsInDatabase(wayPointsDb)
-    
-        
+      
         print ( "=========== Route Finder start  =========== " + time.strftime("%c") )
         
         
-    def test_two(self):
-        print ( "=========== Route Finder start  =========== " + time.strftime("%c") )
-    
-    
+
 #============================================
 if __name__ == '__main__':
     unittest.main()

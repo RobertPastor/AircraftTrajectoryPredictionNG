@@ -24,10 +24,12 @@ Home/Airline/AirlineFleet.xlsx
 
 Home/AirlineFleet/AirlineFleet.xls
 Home/AirlineRoutes/RoutesAirportsDepartureArrival.xls
+
 Home/Environment/WayPoints.xls
 Home/Environment/WayPoints.xls
 Home/Environment/WayPoints.xls
 Home/Environment/WayPoints.xls
+
 Home/AirlineRoutes/AirlineWayPoints.xls
 Home/AirlineRoutes/RouteKATL2PHNL.xlsx
-Home/Environment/WayPoints.xls
+Home/AirlineRoutes/*.xls

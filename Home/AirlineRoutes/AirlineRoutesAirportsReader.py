@@ -11,11 +11,28 @@ HeaderNames = ["Departure Airport", "Departure Airport ICAO Code", "Arrival Airp
 
 class AirlineRoute(object):
     
+    departureAirportICAOcode = ""
+    arrivalAirportICAOcode = ""
+    
     def __init__(self, _departureAirportICAOcode , _arrivalAirportICAOcode):
         self.className = self.__class__.__name__
         self.departureAirportICAOcode = _departureAirportICAOcode
         self.arrivalAirportICAOcode = _arrivalAirportICAOcode
         
+        
+    def setRoute(self, route):
+        assert ( type(route) is dict )
+        assert ( "Departure Airport ICAO Code" in route.keys())
+        assert ( "Arrival Airport ICAO Code" in route.keys())
+        self.departureAirportICAOcode =  route["Departure Airport ICAO Code"]
+        self.arrivalAirportICAOcode =  route["Arrival Airport ICAO Code"]
+        
+        
+    def getDepartureAirportICAOcode(self):
+        return self.departureAirportICAOcode
+    
+    def getArrivalAirportICAOcode(self):
+        return self.arrivalAirportICAOcode
     
 
 class AirlineRoutesAirportsDataBase(object):
@@ -85,6 +102,13 @@ class AirlineRoutesAirportsDataBase(object):
     def getDepartureArrivalAirportICAOcode(self):
         for route in self.RoutesAirports:
             yield route[HeaderNames[1]] , route[HeaderNames[3]]
+            
+            
+    def getRoutes(self):
+        for route in self.RoutesAirports:
+            airlineRoute = AirlineRoute()
+            airlineRoute.setRoute(route)
+            yield airlineRoute
     
     
     def getDepartureAirportsICAOcode(self):

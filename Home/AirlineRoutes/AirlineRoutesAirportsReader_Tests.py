@@ -10,10 +10,11 @@ from Home.AirlineRoutes.AirlineRoutesAirportsReader import AirlineRoutesAirports
 from Home.Environment.AirportDatabaseFile import AirportsDatabase
 
 from Home.Guidance.WayPointFile import Airport
-
+from Home.Environment.Constants import Meter2NauticalMiles
 
 class TestMethods(unittest.TestCase):
 #============================================
+
     def test_one(self):
     
         t0 = time.clock()
@@ -33,17 +34,15 @@ class TestMethods(unittest.TestCase):
             self.assertTrue (airportsDb.read())
             print ("------- airports database read correctly --------")
             
-            for departureAirportICAOcode in routesAirports.getDepartureAirportsICAOcode():
-                
+            for departureAirportICAOcode in routesAirports.getDepartureAirportsICAOcode():       
                 country = 'United States'
                 for airport in airportsDb.getAirportsFromCountry( Country = country):
                     #airportName = str(airport.getName())
                     self.assertTrue ( isinstance(airport, Airport)  )
                     if ( departureAirportICAOcode == airport.getICAOcode() ):
-                        print ( "--> found -> {0} --> name = {1}".format( airport.getICAOcode() , airport.getName()) )
-            
+                        print ( "--> found -> {0} --> name = {1}".format( airport.getICAOcode() , airport.getName()) )        
+
             for arrivalAirportICAOcode in routesAirports.getArrivalAirportsICAOcode():
-                
                 country = 'United States'
                 for airport in airportsDb.getAirportsFromCountry( Country = country):
                     #airportName = str(airport.getName())
@@ -61,6 +60,7 @@ class TestMethods(unittest.TestCase):
                 
                 distanceMeters = departureAirport.getDistanceMetersTo(arrivalAirport)
                 print ( "distance from {0} - to {1} - dist = {2} meters".format(departureAirport.getICAOcode() , arrivalAirport.getICAOcode() , distanceMeters))
+                print ( "distance from {0} - to {1} - dist = {2} nautical miles".format(departureAirport.getICAOcode() , arrivalAirport.getICAOcode() , distanceMeters*Meter2NauticalMiles))
         
         
         
