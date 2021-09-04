@@ -111,8 +111,7 @@ class WayPointsDatabase(object):
     def __init__(self):
         self.className = self.__class__.__name__
         
-        self.FilePath = 'WayPoints.xls'
-            
+        self.FilePath = 'WayPoints.xls'  
         self.FilesFolder = os.path.dirname(__file__)
 
         print ( self.className + ': file folder= {0}'.format(self.FilesFolder) )

@@ -24,8 +24,9 @@ class Test_Main(unittest.TestCase):
             pass
             #print ( wayPoint )
         print ( '==================== Way-Points ====================' )
-        NOT_EXISTING = wayPointsDb.getWayPoint('doesnotexist')
+        NOT_EXISTING = wayPointsDb.getWayPoint('does-not-exist')
         print ( NOT_EXISTING )
+        self.assertTrue(NOT_EXISTING, None)
         
         print ( 'number of wayPoints= {0}'.format(wayPointsDb.getNumberOfWayPoints()) )
         
@@ -36,6 +37,7 @@ class Test_Main(unittest.TestCase):
             self.assertTrue(ret, 'insertion correct')
     
         print ( 'number of wayPoints= {0}'.format(wayPointsDb.getNumberOfWayPoints()) )
+    
     
     def test_duplicates(self):
         print ("---------- test duplicates -----------")
