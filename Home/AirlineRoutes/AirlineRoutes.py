@@ -94,3 +94,18 @@ class AirlineRoutes(object):
             
         if (found == False):
             return None
+        
+    def getRoutes(self):
+        ''' get all the configured routes '''
+        for detailedRoute in self.detailedRoutes:
+             
+            Adep = detailedRoute["Adep"]
+            Ades = detailedRoute["Ades"]
+            detailedWayPointsList = detailedRoute["route"]
+            wayPointsListOfNames = []
+            for wayPoint in detailedWayPointsList:
+                wayPointsListOfNames.append(wayPoint["Name"])
+                
+            route = Route( Adep, "" , wayPointsListOfNames , Ades, "")
+            yield route
+            

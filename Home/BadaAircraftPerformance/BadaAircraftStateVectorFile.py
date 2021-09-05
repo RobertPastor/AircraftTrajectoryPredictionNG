@@ -92,13 +92,14 @@ class StateVector(object):
                                                  flightPathAngleDegrees,
                                                  thrustNewtons,
                                                  dragNewtons,
-                                                 liftNewtons ]
+                                                 liftNewtons ,
+                                                 endOfSimulation]
         self.aircraftStateHistory.append(aircraftStateDict)
 
 
     def getCurrentAltitudeSeaLevelMeters(self):
         if len(self.aircraftStateHistory) > 0:
-            ''' values returns a list who first element is the expected value '''
+            ''' values returns a list whose first element is the expected value '''
             lastDict = self.aircraftStateHistory[-1]
             values = lastDict.values()
             altitudeMSLmeters = list(values)[0][0]
@@ -168,7 +169,8 @@ class StateVector(object):
                                  'drag-newtons'                 ,
                                  'lift-newtons'                 ,
                                  
-                                 'load-factor-g'                
+                                 'load-factor-g'                ,
+                                 'end of simulation'
                                  ])
 
         previousAltitudeMeanSeaLevelFeet = 0.0
@@ -219,6 +221,8 @@ class StateVector(object):
                 previousAltitudeMeanSeaLevelFeet = altitudeMeanSeaLevelFeet
                 
                 previousElapsedTimeSeconds = elapsedTimeSeconds
+                ''' 5th September 2021 - write endOfSimulation '''
+                endOfSimulation = valueList[9]
                 xlsxOutput.writeFifteenFloatValues(elapsedTimeSeconds, 
                                                  altitudeMeanSeaLevelMeters,
                                                  altitudeMeanSeaLevelFeet,
@@ -238,7 +242,8 @@ class StateVector(object):
                                                  thrustNewtons          ,
                                                  dragNewtons            ,
                                                  liftNewtons            ,
-                                                 loadFactor)
+                                                 loadFactor             ,
+                                                 endOfSimulation)
         xlsxOutput.close()
                     
                     
