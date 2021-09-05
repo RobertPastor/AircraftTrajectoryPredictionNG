@@ -26,7 +26,7 @@ class AirlineWayPointsDatabase(object):
         print ( self.className + ': file path= {0}'.format(self.FilePath) )
 
         self.WayPointsDict = {}
-        self.ColumnNames = ["Name", "latitude", "longitude"]
+        self.ColumnNames = ["WayPoint", "Country", "Type", "Latitude", "Longitude" , "Name"]
         self.sheetName = "WayPoints"
 
 
@@ -38,8 +38,11 @@ class AirlineWayPointsDatabase(object):
         
         wayPoint = {}
         wayPoint[self.ColumnNames[0]] = wayPointName
-        wayPoint[self.ColumnNames[1]] = Latitude
-        wayPoint[self.ColumnNames[2]] = Longitude
+        wayPoint[self.ColumnNames[1]] = "Unknown"
+        wayPoint[self.ColumnNames[2]] = "WayPoint"
+        wayPoint[self.ColumnNames[3]] = Latitude
+        wayPoint[self.ColumnNames[4]] = Longitude
+        wayPoint[self.ColumnNames[5]] = "Unknown Name"
         
         df = pd.DataFrame(wayPoint, index=[0])
         

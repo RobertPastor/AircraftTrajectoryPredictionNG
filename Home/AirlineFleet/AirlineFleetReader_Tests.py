@@ -13,6 +13,7 @@ from Home.BadaAircraftPerformance.BadaAircraftFile import BadaAircraft
 from Home.Environment.Atmosphere import Atmosphere
 from Home.Environment.Earth import Earth
 
+
 class TestMethods(unittest.TestCase):
 #============================================
     '''def test_one(self):
@@ -82,14 +83,15 @@ class TestMethods(unittest.TestCase):
                                               aircraftFullName = acBd.getAircraftFullName(aircraftICAOcode), 
                                               badaPerformanceFilePath =  acBd.getAircraftPerformanceFile(aircraftICAOcode),
                                       atmosphere = atmosphere, earth = earth)
-                            print ( "Landing length meters = {0}".format(ac.getLandingLengthMeters()) )
-                            print ( "Take-off length meters = {0}".format(ac.getTakeOffLengthMeters()) )
-                            results = {}
-                            results["aircraft ICAO code"] = aircraftICAOcode
-                            results["aircraft Full Name"] = str(acType).upper()
-                            results["Landing Length"] = str(ac.getLandingLengthMeters())
-                            results["TakeOff Length"] = str(ac.getTakeOffLengthMeters())
-                            allResults.append(results)
+                            if (ac is None) == False:
+                                print ( "Landing length meters = {0}".format(ac.getLandingLengthMeters()) )
+                                print ( "Take-off length meters = {0}".format(ac.getTakeOffLengthMeters()) )
+                                results = {}
+                                results["aircraft ICAO code"] = aircraftICAOcode
+                                results["aircraft Full Name"] = str(acType).upper()
+                                results["Landing Length"] = str(ac.getLandingLengthMeters())
+                                results["TakeOff Length"] = str(ac.getTakeOffLengthMeters())
+                                allResults.append(results)
                         
                         else:
                             print (" ---------------- " , str(acType).upper() , " -----------------")

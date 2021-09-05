@@ -78,3 +78,6 @@ class AirlineFleetDataBase(object):
     def getAircraftFullNames(self):
         for aircraftType in self.FleetAircraftTypes:
             yield aircraftType
+            
+    
+        

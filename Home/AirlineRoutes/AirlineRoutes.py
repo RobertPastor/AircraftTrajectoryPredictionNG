@@ -6,10 +6,8 @@ Created on 4 sept. 2021
 This class manages the ordered list of wayPoints of one route
 '''
 import os
-import time
-import unittest
 import pandas as pd
-
+from Home.Guidance.RouteFile import Route
 
 class AirlineRoutes(object):
     
@@ -17,6 +15,7 @@ class AirlineRoutes(object):
     FileName = ""
     FilePath = ""
     ColumnNames = [ "order" , "wayPoint"]
+    detailedRoutes = []
     
     def __init__(self):
         self.className = self.__class__.__name__
@@ -29,16 +28,16 @@ class AirlineRoutes(object):
 
         route_KATL_KLAX = [{'Name': 'VUZ', 'latitude': 'N33°40\'12.47"', 'longitude': 'W086°53\'59.41"'}, {'Name': 'YAALL', 'latitude': 'N33°47\'36.30"', 'longitude': 'W087°28\'51.23"'}, {'Name': 'XESSS', 'latitude': 'N34°18\'50.62"', 'longitude': 'W090°07\'02.78"'}, {'Name': 'CARIN', 'latitude': 'N34°27\'14.98"', 'longitude': 'W090°53\'13.05"'}, {'Name': 'ARIGY', 'latitude': 'N34°32\'07.71"', 'longitude': 'W091°20\'49.90"'}, {'Name': 'LIT', 'latitude': 'N34°40\'39.62"', 'longitude': 'W092°10\'49.90"'}, {'Name': 'KOMMA', 'latitude': 'N35°00\'52.67"', 'longitude': 'W094°40\'39.39"'}, {'Name': 'KLUBB', 'latitude': 'N35°07\'13.30"', 'longitude': 'W095°28\'00.29"'}, {'Name': 'DWINE', 'latitude': 'N35°12\'29.02"', 'longitude': 'W096°12\'58.54"'}, {'Name': 'IRW', 'latitude': 'N35°21\'30.94"', 'longitude': 'W097°36\'33.21"'}, {'Name': 'CRUSR', 'latitude': 'N35°20\'07.49"', 'longitude': 'W098°51\'58.39"'}, {'Name': 'PNH', 'latitude': 'N35°14\'06.22"', 'longitude': 'W101°41\'56.51"'}, {'Name': 'TCC', 'latitude': 'N35°10\'55.94"', 'longitude': 'W103°35\'54.89"'}, {'Name': 'ABQ', 'latitude': 'N35°02\'37.66"', 'longitude': 'W106°48\'58.72"'}, {'Name': 'ZUN', 'latitude': 'N34°57\'56.71"', 'longitude': 'W109°09\'16.23"'}, {'Name': 'PYRIT', 'latitude': 'N34°52\'10.39"', 'longitude': 'W110°30\'41.16"'}, {'Name': 'DRK', 'latitude': 'N34°42\'09.19"', 'longitude': 'W112°28\'49.24"'}, {'Name': 'HIPPI', 'latitude': 'N34°33\'44.24"', 'longitude': 'W113°38\'21.73"'}, {'Name': 'CADEZ', 'latitude': 'N34°12\'23.63"', 'longitude': 'W115°20\'34.34"'}, {'Name': 'TNP', 'latitude': 'N34°06\'44.04"', 'longitude': 'W115°46\'11.65"'}]
 
-        self.routes = []
-        self.routes.append ( { "Adep" : "KATL" , "Ades": "PHNL" , "route": route_KATL_PHNL })
-        self.routes.append ( { "Adep" : "KJFK" , "Ades": "KSEA" , "route": route_KJFK_KSEA})
-        self.routes.append ( { "Adep" : "PANC" , "Ades": "KATL" , "route": route_PANC_KATL})
-        self.routes.append ( { "Adep" : "KATL" , "Ades": "KLAX" , "route": route_KATL_KLAX})
+        self.detailedRoutes = []
+        self.detailedRoutes.append ( { "Adep" : "KATL" , "Ades": "PHNL" , "route": route_KATL_PHNL })
+        self.detailedRoutes.append ( { "Adep" : "KJFK" , "Ades": "KSEA" , "route": route_KJFK_KSEA})
+        self.detailedRoutes.append ( { "Adep" : "PANC" , "Ades": "KATL" , "route": route_PANC_KATL})
+        self.detailedRoutes.append ( { "Adep" : "KATL" , "Ades": "KLAX" , "route": route_KATL_KLAX})
 
     
     def createRoutesFiles(self):
         
-        for route in self.routes:
+        for route in self.detailedRoutes:
             
             self.FileName = "Airline-Route-" + route["Adep"] + '-' + route["Ades"] + ".xls" 
             self.FilesFolder = os.path.dirname(__file__)
@@ -63,26 +62,35 @@ class AirlineRoutes(object):
             df = pd.DataFrame(orderedWayPoints)
             df.to_excel(excel_writer=self.FilePath, sheet_name="WayPoints", index = False, columns=self.ColumnNames)
 
-    
-    
-class TestMethods(unittest.TestCase):
-#============================================
-    def test_one(self):
-        pass
-    
-        t0 = time.clock()
-        print ( '================ test one =================' )
-        
-        airlineRoutes = AirlineRoutes()
-        t1 = time.clock()
-        print ( 'duration= {0} seconds'.format(t1-t0) )
 
-        airlineRoutes.createRoutesFiles()
-        
-        print ( '================ test one =================' )
-
-        t2 = time.clock()
-        print ( 'duration= {0} seconds'.format(t2-t1) )
-        
-if __name__ == '__main__':
-    unittest.main()
+    def getWayPointsList(self, Adep, Ades):
+        wayPointsListOfNames = []
+        for detailedRoute in self.detailedRoutes:
+            if (Adep == detailedRoute["Adep"]) and (Ades == detailedRoute["Ades"]): 
+                
+                detailedWayPointsList = detailedRoute["route"]
+                for wayPoint in detailedWayPointsList:
+                    wayPointsListOfNames.append(wayPoint["Name"])
+                    
+                for wayPoint in detailedWayPointsList:
+                    wayPointsListOfNames.append(wayPoint["Name"])
+                    
+        return wayPointsListOfNames
+    
+    
+    def getRoute(self, Adep, Ades):
+        ''' parameters are airport ICAO codes '''
+        found = False
+        for detailedRoute in self.detailedRoutes:
+            if (Adep == detailedRoute["Adep"]) and (Ades == detailedRoute["Ades"]): 
+                found = True
+                detailedWayPointsList = detailedRoute["route"]
+                wayPointsListOfNames = []
+                for wayPoint in detailedWayPointsList:
+                    wayPointsListOfNames.append(wayPoint["Name"])
+                
+                route = Route( Adep, "" , wayPointsListOfNames , Ades, "")
+                return route
+            
+        if (found == False):
+            return None
