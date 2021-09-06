@@ -515,8 +515,8 @@ class FlightPath(FlightPlan):
             
     def createFlightOutputFiles(self):
         ''' build outputs '''
-        self.finalRoute.createXlsxOutputFile()
-        self.finalRoute.createKmlOutputFile()
+        self.finalRoute.createXlsxOutputFile(self.aircraftICAOcode)
+        self.finalRoute.createKmlOutputFile(self.aircraftICAOcode)
         ''' add a prefix to the file path to identify the departure and arrival airport '''
         filePrefix = ''
         if not(self.departureAirport is None):

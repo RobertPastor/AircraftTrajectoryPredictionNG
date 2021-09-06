@@ -227,7 +227,7 @@ class Graph(object):
             yield edge
     
     
-    def createKmlOutputFile(self):
+    def createKmlOutputFile(self, aircraftICAOcode):
         if self.getNumberOfVertices() > 1:
             ''' need at least two vertices '''
             tail = self.getVertex(0)
@@ -237,7 +237,7 @@ class Graph(object):
             tailWayPoint = tail.getWeight()
             headWayPoint = head.getWeight()
             
-            strFileName = tailWayPoint.getName()+'-'+headWayPoint.getName()
+            strFileName = str(aircraftICAOcode) + "-" + tailWayPoint.getName()+'-'+headWayPoint.getName()
             strFileName = str(strFileName).replace(' ', '-')
             strFileName += '-{0}.kml'.format(datetime.now().strftime("%d-%b-%Y-%Hh%Mm%S"))
             
@@ -251,7 +251,7 @@ class Graph(object):
             kmlOutputFile.close()
     
     
-    def createXlsxOutputFile(self):
+    def createXlsxOutputFile(self, aircraftICAOcode):
         if self.getNumberOfVertices() > 1:
             ''' need at least two vertices '''
             tail = self.getVertex(0)
@@ -261,7 +261,7 @@ class Graph(object):
             tailWayPoint = tail.getWeight()
             headWayPoint = head.getWeight()
             
-            strFileName = tailWayPoint.getName()+'-'+headWayPoint.getName()
+            strFileName = str(aircraftICAOcode) + "-" + tailWayPoint.getName()+'-'+headWayPoint.getName()
             strFileName = str(strFileName).replace(' ', '-')
             strFileName += '-{0}.xlsx'.format(datetime.now().strftime("%d-%b-%Y-%Hh%Mm%S"))
             
