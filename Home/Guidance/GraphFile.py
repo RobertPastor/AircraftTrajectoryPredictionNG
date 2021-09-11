@@ -227,7 +227,8 @@ class Graph(object):
             yield edge
     
     
-    def createKmlOutputFile(self, aircraftICAOcode, AdepICAOcode, AdesICAOcde):
+    def createKmlOutputFile(self, abortedFlight, aircraftICAOcode, AdepICAOcode, AdesICAOcde):
+        assert ( type(abortedFlight) == bool )
         if self.getNumberOfVertices() > 1:
             ''' need at least two vertices '''
             tail = self.getVertex(0)
@@ -237,7 +238,10 @@ class Graph(object):
             tailWayPoint = tail.getWeight()
             headWayPoint = head.getWeight()
             
-            strFileName = str(aircraftICAOcode) + "-" + AdepICAOcode + "-" + AdesICAOcde
+            strFileName = ""
+            if abortedFlight:
+                strFileName = "ABORTED-"
+            strFileName += str(aircraftICAOcode) + "-" + AdepICAOcode + "-" + AdesICAOcde
             strFileName += "-" + tailWayPoint.getName()+'-'+headWayPoint.getName()
             ''' replace '''
             strFileName = str(strFileName).replace(' ', '-')
@@ -253,7 +257,9 @@ class Graph(object):
             kmlOutputFile.close()
     
     
-    def createXlsxOutputFile(self, aircraftICAOcode, AdepICAOcode, AdesICAOcode):
+    def createXlsxOutputFile(self, abortedFlight, aircraftICAOcode, AdepICAOcode, AdesICAOcode):
+        assert (type(abortedFlight) == bool )
+        
         if self.getNumberOfVertices() > 1:
             ''' need at least two vertices '''
             tail = self.getVertex(0)
@@ -263,7 +269,10 @@ class Graph(object):
             tailWayPoint = tail.getWeight()
             headWayPoint = head.getWeight()
             
-            strFileName = str(aircraftICAOcode) + "-" + AdepICAOcode +  "-" + AdesICAOcode
+            strFileName = ""
+            if abortedFlight:
+                strFileName = "ABORTED-"
+            strFileName += str(aircraftICAOcode) + "-" + AdepICAOcode +  "-" + AdesICAOcode
             strFileName += "-" + tailWayPoint.getName()+'-'+headWayPoint.getName()
             strFileName = str(strFileName).replace(' ', '-')
             strFileName += '-{0}.xlsx'.format(datetime.now().strftime("%d-%b-%Y-%Hh%Mm%S"))

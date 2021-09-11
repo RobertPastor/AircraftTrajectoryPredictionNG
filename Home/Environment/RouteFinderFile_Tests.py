@@ -22,6 +22,9 @@ Ades = "KLAX" # US Los Angeles-Los Angeles Intl
 #Adep = "KATL" # Atlanta
 #Ades = "PHNL" # US Honolulu Intl States 
 
+Adep = "KATL" #  US Atlanta-Hartsfield Jackson Atlanta Intl
+Ades = "KMSP"
+
 routeDict = {}
 routeDict["Adep"] = Adep
 routeDict["Ades"] = Ades

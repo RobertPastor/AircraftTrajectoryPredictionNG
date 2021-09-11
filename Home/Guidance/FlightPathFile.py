@@ -60,6 +60,7 @@ class FlightPath(FlightPlan):
     
     flightPlan = None
     aircraftICAOcode = ''
+    abortedFlight = False
     
     def __init__(self, 
                  route, 
@@ -69,6 +70,8 @@ class FlightPath(FlightPlan):
                  takeOffMassKilograms = 62000.0):
         
         self.className = self.__class__.__name__
+        self.abortedFlight = False
+        
         ''' init mother class '''
         FlightPlan.__init__(self, route)
         ''' first bad and incomplete flight length '''
@@ -278,7 +281,9 @@ class FlightPath(FlightPlan):
             ''' prepare for next loop '''
             self.flightListIndex += 1
             
-            
+        if self.endOfSimulation:
+            raise ValueError (self.className + ': end of simulation !!!')
+
         ''' return final heading of the last great circle '''
         return self.endOfSimulation, initialHeadingDegrees
     
@@ -489,40 +494,45 @@ class FlightPath(FlightPlan):
         assert not( self.departureRunway is None)
         assert not( self.departureAirport is None)
         
-        if self.isDomestic() or self.isOutBound():
-            initialHeadingDegrees , initialWayPoint = self.buildDeparturePhase()
-      
-        if self.isDomestic() or self.isInBound():
-            assert not(self.arrivalAirport is None)
-            self.buildSimulatedArrivalPhase()
+        try:
         
-        #print '==================== Loop over the fix list ==================== '
+            if self.isDomestic() or self.isOutBound():
+                initialHeadingDegrees , initialWayPoint = self.buildDeparturePhase()
+          
+            if self.isDomestic() or self.isInBound():
+                assert not(self.arrivalAirport is None)
+                self.buildSimulatedArrivalPhase()
+            
+            #print '==================== Loop over the fix list ==================== '
+            
+            self.endOfSimulation, initialHeadingDegrees = self.loopThroughFixList(initialHeadingDegrees = initialHeadingDegrees,
+                                                            elapsedTimeSeconds = initialWayPoint.getElapsedTimeSeconds())
+            
+            if (self.endOfSimulation == False):
+                #print '=========== build arrival phase =============='
+                self.buildArrivalPhase(initialHeadingDegrees)
+    
+            print ( self.className + ' ========== delta mass status ==============' )
+            print ( self.className + ': initial mass= {0:.2f} kilograms = {1:.2f} pounds'.format(self.aircraft.getAircraftInitialMassKilograms(),
+                                                                                               self.aircraft.getAircraftInitialMassKilograms()*Kilogram2Pounds) )
+            print ( self.className + ': final mass= {0:.2f} kilograms = {1:.2f} pounds'.format(self.aircraft.getAircraftCurrentMassKilograms(),
+                                                                                             self.aircraft.getAircraftCurrentMassKilograms()*Kilogram2Pounds) )
+            print ( self.className + ': diff mass= {0:.2f} kilograms = {1:.2f} pounds'.format(self.aircraft.getAircraftInitialMassKilograms()-self.aircraft.getAircraftCurrentMassKilograms(),
+                                                                                            (self.aircraft.getAircraftInitialMassKilograms()-self.aircraft.getAircraftCurrentMassKilograms())*Kilogram2Pounds) )
+            print ( self.className + ' ========== delta mass status ==============' )
         
-        self.endOfSimulation, initialHeadingDegrees = self.loopThroughFixList(initialHeadingDegrees = initialHeadingDegrees,
-                                                        elapsedTimeSeconds = initialWayPoint.getElapsedTimeSeconds())
-        
-        if (self.endOfSimulation == False):
-            #print '=========== build arrival phase =============='
-            self.buildArrivalPhase(initialHeadingDegrees)
-
-        print ( self.className + ' ========== delta mass status ==============' )
-        print ( self.className + ': initial mass= {0:.2f} kilograms = {1:.2f} pounds'.format(self.aircraft.getAircraftInitialMassKilograms(),
-                                                                                           self.aircraft.getAircraftInitialMassKilograms()*Kilogram2Pounds) )
-        print ( self.className + ': final mass= {0:.2f} kilograms = {1:.2f} pounds'.format(self.aircraft.getAircraftCurrentMassKilograms(),
-                                                                                         self.aircraft.getAircraftCurrentMassKilograms()*Kilogram2Pounds) )
-        print ( self.className + ': diff mass= {0:.2f} kilograms = {1:.2f} pounds'.format(self.aircraft.getAircraftInitialMassKilograms()-self.aircraft.getAircraftCurrentMassKilograms(),
-                                                                                        (self.aircraft.getAircraftInitialMassKilograms()-self.aircraft.getAircraftCurrentMassKilograms())*Kilogram2Pounds) )
-        print ( self.className + ' ========== delta mass status ==============' )
-
+        except:
+            print ("----> flight did not go to a normal end --->")
+            self.abortedFlight = True
             
             
     def createFlightOutputFiles(self):
         ''' build outputs '''
-        self.finalRoute.createXlsxOutputFile(self.aircraftICAOcode, self.departureAirport.getICAOcode(), self.arrivalAirport.getICAOcode())
-        self.finalRoute.createKmlOutputFile(self.aircraftICAOcode, self.departureAirport.getICAOcode(), self.arrivalAirport.getICAOcode())
+        self.finalRoute.createXlsxOutputFile(self.abortedFlight, self.aircraftICAOcode, self.departureAirport.getICAOcode(), self.arrivalAirport.getICAOcode())
+        self.finalRoute.createKmlOutputFile(self.abortedFlight, self.aircraftICAOcode, self.departureAirport.getICAOcode(), self.arrivalAirport.getICAOcode())
         ''' add a prefix to the file path to identify the departure and arrival airport '''
         
-        self.aircraft.createStateVectorOutputFile(self.aircraftICAOcode, self.departureAirport.getICAOcode(), self.arrivalAirport.getICAOcode())
+        self.aircraft.createStateVectorOutputFile(self.abortedFlight, self.aircraftICAOcode, self.departureAirport.getICAOcode(), self.arrivalAirport.getICAOcode())
         print (  '{0} - final route length= {1:.2f} nautics'.format(self.className, self.finalRoute.getLengthMeters()*Meter2NauticalMiles) )
         
 

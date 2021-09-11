@@ -65,6 +65,9 @@ class TestMethods(unittest.TestCase):
         airlineFleet = AirlineFleetDataBase()
         retOne = airlineFleet.read()
         self.assertTrue(retOne)
+
+        retTwo = airlineFleet.extendDatabase()
+        self.assertTrue(retTwo)
         
         acBd = BadaAircraftDatabase()
         retTwo = acBd.read()
@@ -78,30 +81,26 @@ class TestMethods(unittest.TestCase):
         airlineRoutes = AirlineRoutes()
         for route in airlineRoutes.getRoutes():
             self.assertTrue( isinstance(route,Route) )
+            
             print ( route.getRouteAsString() )
             
-            for acType in airlineFleet.getAircraftFullNames():
-                print ( str(acType).upper() )
-                print (" ---------------- " , str(acType).upper() , " -----------------")
-
-                for aircraftICAOcode in acBd.getAircraftICAOcodes():
-                    if ( str(acType).upper() == acBd.getAircraftFullName( aircraftICAOcode )):
+            for airlineAircraft in airlineFleet.getAirlineAircrafts():
+                
+                if ( airlineAircraft.hasICAOcode() ):
+                    
+                    aircraftICAOcode = airlineAircraft.getAircraftICAOcode()
+                    
+                    if ( acBd.aircraftExists(aircraftICAOcode) 
+                         and acBd.aircraftPerformanceFileExists(aircraftICAOcode)):
                         
-                        if ( acBd.aircraftExists(aircraftICAOcode) 
-                             and acBd.aircraftPerformanceFileExists(aircraftICAOcode)):
-                            
-                            print (" ---------------- " , str(acType).upper() , " -----------------")
-                            print ( 'FOUND -> aircraft full name = {0} -- aircraft ICAO code = {1}'.format( acType , aircraftICAOcode  ) )
-                            print (" ---------------- " , str(acType).upper() , " -----------------")
-
-                            ac = BadaAircraft(ICAOcode = aircraftICAOcode , 
+                        ac = BadaAircraft(ICAOcode = aircraftICAOcode , 
                                               aircraftFullName = acBd.getAircraftFullName(aircraftICAOcode), 
                                               badaPerformanceFilePath =  acBd.getAircraftPerformanceFile(aircraftICAOcode),
-                                              atmosphere = atmosphere, earth = earth)
-                            
-                            acPerformance = AircraftPerformance(acBd.getAircraftPerformanceFile(aircraftICAOcode))
+                                      atmosphere = atmosphere, earth = earth)
 
-                            if ( ((ac is None) == False) and ((acPerformance is None) == False) ):
+                        acPerformance = AircraftPerformance(acBd.getAircraftPerformanceFile(aircraftICAOcode))
+
+                        if ( ((ac is None) == False) and ((acPerformance is None) == False) ):
                                 print ( "Landing length meters = {0}".format(ac.getLandingLengthMeters()) )
                                 print ( "Take-off length meters = {0}".format(ac.getTakeOffLengthMeters()) )      
                                 print ( "Max TakeOff Weight kilograms = {0}".format(ac.getMaximumMassKilograms() ) )   
@@ -119,8 +118,11 @@ class TestMethods(unittest.TestCase):
                                 print ('time zero= ' + str(t0))
                                 lengthNauticalMiles = flightPath.computeLengthNauticalMiles()
                                 print ('flight path length= {0:.2f} nautics '.format(lengthNauticalMiles))
-                                flightPath.computeFlight(deltaTimeSeconds = 1.0)
-                                print ('simulation duration= ' + str(time.clock()-t0) + ' seconds')
+                                try:
+                                    flightPath.computeFlight(deltaTimeSeconds = 1.0)
+                                    print ('simulation duration= ' + str(time.clock()-t0) + ' seconds')
+                                except Exception as e:
+                                    print ("-----------> flight was aborted = {0}".format(e))
                                 
                                 print ("=========== Flight Plan create output files  =========== " + time.strftime("%c"))
                                 flightPath.createFlightOutputFiles()

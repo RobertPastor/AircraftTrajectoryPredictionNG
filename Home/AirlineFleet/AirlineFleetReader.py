@@ -43,7 +43,9 @@ class AirlineAircraft(object):
         self.landingLengthMeters = 0.0
         self.takeOffMTOWLengthMeters = 0.0
         
-
+        
+    def hasICAOcode(self):
+        return ( len ( self.aircraftICAOcode ) > 0 )
         
     def getAircraftFullName(self):
         return self.aircraftFullName

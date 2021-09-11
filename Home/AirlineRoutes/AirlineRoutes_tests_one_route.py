@@ -193,8 +193,12 @@ class TestMethods(unittest.TestCase):
                                 print ('time zero= ' + str(t0))
                                 lengthNauticalMiles = flightPath.computeLengthNauticalMiles()
                                 print ('flight path length= {0:.2f} nautics '.format(lengthNauticalMiles))
-                                flightPath.computeFlight(deltaTimeSeconds = 1.0)
-                                print ('simulation duration= ' + str(time.clock()-t0) + ' seconds')
+                                
+                                try:
+                                    flightPath.computeFlight(deltaTimeSeconds = 1.0)
+                                    print ('simulation duration= ' + str(time.clock()-t0) + ' seconds')
+                                except Exception as e:
+                                    print ("exception = {0}".format(e))
                                 
                                 print ("=========== Flight Plan create output files  =========== " + time.strftime("%c"))
                                 flightPath.createFlightOutputFiles()

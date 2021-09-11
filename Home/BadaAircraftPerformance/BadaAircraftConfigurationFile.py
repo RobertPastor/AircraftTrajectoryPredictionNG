@@ -1235,9 +1235,13 @@ class AircraftConfiguration(FlightEnvelope):
         #DescentRateFeetPerMinutes = 3000.0
         return DescentRateFeetPerMinutes
 
-    def createStateVectorOutputFile(self, aircraftICAOcode, AdepICAOcode, AdesICAOcode):
+    def createStateVectorOutputFile(self, abortedFlight, aircraftICAOcode, AdepICAOcode, AdesICAOcode):
+        assert ( type(abortedFlight) == bool )
         #print self.className + ': create State Vector output file'
-        filePrefix = aircraftICAOcode + "-" + AdepICAOcode + "-" + AdesICAOcode
+        filePrefix = ""
+        if abortedFlight:
+            filePrefix = "ABORTED-"
+        filePrefix += aircraftICAOcode + "-" + AdepICAOcode + "-" + AdesICAOcode
         self.StateVector.createStateVectorHistoryFile(filePrefix)
 
         
