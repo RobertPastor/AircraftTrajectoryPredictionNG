@@ -97,7 +97,7 @@ class TestMethods(unittest.TestCase):
                             ac = BadaAircraft(ICAOcode = aircraftICAOcode , 
                                               aircraftFullName = acBd.getAircraftFullName(aircraftICAOcode), 
                                               badaPerformanceFilePath =  acBd.getAircraftPerformanceFile(aircraftICAOcode),
-                                      atmosphere = atmosphere, earth = earth)
+                                              atmosphere = atmosphere, earth = earth)
                             
                             acPerformance = AircraftPerformance(acBd.getAircraftPerformanceFile(aircraftICAOcode))
 

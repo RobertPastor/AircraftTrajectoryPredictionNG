@@ -1142,8 +1142,8 @@ class AircraftConfiguration(FlightEnvelope):
         if deltaDistanceMeters > 0.0:
             flightPathAngleDegrees = math.degrees(math.atan(deltaAltitudeMeters / deltaDistanceMeters))
             
-        if not endOfSimulation:
-            endOfSimulation = self.updateAircraftStateVector(elapsedTimeSeconds + deltaTimeSeconds, 
+        #if not endOfSimulation:
+        endOfSimulation = self.updateAircraftStateVector(elapsedTimeSeconds + deltaTimeSeconds, 
                                                       trueAirSpeedMetersSecond      , 
                                                       altitudeMeanSeaLevelMeters    ,
                                                       currentDistanceFlownMeters    ,
@@ -1235,8 +1235,9 @@ class AircraftConfiguration(FlightEnvelope):
         #DescentRateFeetPerMinutes = 3000.0
         return DescentRateFeetPerMinutes
 
-    def createStateVectorOutputFile(self, filePrefix):
+    def createStateVectorOutputFile(self, aircraftICAOcode, AdepICAOcode, AdesICAOcode):
         #print self.className + ': create State Vector output file'
+        filePrefix = aircraftICAOcode + "-" + AdepICAOcode + "-" + AdesICAOcode
         self.StateVector.createStateVectorHistoryFile(filePrefix)
 
         

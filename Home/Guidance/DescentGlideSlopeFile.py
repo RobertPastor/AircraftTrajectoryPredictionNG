@@ -171,6 +171,7 @@ class DescentGlideSlope(Graph):
             ''' replace the intermediate point '''
             intermediateWayPoint = newIntermediatePoint
             index += 1
+            
         ''' set the name of the last point '''
         Name = 'slope-pt-{0}-{1:.2f}-Nm'.format(index, flownDistanceMeters*Meter2NauticalMiles)
         if not(newIntermediatePoint is None):

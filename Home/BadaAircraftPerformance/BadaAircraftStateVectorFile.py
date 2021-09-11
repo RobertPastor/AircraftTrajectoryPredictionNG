@@ -142,9 +142,9 @@ class StateVector(object):
         
     def createStateVectorHistoryFile(self, filePrefix):
         if isinstance(filePrefix, str) and len(filePrefix)>0:
-            fileName = self.aircraftICAOcode + '-' + filePrefix + '-Altitude-MSL-Speed-History'
+            fileName =  filePrefix + '-Altitude-MSL-Speed-History'
         else:
-            fileName = self.aircraftICAOcode +  '-Altitude-MSL-Speed-History'
+            fileName = self.aircraftICAOcode + '-Altitude-MSL-Speed-History'
 
         xlsxOutput = XlsxOutput(fileName)
         xlsxOutput.writeHeaders(['elapsed-time-seconds', 

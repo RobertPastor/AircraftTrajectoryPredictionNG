@@ -161,13 +161,13 @@ class FlightPath(FlightPlan):
         distanceStillToFlyMeters = self.flightLengthMeters - self.finalRoute.getLengthMeters()
         print ( self.className + ': still to fly= {0:.2f} nautics'.format(distanceStillToFlyMeters * Meter2NauticalMiles) )
 
-        endOfSimulation = turnLeg.buildTurnLeg(deltaTimeSeconds = self.deltaTimeSeconds,
+        self.endOfSimulation = turnLeg.buildTurnLeg(deltaTimeSeconds = self.deltaTimeSeconds,
                              elapsedTimeSeconds = tailWayPoint.getElapsedTimeSeconds(), 
                              distanceStillToFlyMeters = distanceStillToFlyMeters,
                              distanceToLastFixMeters = distanceToLastFixMeters)
         self.finalRoute.addGraph(turnLeg)
 
-        if (endOfSimulation == False):
+        if (self.endOfSimulation == False):
             print ( ' ==================== end of turn leg  ==================== ' )
                 
             endOfTurnLegWayPoint = self.finalRoute.getLastVertex().getWeight()
@@ -215,7 +215,7 @@ class FlightPath(FlightPlan):
             print ( self.className + ': still to fly= {0} nautics'.format(distanceStillToFlyMeters * Meter2NauticalMiles) )
     
     
-            endOfSimulation = greatCircle.computeGreatCircle(deltaTimeSeconds = self.deltaTimeSeconds,
+            self.endOfSimulation = greatCircle.computeGreatCircle(deltaTimeSeconds = self.deltaTimeSeconds,
                                            elapsedTimeSeconds = endOfTurnLegWayPoint.getElapsedTimeSeconds(),
                                            distanceStillToFlyMeters = distanceStillToFlyMeters,
                                            distanceToLastFixMeters = distanceToLastFixMeters)
@@ -235,8 +235,9 @@ class FlightPath(FlightPlan):
             print ( self.className + ': still to fly= {0:.2f} meters - still to fly= {1:.2f} nautics'.format(distanceStillToFlyMeters, distanceStillToFlyMeters * Meter2NauticalMiles) )
             ''' print the way point that has been passed right now '''
             self.printPassedWayPoint(finalWayPoint)
+            
         ''' return to caller '''
-        return endOfSimulation, finalHeadingDegrees, finalWayPoint.getElapsedTimeSeconds(), anticipatedTurnWayPoint
+        return self.endOfSimulation, finalHeadingDegrees, finalWayPoint.getElapsedTimeSeconds(), anticipatedTurnWayPoint
         
     
     def loopThroughFixList(self, 
@@ -248,8 +249,9 @@ class FlightPath(FlightPlan):
         ''' assumption: fix list does not contain departure and arrival airports '''
         self.flightListIndex = 0
         ''' loop over the fix list '''
-        endOfSimulation = False
-        while (endOfSimulation == False) and (self.flightListIndex < len(self.fixList)):
+        self.endOfSimulation = False
+        
+        while (self.endOfSimulation == False) and (self.flightListIndex < len(self.fixList)):
             #print  self.className + ': initial heading degrees= ' + str(initialHeadingDegrees) + ' degrees'
                 
             ''' get the next fix '''
@@ -268,7 +270,7 @@ class FlightPath(FlightPlan):
                 headWayPoint = self.wayPointsDict[self.fixList[self.flightListIndex+1]]
                 print ( headWayPoint )
                 ''' turn and fly '''
-                endOfSimulation, initialHeadingDegrees , elapsedTimeSeconds , anticipatedTurnWayPoint = self.turnAndFly(
+                self.endOfSimulation, initialHeadingDegrees , elapsedTimeSeconds , anticipatedTurnWayPoint = self.turnAndFly(
                                                                             tailWayPoint = tailWayPoint,
                                                                             headWayPoint = headWayPoint,
                                                                             initialHeadingDegrees = initialHeadingDegrees,
@@ -276,8 +278,9 @@ class FlightPath(FlightPlan):
             ''' prepare for next loop '''
             self.flightListIndex += 1
             
+            
         ''' return final heading of the last great circle '''
-        return endOfSimulation, initialHeadingDegrees
+        return self.endOfSimulation, initialHeadingDegrees
     
     
     def buildDeparturePhase(self):
@@ -495,10 +498,10 @@ class FlightPath(FlightPlan):
         
         #print '==================== Loop over the fix list ==================== '
         
-        endOfSimulation, initialHeadingDegrees = self.loopThroughFixList(initialHeadingDegrees = initialHeadingDegrees,
+        self.endOfSimulation, initialHeadingDegrees = self.loopThroughFixList(initialHeadingDegrees = initialHeadingDegrees,
                                                         elapsedTimeSeconds = initialWayPoint.getElapsedTimeSeconds())
         
-        if (endOfSimulation == False):
+        if (self.endOfSimulation == False):
             #print '=========== build arrival phase =============='
             self.buildArrivalPhase(initialHeadingDegrees)
 
@@ -515,15 +518,11 @@ class FlightPath(FlightPlan):
             
     def createFlightOutputFiles(self):
         ''' build outputs '''
-        self.finalRoute.createXlsxOutputFile(self.aircraftICAOcode)
-        self.finalRoute.createKmlOutputFile(self.aircraftICAOcode)
+        self.finalRoute.createXlsxOutputFile(self.aircraftICAOcode, self.departureAirport.getICAOcode(), self.arrivalAirport.getICAOcode())
+        self.finalRoute.createKmlOutputFile(self.aircraftICAOcode, self.departureAirport.getICAOcode(), self.arrivalAirport.getICAOcode())
         ''' add a prefix to the file path to identify the departure and arrival airport '''
-        filePrefix = ''
-        if not(self.departureAirport is None):
-            filePrefix = self.departureAirport.getICAOcode()
-            if not(self.arrivalAirport is None):
-                filePrefix += '-' + self.arrivalAirport.getICAOcode()
-        self.aircraft.createStateVectorOutputFile(filePrefix)
+        
+        self.aircraft.createStateVectorOutputFile(self.aircraftICAOcode, self.departureAirport.getICAOcode(), self.arrivalAirport.getICAOcode())
         print (  '{0} - final route length= {1:.2f} nautics'.format(self.className, self.finalRoute.getLengthMeters()*Meter2NauticalMiles) )
         
 

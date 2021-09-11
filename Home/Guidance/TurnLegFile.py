@@ -252,6 +252,7 @@ class TurnLeg(Graph):
         print ( '{0} - initial heading= {1:.2f} degrees'.format(self.className, self.initialHeadingDegrees) )
         passedThrough360 = False
         endOfSimulation = False
+        
         while ( (endOfSimulation == False) and (continueTurning == True)):
             ''' initial index - loop initialisation '''
             #print 'altitude= ' + str(altitudeMeanSeaLevelMeters) + ' meters'
@@ -353,6 +354,7 @@ class TurnLeg(Graph):
             turnLegList.append(newIntermediateWayPoint)
             ''' copy the intermediate way-point '''
             intermediateWayPoint = newIntermediateWayPoint
+            
             
         ''' set name of last point '''
         name = 'turn-pt-{0}-{1:.2f}-degrees'.format(index, currentHeadingDegrees)

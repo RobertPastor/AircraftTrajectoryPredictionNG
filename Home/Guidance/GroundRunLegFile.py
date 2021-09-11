@@ -259,7 +259,7 @@ class GroundRunLeg(Graph):
             ''' during the ground run - altitude = airport field elevation '''
             newIntermediateWayPoint.setAltitudeMeanSeaLevelMeters(self.airport.getFieldElevationAboveSeaLevelMeters())
             
-            ''' update route waypoint '''
+            ''' update route way-point '''
             elapsedTimeSeconds += deltaTimeSeconds
             newIntermediateWayPoint.setElapsedTimeSeconds(elapsedTimeSeconds)
  

@@ -149,6 +149,7 @@ class ClimbRamp(Graph):
             ''' replace the intermediate point '''
             intermediateWayPoint = newIntermediateWayPoint
             index += 1
+            
         ''' set name of the last point '''
         Name = 'climb-ramp-pt-{0}-{1:.2f}-meters'.format(index, cumulatedLegDistanceMeters)
         newIntermediateWayPoint.setName(Name = Name)
