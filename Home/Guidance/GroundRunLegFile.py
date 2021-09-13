@@ -62,6 +62,7 @@ class GroundRunLeg(Graph):
     aircraft = None
     airport = None
     runway = None
+    elapsedTimeSeconds = 0.0
     
     def __init__(self,
                  runway,
@@ -140,7 +141,6 @@ class GroundRunLeg(Graph):
                 intermediateWayPoint = initialWayPoint
                 
             ''' fly => decrease the true air speed '''
-            ''' during ground run => all the energy is used to increase the Kinetic energy => no potential energy increase '''
             endOfSimulation, deltaDistanceMeters , altitudeMeters = self.aircraft.fly(
                                                                     elapsedTimeSeconds = elapsedTimeSeconds,
                                                                     deltaTimeSeconds = deltaTimeSeconds , 
@@ -166,7 +166,8 @@ class GroundRunLeg(Graph):
             ''' update route way-point '''
             elapsedTimeSeconds += deltaTimeSeconds
             newIntermediateWayPoint.setElapsedTimeSeconds(elapsedTimeSeconds)
-             
+            self.elapsedTimeSeconds = elapsedTimeSeconds
+            
             ''' insert in the route '''
             self.addVertex(newIntermediateWayPoint)
             
@@ -262,6 +263,7 @@ class GroundRunLeg(Graph):
             ''' update route way-point '''
             elapsedTimeSeconds += deltaTimeSeconds
             newIntermediateWayPoint.setElapsedTimeSeconds(elapsedTimeSeconds)
+            self.elapsedTimeSeconds = elapsedTimeSeconds
  
             ''' insert in the route '''
             self.addVertex(newIntermediateWayPoint)
@@ -274,6 +276,9 @@ class GroundRunLeg(Graph):
         ''' rename last point as take-off '''
         intermediateWayPoint.setName(Name = 'Take-Off-{0:.2f}-meters'.format(totalLegDistanceMeters))
    
+   
+    def getElapsedTimeSeconds(self):
+        return self.elapsedTimeSeconds
 
 if __name__ == '__main__':
 

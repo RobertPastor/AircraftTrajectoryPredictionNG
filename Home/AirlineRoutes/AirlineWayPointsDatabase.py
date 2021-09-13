@@ -18,7 +18,7 @@ class AirlineWayPointsDatabase(object):
     def __init__(self):
         self.className = self.__class__.__name__
         
-        self.FileName = 'AirlineWayPoints.xls'  
+        self.FileName = 'WayPoints.xls'  
         self.FilesFolder = os.path.dirname(__file__)
 
         print ( self.className + ': file folder= {0}'.format(self.FilesFolder) )
@@ -80,11 +80,12 @@ class AirlineWayPointsDatabase(object):
     def dropDuplicates(self):
         
         if os.path.exists(self.FilePath):
-            
+            ''' get previous content '''
             df = pd.DataFrame(pd.read_excel(self.FilePath, sheet_name=self.sheetName))
             df = df.drop_duplicates()
-            
+            ''' delete old file '''
             os.remove(self.FilePath)
+            ''' re create new file '''
             df.to_excel(excel_writer=self.FilePath, sheet_name="WayPoints", index = False, columns=self.ColumnNames)
             return True
         else:

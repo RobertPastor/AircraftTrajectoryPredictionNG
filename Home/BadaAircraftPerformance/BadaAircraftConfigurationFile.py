@@ -153,7 +153,7 @@ class AircraftConfiguration(FlightEnvelope):
         
         self.badaPerformanceFilePath = badaPerformanceFilePath
         aircraftPerformance = AircraftPerformance(badaPerformanceFilePath)
-        ''' init mother class '''
+        ''' initialize base class '''
         FlightEnvelope.__init__(self, aircraftPerformance, ICAOcode , atmosphere, earth)
 
         assert isinstance(atmosphere, Atmosphere) and not(atmosphere is None)
@@ -1134,7 +1134,7 @@ class AircraftConfiguration(FlightEnvelope):
             aircraftMassKilograms = self.aircraftMass.updateAircraftMassKilograms(fuelFlowKilograms)
         except:
             print ( self.className + ': no more fuel !!!!' )
-            endOfSimulation = True
+            raise ValueError ( self.className + ': no more fuel !!!! ' )
 
         ''' store updated speed '''
         currentDistanceFlownMeters += deltaDistanceMeters

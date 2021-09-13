@@ -74,6 +74,7 @@ class FlightPath(FlightPlan):
         
         ''' init mother class '''
         FlightPlan.__init__(self, route)
+        
         ''' first bad and incomplete flight length '''
         ''' missing last turn and glide slope '''
         self.flightLengthMeters = self.computeLengthMeters() 
@@ -82,6 +83,7 @@ class FlightPath(FlightPlan):
 
         self.aircraft = None
         self.getAircraft()
+        
         assert isinstance(self.aircraft, BadaAircraft) and not(self.aircraft is None)
         self.aircraft.setAircraftMassKilograms(takeOffMassKilograms)
         
@@ -171,7 +173,7 @@ class FlightPath(FlightPlan):
         self.finalRoute.addGraph(turnLeg)
 
         if (self.endOfSimulation == False):
-            print ( ' ==================== end of turn leg  ==================== ' )
+            print ( self.className + ' ==================== end of turn leg  ==================== ' )
                 
             endOfTurnLegWayPoint = self.finalRoute.getLastVertex().getWeight()
             lastLeg = self.finalRoute.getLastEdge()
@@ -197,6 +199,7 @@ class FlightPath(FlightPlan):
             
                 if ((endOfTurnLegWayPoint.getDistanceMetersTo(headWayPoint) > (1.1 * anticipatedTurnStartMeters) 
                     and abs(angleDifferenceDegrees) > 30.)):
+                    
                     print ( self.className + ': Envisage anticipated Fly By turn !!!' )
                     bearingDegrees = math.fmod ( firstAngleDegrees + 180.0 , 360.0 )
                     anticipatedTurnWayPoint = headWayPoint.getWayPointAtDistanceBearing(
@@ -281,8 +284,6 @@ class FlightPath(FlightPlan):
             ''' prepare for next loop '''
             self.flightListIndex += 1
             
-        if self.endOfSimulation:
-            raise ValueError (self.className + ': end of simulation !!!')
 
         ''' return final heading of the last great circle '''
         return self.endOfSimulation, initialHeadingDegrees
@@ -418,6 +419,7 @@ class FlightPath(FlightPlan):
         
         print ( self.className + '==================== add last turn ==================== ' )
         if self.isDomestic() or self.isInBound():
+            
             endOfLastGreatCircleWayPoint = self.finalRoute.getLastVertex().getWeight()
                 
             finalHeadingDegrees = self.arrivalRunway.getTrueHeadingDegrees()
@@ -470,6 +472,7 @@ class FlightPath(FlightPlan):
                                                flownDistanceMeters = flownDistanceMeters, 
                                                distanceStillToFlyMeters= distanceStillToFlyMeters ,
                                                distanceToLastFixMeters = distanceToLastFixMeters)
+            
             self.finalRoute.addGraph(descentGlideSlope)
             endOfDescentGlideSlope = self.finalRoute.getLastVertex().getWeight()
             
@@ -477,11 +480,17 @@ class FlightPath(FlightPlan):
             arrivalGroundRun = GroundRunLeg( runway   = self.arrivalRunway,
                                           aircraft = self.aircraft,
                                           airport  = self.arrivalAirport )
+            
             arrivalGroundRun.buildArrivalGroundRun(deltaTimeSeconds = self.deltaTimeSeconds,
                                                    elapsedTimeSeconds = endOfDescentGlideSlope.getElapsedTimeSeconds(),
                                                     initialWayPoint = endOfDescentGlideSlope)
+            
             self.finalRoute.addGraph(arrivalGroundRun)
-        
+            ''' set total elapsed time seconds '''
+            print ("------------------- arrival ground run ----------")
+            print ("------------------- elapsed time seconds = {0} --------------".format( arrivalGroundRun.getElapsedTimeSeconds() ) ) 
+            print ("------------------- arrival ground run ----------")
+            self.elapsedTimeSeconds = arrivalGroundRun.getElapsedTimeSeconds()
         
       
     def computeFlight(self, deltaTimeSeconds):
@@ -511,6 +520,7 @@ class FlightPath(FlightPlan):
             if (self.endOfSimulation == False):
                 #print '=========== build arrival phase =============='
                 self.buildArrivalPhase(initialHeadingDegrees)
+                
     
             print ( self.className + ' ========== delta mass status ==============' )
             print ( self.className + ': initial mass= {0:.2f} kilograms = {1:.2f} pounds'.format(self.aircraft.getAircraftInitialMassKilograms(),
@@ -521,8 +531,8 @@ class FlightPath(FlightPlan):
                                                                                             (self.aircraft.getAircraftInitialMassKilograms()-self.aircraft.getAircraftCurrentMassKilograms())*Kilogram2Pounds) )
             print ( self.className + ' ========== delta mass status ==============' )
         
-        except:
-            print ("----> flight did not go to a normal end --->")
+        except Exception as e:
+            print ("----> flight did not go to a normal end ---> {0}".format(e))
             self.abortedFlight = True
             
             
@@ -536,3 +546,8 @@ class FlightPath(FlightPlan):
         print (  '{0} - final route length= {1:.2f} nautics'.format(self.className, self.finalRoute.getLengthMeters()*Meter2NauticalMiles) )
         
 
+    def getAircraftCurrentMassKilograms(self):
+        return self.aircraft.getAircraftCurrentMassKilograms()
+    
+    def getFlightDurationSeconds(self):
+        return self.aircraft.getElapsedTimeSeconds()

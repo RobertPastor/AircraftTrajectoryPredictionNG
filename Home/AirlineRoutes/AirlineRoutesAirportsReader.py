@@ -42,7 +42,7 @@ class AirlineRoutesAirportsDataBase(object):
     def __init__(self):
         self.className = self.__class__.__name__
 
-        self.FilePath = "RoutesAirportsDepartureArrival.xls"
+        self.FilePath = "AirlineRoutesAirportsDepartureArrival.xls"
         
         #self.FilesFolder = os.getcwd()
         self.FilesFolder = os.path.dirname(__file__)
@@ -60,6 +60,7 @@ class AirlineRoutesAirportsDataBase(object):
         ''' this method reads the whole dataset file - not only the headers '''
         print (self.FilePath)
         assert len(self.FilePath)>0 and os.path.isfile(self.FilePath) 
+        
         book = open_workbook(self.FilePath, formatting_info=True)
         ''' assert there is only one sheet '''
         self.sheet = book.sheet_by_index(0)

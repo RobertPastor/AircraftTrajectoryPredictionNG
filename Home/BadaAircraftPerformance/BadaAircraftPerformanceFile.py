@@ -162,7 +162,10 @@ class AircraftPerformance(object):
                 return fortran_float(str(self.dataLines[self.AircraftMassLine]).split()[3])
         except:
             raise ValueError("BadaPerformanceFile: error while reading Maximum mass in Tons")
-        return 0.
+        return 0.0
+    
+    def getMaximumMassKilograms(self):
+        return self.getMaximumMassTons() * 1000.0
     
     def getMaximumPayLoadMassKilograms(self):
         try:

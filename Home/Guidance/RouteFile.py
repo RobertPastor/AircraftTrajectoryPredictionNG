@@ -6,10 +6,10 @@ Created on 5 sept. 2021
 this class manages a route 
 a route is defined by
 1) a departure airport
-2) a departure runway - if missing a default runway will be used
+2) a departure run-way - if missing a default run-way will be used
 3) an ordered list of wayPoints - these are names only - latitude and longitude are defined in a separate database
 4) an arrival airport
-5) an arrival runway - if missing a default runway will be used
+5) an arrival run-way - if missing a default run-way will be used
 
 
 strRoute = 'ADEP/LFBM/27-SAU-VELIN-LMG-BEBIX-GUERE-LARON-KUKOR-MOU-'
@@ -27,7 +27,6 @@ class Route(object):
     listOfWayPointNames = []
     arrivalAirportICAOcode = ""
     arrivalRunWay = ""
-    
     
     
     def __init__(self, _departureAirportICAOcode, _departureRunWay, _listOfWayPointNames, _arrivalAirportICAOcode, _arrivalRunWay):
@@ -75,3 +74,10 @@ class Route(object):
             strRoute += "/" + self.arrivalRunWay 
             
         return strRoute
+    
+    def getDepartureAirportICAOcode(self):
+        return self.departureAirportICAOcode
+    
+    def getArrivalAirportICAOcode(self):
+        return self.arrivalAirportICAOcode
+    

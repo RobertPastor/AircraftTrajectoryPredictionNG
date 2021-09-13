@@ -81,6 +81,9 @@ class FlightEnvelope(AeroDynamics):
     # Gt - temperature gradient on hmax in feet/degree Celsius
     ''' speed history - check that speed stays within the flight envelope '''
     StateVector = None
+    
+    elapsedTimeSeconds = 0.0
+
 
     def __init__(self, aircraftPerformance, ICAOcode, atmosphere, earth):
 
@@ -202,6 +205,7 @@ class FlightEnvelope(AeroDynamics):
                                             trueAirSpeedMetersSecond, 
                                             airportFieldElevationAboveSeaLevelMeters,
                                             aircraftMassKilograms)
+        self.elapsedTimeSeconds = elapsedTimeSeconds
 
 
     def updateAircraftStateVector(self,
@@ -217,6 +221,9 @@ class FlightEnvelope(AeroDynamics):
                                   liftNewtons                   ,
                                   endOfSimulation):
         
+        ''' 12th September 2021 - Robert - need to know real time spent during flying '''
+        self.elapsedTimeSeconds = elapsedTimeSeconds
+
         self.StateVector.updateAircraftStateVector(elapsedTimeSeconds           , 
                                                    trueAirSpeedMetersPerSecond  , 
                                                    altitudeMeanSeaLevelMeters   , 
@@ -228,6 +235,7 @@ class FlightEnvelope(AeroDynamics):
                                                    dragNewtons                   ,
                                                    liftNewtons                   ,
                                                    endOfSimulation)
+        
         
         calibratedAirSpeedKnots = self.atmosphere.tas2cas(tas = trueAirSpeedMetersPerSecond ,
                                                   altitude = altitudeMeanSeaLevelMeters,
@@ -272,6 +280,10 @@ class FlightEnvelope(AeroDynamics):
     def getFlightPathAngleDegrees(self):
         return self.StateVector.getFlightPathAngleDegrees()
 
+    def getElapsedTimeSeconds(self):
+        return self.elapsedTimeSeconds
+    
+    
 
 class Test_Class(unittest.TestCase):
 

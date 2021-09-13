@@ -10,7 +10,6 @@ from ortools.linear_solver import pywraplp
 import numpy as np
 
 
-
 class TestMethods(unittest.TestCase):
 #============================================
     def test_one(self):
