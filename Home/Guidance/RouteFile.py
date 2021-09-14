@@ -81,3 +81,6 @@ class Route(object):
     def getArrivalAirportICAOcode(self):
         return self.arrivalAirportICAOcode
     
+    def getListOfWayPoints(self):
+        return self.listOfWayPointNames
+    

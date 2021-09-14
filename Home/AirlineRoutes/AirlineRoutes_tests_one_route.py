@@ -89,9 +89,9 @@ class TestMethods(unittest.TestCase):
         
         if retOne and retTwo and retThree:
             
-            for ac in airlineFleet.getAirlineAircrafts():
+            for airlineAircraft in airlineFleet.getAirlineAircrafts():
                 
-                acType = ac.getAircraftFullName()
+                acType = airlineAircraft.getAircraftFullName()
                 print ( str(acType).upper() )
                 print (" ---------------- " , str(acType).upper() , " -----------------")
 
@@ -140,15 +140,17 @@ class TestMethods(unittest.TestCase):
                                         
                                     takeOffMassKilograms = acBada.getMaximumMassKilograms()
                                     print ( "TakeOff Mass (kilograms) = {0}".format( ( takeOffMassKilograms ) ) )
-    
+        
                                     finalMassKilograms = flightPath.getAircraftCurrentMassKilograms()
                                     print ( "Final Mass (kilograms) = {0}".format( ( finalMassKilograms ) ) )
-                                    
+                                        
                                     flightDurationSeconds = flightPath.getFlightDurationSeconds()
                                     print ( "Flight Duration (seconds) = {0}".format( ( flightDurationSeconds ) ) )
-                                        
-                                    airlineAircraftRoutesCost = AirlineAircraftRoutesCost(aircraftICAOcode, acBada , route, flightDurationSeconds , takeOffMassKilograms, finalMassKilograms)
+     
+                                    airlineAircraftRoutesCost = AirlineAircraftRoutesCost(airlineAircraft, acBada , route, flightDurationSeconds , takeOffMassKilograms, finalMassKilograms)
                                     #self.airlineAircraftRoutesCosts.append(airlineAircraftRoutesCost)
+   
+                                
                                     
                                 except Exception as e:
                                     print ("-----------> flight was aborted = {0}".format(e))

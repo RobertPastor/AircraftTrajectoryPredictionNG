@@ -156,56 +156,61 @@ class AirlineAircraftRoutesCosts(object):
         if os.path.exists(self.FilePath):
             os.remove(self.FilePath)
             
-        costsHeaders = ["aircraft full name" , "aircraft ICAO code" , "departure Airport", "departure Airport ICAO code" , "arrival Airport", "arrival Airport ICAO code" , "flight duration seconds" , "take-off Mass Kilograms", "massFuelConsumptionKilograms"]
+        costsHeaders = []
+        costsHeaders.append( "aircraft full name" )
+        costsHeaders.append( "aircraft ICAO code" )
+        costsHeaders.append( "departure Airport"  )
+        costsHeaders.append( "departure Airport ICAO code" )
+        costsHeaders.append( "arrival Airport" )
+        costsHeaders.append( "arrival Airport ICAO code" )
+        costsHeaders.append( "flight duration (seconds)" )
+        
+        costsHeaders.append( "total operational costs (dollars)" )
+        
+        costsHeaders.append( "take-off Mass (Kilograms)" )
+        costsHeaders.append( "Fuel Consumption Mass (Kilograms)" )
         costs = []
-        index = 1
+        
         for cost in self.airlineAircraftRoutesCosts:
             assert ( isinstance( cost , AirlineAircraftRoutesCost ) )
             
             costDict = {}
-            costDict[costsHeaders[0]] = cost.getAircraftFullName()
-            
-            if len ( cost.getAircraftICAOcode() ) > 0: 
-                costDict[costsHeaders[1]] = str(cost.getAircraftICAOcode())
-            else:
-                costDict[costsHeaders[1]] = "unknown ICAO code"
+            index = 0
+            costDict[costsHeaders[index]] = cost.getAircraftFullName()
+            index = index + 1
+            costDict[costsHeaders[index]] = str(cost.getAircraftICAOcode())
                 
             airport = airportsDb.getAirportFromICAOCode(cost.getRoute().getDepartureAirportICAOcode())
             assert ( isinstance( airport, Airport) )
-            costDict[costsHeaders[2]] = airport.getName()
-                
-            if len ( cost.getRoute().getDepartureAirportICAOcode() ) > 0: 
-                costDict[costsHeaders[3]] = str(cost.getRoute().getDepartureAirportICAOcode())
-            else:
-                costDict[costsHeaders[3]] = "unknown departure airport ICAO code"
+            index = index + 1
+            costDict[costsHeaders[index]] = airport.getName()
+            
+            index = index + 1
+            costDict[costsHeaders[index]] = str(cost.getRoute().getDepartureAirportICAOcode())
                 
             airport = airportsDb.getAirportFromICAOCode(cost.getRoute().getArrivalAirportICAOcode())
             assert ( isinstance( airport, Airport) )
-            costDict[costsHeaders[4]] = airport.getName()
             
-            if len ( cost.getRoute().getArrivalAirportICAOcode() ) > 0: 
-                costDict[costsHeaders[5]] = str(cost.getRoute().getArrivalAirportICAOcode())
-            else:
-                costDict[costsHeaders[5]] = "unknown arrival airport ICAO code"
+            index = index + 1
+            costDict[costsHeaders[index]] = airport.getName()
+
+            index = index + 1
+            costDict[costsHeaders[index]] = str(cost.getRoute().getArrivalAirportICAOcode())
+
+            index = index + 1    
+            costDict[costsHeaders[index]] = "{0:.2f}".format( cost.getflightDurationSeconds() )
+            
+            index = index + 1    
+            costDict[costsHeaders[index]] = "{0:.2f}".format( ( cost.getflightDurationSeconds() / 3600.0 ) *  cost.getAirlineAircraft().getCostsFlyingPerHoursDollars() )
                 
-            if ( cost.getflightDurationSeconds() > 0.0 ):
-                costDict[costsHeaders[6]] = str(cost.getflightDurationSeconds())
-            else:
-                costDict[costsHeaders[6]] = str(0.0)
+            index = index + 1    
+            costDict[costsHeaders[index]] = "{0:.2f}".format( cost.getTakeOffMassKilograms() )
                 
-            if ( cost.getFuelConsumptionKilograms() > 0.0 ):
-                costDict[costsHeaders[7]] = str(cost.getTakeOffMassKilograms())
-            else:
-                costDict[costsHeaders[7]] = str(0.0)
-                
-            if ( cost.getFuelConsumptionKilograms() > 0.0 ):
-                costDict[costsHeaders[8]] = str(cost.getFuelConsumptionKilograms())
-            else:
-                costDict[costsHeaders[8]] = str(0.0)
+            index = index + 1    
+            costDict[costsHeaders[index]] = "{0:.2f}".format( cost.getFuelConsumptionKilograms() )
             
             costs.append(costDict)
             print ( costDict )
-            index = index + 1
                 
                 
         if ( len ( self.airlineAircraftRoutesCosts ) > 0):
@@ -248,6 +253,8 @@ class AirlineAircraftRoutesCost(object):
         #assert ( type(_finalMassKilograms) == float)
         self.finalMassKilograms = _finalMassKilograms
         
+    def getAirlineAircraft(self):
+        return self.airlineAircraft
         
     def getAircraftFullName(self):
         return self.airlineAircraft.getAircraftFullName()

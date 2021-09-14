@@ -63,7 +63,6 @@ class AirlineAircraft(object):
     def setAircraftICAOcode(self, acICAOcode):
         self.aircraftICAOcode = acICAOcode
     
-    
     def getAircraftICAOcode(self):
         return self.aircraftICAOcode
     
@@ -73,7 +72,6 @@ class AirlineAircraft(object):
     def setTakeOffMTOWLengthMeters(self, lenghtMeters):
         self.takeOffMTOWLengthMeters = lenghtMeters
     
-        
     def getLandingLengthMeters(self):
         return self.landingLengthMeters
     

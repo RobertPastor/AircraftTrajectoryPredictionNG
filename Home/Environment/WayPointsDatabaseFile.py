@@ -32,7 +32,6 @@ import os
 
 from Home.Guidance.WayPointFile import WayPoint
 from xlrd import open_workbook
-import xlsxwriter
 
 fieldNames = ['WayPoint', 'Country' , 'Type', 'Latitude', 'Longitude' , 'Name']
 
