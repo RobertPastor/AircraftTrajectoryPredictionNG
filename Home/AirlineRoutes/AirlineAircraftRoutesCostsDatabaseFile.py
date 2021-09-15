@@ -33,11 +33,33 @@ from Home.Guidance.WayPointFile import Airport
 class AirlineAircraftRoutesCosts(object):
     
     airlineAircraftRoutesCosts = []
+    costsHeaders = []
 
     def __init__(self):
         pass
         self.airlineAircraftRoutesCosts = []
         self.className = self.__class__.__name__
+        
+        self.FileName = "AirlineAircraftRoutesCosts.xls" 
+        self.FilesFolder = os.path.dirname(__file__)
+        print ( self.className + ': file folder= {0}'.format(self.FilesFolder) )
+        self.FilePath = os.path.abspath(self.FilesFolder+ os.path.sep + self.FileName)
+
+        self.sheetName = "costs"
+        
+        self.costsHeaders = []
+        self.costsHeaders.append( "aircraft full name" )
+        self.costsHeaders.append( "aircraft ICAO code" )
+        self.costsHeaders.append( "departure Airport"  )
+        self.costsHeaders.append( "departure Airport ICAO code" )
+        self.costsHeaders.append( "arrival Airport" )
+        self.costsHeaders.append( "arrival Airport ICAO code" )
+        self.costsHeaders.append( "flight duration (seconds)" )
+        
+        self.costsHeaders.append( "total operational costs (dollars)" )
+        
+        self.costsHeaders.append( "take-off Mass (Kilograms)" )
+        self.costsHeaders.append( "Fuel Consumption Mass (Kilograms)" )
 
     
     def build(self):
@@ -145,30 +167,12 @@ class AirlineAircraftRoutesCosts(object):
         airportsDb = AirportsDatabase()
         assert ( airportsDb.read() == True)
         
-        self.FileName = "AirlineAircraftRoutesCosts.xls" 
-        
-        self.FilesFolder = os.path.dirname(__file__)
-
-        print ( self.className + ': file folder= {0}'.format(self.FilesFolder) )
-        self.FilePath = os.path.abspath(self.FilesFolder+ os.path.sep + self.FileName)
         print ( self.className + ': file path= {0}'.format(self.FilePath) ) 
             
         if os.path.exists(self.FilePath):
             os.remove(self.FilePath)
             
-        costsHeaders = []
-        costsHeaders.append( "aircraft full name" )
-        costsHeaders.append( "aircraft ICAO code" )
-        costsHeaders.append( "departure Airport"  )
-        costsHeaders.append( "departure Airport ICAO code" )
-        costsHeaders.append( "arrival Airport" )
-        costsHeaders.append( "arrival Airport ICAO code" )
-        costsHeaders.append( "flight duration (seconds)" )
         
-        costsHeaders.append( "total operational costs (dollars)" )
-        
-        costsHeaders.append( "take-off Mass (Kilograms)" )
-        costsHeaders.append( "Fuel Consumption Mass (Kilograms)" )
         costs = []
         
         for cost in self.airlineAircraftRoutesCosts:
@@ -176,38 +180,38 @@ class AirlineAircraftRoutesCosts(object):
             
             costDict = {}
             index = 0
-            costDict[costsHeaders[index]] = cost.getAircraftFullName()
+            costDict[self.costsHeaders[index]] = cost.getAircraftFullName()
             index = index + 1
-            costDict[costsHeaders[index]] = str(cost.getAircraftICAOcode())
+            costDict[self.costsHeaders[index]] = str(cost.getAircraftICAOcode())
                 
             airport = airportsDb.getAirportFromICAOCode(cost.getRoute().getDepartureAirportICAOcode())
             assert ( isinstance( airport, Airport) )
             index = index + 1
-            costDict[costsHeaders[index]] = airport.getName()
+            costDict[self.costsHeaders[index]] = airport.getName()
             
             index = index + 1
-            costDict[costsHeaders[index]] = str(cost.getRoute().getDepartureAirportICAOcode())
+            costDict[self.costsHeaders[index]] = str(cost.getRoute().getDepartureAirportICAOcode())
                 
             airport = airportsDb.getAirportFromICAOCode(cost.getRoute().getArrivalAirportICAOcode())
             assert ( isinstance( airport, Airport) )
             
             index = index + 1
-            costDict[costsHeaders[index]] = airport.getName()
+            costDict[self.costsHeaders[index]] = airport.getName()
 
             index = index + 1
-            costDict[costsHeaders[index]] = str(cost.getRoute().getArrivalAirportICAOcode())
+            costDict[self.costsHeaders[index]] = str(cost.getRoute().getArrivalAirportICAOcode())
 
             index = index + 1    
-            costDict[costsHeaders[index]] = "{0:.2f}".format( cost.getflightDurationSeconds() )
+            costDict[self.costsHeaders[index]] = "{0:.2f}".format( cost.getflightDurationSeconds() )
             
             index = index + 1    
-            costDict[costsHeaders[index]] = "{0:.2f}".format( ( cost.getflightDurationSeconds() / 3600.0 ) *  cost.getAirlineAircraft().getCostsFlyingPerHoursDollars() )
+            costDict[self.costsHeaders[index]] = "{0:.2f}".format( ( cost.getflightDurationSeconds() / 3600.0 ) *  cost.getAirlineAircraft().getCostsFlyingPerHoursDollars() )
                 
             index = index + 1    
-            costDict[costsHeaders[index]] = "{0:.2f}".format( cost.getTakeOffMassKilograms() )
+            costDict[self.costsHeaders[index]] = "{0:.2f}".format( cost.getTakeOffMassKilograms() )
                 
             index = index + 1    
-            costDict[costsHeaders[index]] = "{0:.2f}".format( cost.getFuelConsumptionKilograms() )
+            costDict[self.costsHeaders[index]] = "{0:.2f}".format( cost.getFuelConsumptionKilograms() )
             
             costs.append(costDict)
             print ( costDict )
@@ -215,10 +219,20 @@ class AirlineAircraftRoutesCosts(object):
                 
         if ( len ( self.airlineAircraftRoutesCosts ) > 0):
             df = pd.DataFrame(costs)
-            df.to_excel(excel_writer=self.FilePath, sheet_name="costs", index = False, columns=costsHeaders)
+            df.to_excel(excel_writer=self.FilePath, sheet_name=self.sheetName, index = False, columns=self.costsHeaders)
+            print ("write to Excel file done")
             return True
         
         return False
+    
+    
+    def read(self):
+        print ( self.FilePath )
+        if os.path.exists(self.FilePath):
+            df = pd.DataFrame(pd.read_excel(self.FilePath, sheet_name=self.sheetName, names=self.costsHeaders))
+            return  ( df.shape[0] > 0 )
+        else:
+            return 0
 
 
 class AirlineAircraftRoutesCost(object):

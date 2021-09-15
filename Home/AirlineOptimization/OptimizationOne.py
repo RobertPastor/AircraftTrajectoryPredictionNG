@@ -9,6 +9,9 @@ import unittest
 from ortools.linear_solver import pywraplp
 import numpy as np
 
+from Home.AirlineRoutes.AirlineAircraftRoutesCostsDatabaseFile import AirlineAircraftRoutesCosts
+
+
 
 class TestMethods(unittest.TestCase):
 #============================================
@@ -18,6 +21,10 @@ class TestMethods(unittest.TestCase):
         
         # Create the MIP solver with the SCIP backend.
         solver = pywraplp.Solver.CreateSolver('SCIP')
+        
+        airlineAircraftRoutesCosts = AirlineAircraftRoutesCosts()
+        retOne = airlineAircraftRoutesCosts.read()
+        self.assertTrue( retOne )
         
         costs = [
                 [90, 80, 75, 70],
