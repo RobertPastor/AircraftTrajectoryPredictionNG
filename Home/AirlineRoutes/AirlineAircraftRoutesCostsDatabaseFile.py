@@ -230,6 +230,16 @@ class AirlineAircraftRoutesCosts(object):
         print ( self.FilePath )
         if os.path.exists(self.FilePath):
             df = pd.DataFrame(pd.read_excel(self.FilePath, sheet_name=self.sheetName, names=self.costsHeaders))
+            for row in df:
+                print ( row )
+            print ( df.shape )
+            temp = ""
+            for index in range(len(df)):
+                temp += df[self.costsHeaders[0]].iloc[index] 
+                temp += " - " + df[self.costsHeaders[1]].iloc[index] 
+                temp += " - " + df[self.costsHeaders[2]].iloc[index]
+                temp += "\n"
+            print ( temp )
             return  ( df.shape[0] > 0 )
         else:
             return 0
