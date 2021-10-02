@@ -21,8 +21,6 @@ HeaderNames = ['Aircraft' , 'In service', 'Orders' , 'Passengers Delta One', 'Pa
                'Passengers Delta Confort Plus' , 'Passengers Main Cabin' , 'Passengers Total' , 'Costs per flying hours dollars', 'Refs', 'Notes']
 
 
-
-
 class AirlineAircraft(object):
     
     aircraftFullName = ""
@@ -43,6 +41,8 @@ class AirlineAircraft(object):
         self.landingLengthMeters = 0.0
         self.takeOffMTOWLengthMeters = 0.0
         
+    def __str__(self):
+        return "{0}-{1}".format(self.aircraftFullName, self.aircraftICAOcode)
         
     def hasICAOcode(self):
         return ( len ( self.aircraftICAOcode ) > 0 )

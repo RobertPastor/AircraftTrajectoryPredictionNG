@@ -172,7 +172,6 @@ class AirlineAircraftRoutesCosts(object):
         if os.path.exists(self.FilePath):
             os.remove(self.FilePath)
             
-        
         costs = []
         
         for cost in self.airlineAircraftRoutesCosts:
@@ -216,7 +215,6 @@ class AirlineAircraftRoutesCosts(object):
             costs.append(costDict)
             print ( costDict )
                 
-                
         if ( len ( self.airlineAircraftRoutesCosts ) > 0):
             df = pd.DataFrame(costs)
             df.to_excel(excel_writer=self.FilePath, sheet_name=self.sheetName, index = False, columns=self.costsHeaders)
@@ -227,22 +225,29 @@ class AirlineAircraftRoutesCosts(object):
     
     
     def read(self):
+        ''' returns a numpy array '''
         print ( self.FilePath )
         if os.path.exists(self.FilePath):
             df = pd.DataFrame(pd.read_excel(self.FilePath, sheet_name=self.sheetName, names=self.costsHeaders))
             for row in df:
                 print ( row )
-            print ( df.shape )
+            print ( "data frame shape = {0}".format(df.shape) )
             temp = ""
             for index in range(len(df)):
                 temp += df[self.costsHeaders[0]].iloc[index] 
                 temp += " - " + df[self.costsHeaders[1]].iloc[index] 
                 temp += " - " + df[self.costsHeaders[2]].iloc[index]
+                temp += " - " + df[self.costsHeaders[3]].iloc[index]
+                temp += " - " + df[self.costsHeaders[4]].iloc[index]
+                temp += " - " + df[self.costsHeaders[5]].iloc[index]
+                temp += " - " + str ( df[self.costsHeaders[6]].iloc[index] )
+                temp += " - " + str ( df[self.costsHeaders[7]].iloc[index] )
                 temp += "\n"
             print ( temp )
-            return  ( df.shape[0] > 0 )
+            print  ( df.shape[0] > 0 )
+            return df.to_numpy()
         else:
-            return 0
+            return None
 
 
 class AirlineAircraftRoutesCost(object):
