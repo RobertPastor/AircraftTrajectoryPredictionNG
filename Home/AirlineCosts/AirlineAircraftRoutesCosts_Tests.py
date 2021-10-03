@@ -9,7 +9,7 @@ compute potential costs for each fleet aircraft for each route
 import time
 import unittest
 
-from Home.AirlineRoutes.AirlineAircraftRoutesCostsFile import AirlineAircraftRoutesCosts
+from Home.AirlineCosts.AirlineAircraftRoutesCostsDatabaseFile import AirlineAircraftRoutesCosts
 
 class TestMethods(unittest.TestCase):
 #============================================

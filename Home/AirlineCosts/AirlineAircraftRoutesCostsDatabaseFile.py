@@ -54,8 +54,10 @@ class AirlineAircraftRoutesCosts(object):
         self.costsHeaders.append( "departure Airport ICAO code" )
         self.costsHeaders.append( "arrival Airport" )
         self.costsHeaders.append( "arrival Airport ICAO code" )
-        self.costsHeaders.append( "flight duration (seconds)" )
         
+        self.costsHeaders.append( "flight duration (seconds)" )
+        self.costsHeaders.append( "Flight Duration (Decimal Hours)" )
+
         self.costsHeaders.append( "total operational costs (dollars)" )
         
         self.costsHeaders.append( "take-off Mass (Kilograms)" )
@@ -84,12 +86,13 @@ class AirlineAircraftRoutesCosts(object):
         airlineRoutes = AirlineRoutes()
         for route in airlineRoutes.getRoutes():
             
+            ''' loop though all the routes '''
             assert( isinstance(route,Route) == True)
             
             print ( route.getRouteAsString() )
             
             for airlineAircraft in airlineFleet.getAirlineAircrafts():
-                
+                ''' loop through all the aircrafts with an ICAO code ''' 
                 if ( airlineAircraft.hasICAOcode() ):
                     
                     aircraftICAOcode = airlineAircraft.getAircraftICAOcode()
@@ -180,11 +183,13 @@ class AirlineAircraftRoutesCosts(object):
             costDict = {}
             index = 0
             costDict[self.costsHeaders[index]] = cost.getAircraftFullName()
+            
             index = index + 1
             costDict[self.costsHeaders[index]] = str(cost.getAircraftICAOcode())
                 
             airport = airportsDb.getAirportFromICAOCode(cost.getRoute().getDepartureAirportICAOcode())
             assert ( isinstance( airport, Airport) )
+            
             index = index + 1
             costDict[self.costsHeaders[index]] = airport.getName()
             
@@ -204,6 +209,10 @@ class AirlineAircraftRoutesCosts(object):
             costDict[self.costsHeaders[index]] = "{0:.2f}".format( cost.getflightDurationSeconds() )
             
             index = index + 1    
+            ''' flight duration hours '''
+            costDict[self.costsHeaders[index]] = "{0:.2f}".format( cost.getflightDurationSeconds() / 3600.0 )
+
+            index = index + 1    
             costDict[self.costsHeaders[index]] = "{0:.2f}".format( ( cost.getflightDurationSeconds() / 3600.0 ) *  cost.getAirlineAircraft().getCostsFlyingPerHoursDollars() )
                 
             index = index + 1    
@@ -211,9 +220,10 @@ class AirlineAircraftRoutesCosts(object):
                 
             index = index + 1    
             costDict[self.costsHeaders[index]] = "{0:.2f}".format( cost.getFuelConsumptionKilograms() )
-            
+
             costs.append(costDict)
             print ( costDict )
+                
                 
         if ( len ( self.airlineAircraftRoutesCosts ) > 0):
             df = pd.DataFrame(costs)

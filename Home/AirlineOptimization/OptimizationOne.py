@@ -9,7 +9,7 @@ import unittest
 from ortools.linear_solver import pywraplp
 import numpy as np
 
-from Home.AirlineRoutes.AirlineAircraftRoutesCostsDatabaseFile import AirlineAircraftRoutesCosts
+from Home.AirlineCosts.AirlineAircraftRoutesCostsDatabaseFile import AirlineAircraftRoutesCosts
 from Home.AirlineRoutes.AirlineRoutesAirportsReader import AirlineRoutesAirportsDataBase
 
 from Home.AirlineFleet.AirlineFleetReader import AirlineFleetDataBase
@@ -63,13 +63,14 @@ class TestMethods(unittest.TestCase):
         print ( airlineCosts_np_array )
         self.assertTrue( airlineCosts_np_array is not None )
         
-        
         print ("------------- airline routes airports OR flight legs --------------")
         for route in airlineRoutesAirports.getDepartureArrivalAirportICAOcode():
             print (route)
             
         ''' create the costs table '''
         costs = []
+        kerosene_kilo_to_US_gallons = 0.33
+        US_gallon_to_US_dollars = 3.25
         for airlineAircraft in airlineFleet.getAirlineAircrafts():
             if ( airlineAircraft.hasICAOcode() ):
                 aircraftCosts = []
@@ -79,22 +80,18 @@ class TestMethods(unittest.TestCase):
                     for airlineCost in airlineCosts_np_array:
                         #print ("=== airline cost ===")
                         #print ( airlineCost[1] , airlineCost[3] , airlineCost[5] )
+                        # airline cost [1] = ICAO code
                         if ( airlineCost[1] == airlineAircraft.getAircraftICAOcode() ) and ( airlineCost[3] == route[0] )  and ( airlineCost[5] == route[1] ):
-                            print ( "{0}-{1}-{2}-{3}".format(airlineAircraft.getAircraftICAOcode(), route[0], route[1], airlineCost[7] ))
-                            aircraftCosts.append( airlineCost[7])
+                            ''' airline cost [3] = departure airport ICAO code '''
+                            ''' airline cost [5] = arrival airport ICAO code '''
+                            ''' airlineCost[7] -> operational costs in dollars '''
+                            print ( "{0}-{1}-{2}-{3}".format(airlineAircraft.getAircraftICAOcode(), route[0], route[1], airlineCost[8] ))
+                            aircraftCosts.append( airlineCost[8] + airlineCost[10] * kerosene_kilo_to_US_gallons * US_gallon_to_US_dollars)
                 print ( aircraftCosts )
                 costs.append(aircraftCosts)
                 
         print ( costs )
         
-        ''' costs = [
-                [90, 80, 75, 70],
-                [35, 85, 55, 65],
-                [125, 95, 90, 95],
-                [45, 110, 95, 115],
-                [50, 100, 90, 100],
-            ]
-        '''
         num_aircrafts = len(costs)
         print (" number of aircrafts = {0}".format(num_aircrafts))
         num_flight_legs = len(costs[0])

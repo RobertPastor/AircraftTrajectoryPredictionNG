@@ -7,7 +7,7 @@ Created on 4 sept. 2021
 import time
 import unittest
 
-from Home.AirlineRoutes.AirlineWayPointsDatabase import AirlineWayPointsDatabase
+from Home.AirlineWayPoints.AirlineWayPointsDatabase import AirlineWayPointsDatabase
 from Home.AirlineRoutes.AirlineRoutes import AirlineRoutes
 from Home.Guidance.RouteFile import Route
 

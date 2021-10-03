@@ -28,6 +28,12 @@ Ades = "KMSP" # Minneapolie
 Adep = "KBOS"
 Ades = "KATL"
 
+Adep = "KIAH"
+Ades = "KORD"
+
+Adep = "KIAD"
+Ades = "KSFO"
+
 routeDict = {}
 routeDict["Adep"] = Adep
 routeDict["Ades"] = Ades
@@ -40,6 +46,8 @@ class Test_Main(unittest.TestCase):
         print ( "=========== Route Finder start  =========== " + time.strftime("%c") )
         wayPointsDb = WayPointsDatabase()
         assert ( wayPointsDb.read() )
+        
+        print ("Departure = {0} - arrivale = {1}".format(Adep, Ades))
     
         print ( "=========== Route Finder start  =========== " + time.strftime("%c") )
     
