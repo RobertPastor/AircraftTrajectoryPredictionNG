@@ -11,7 +11,7 @@ import time
 import unittest
 
 from Home.AirlineRoutes.AirlineRoutes import AirlineRoutes
-from Home.AirlineRoutes.AirlineAircraftRoutesCostsDatabaseFile import AirlineAircraftRoutesCost
+from Home.AirlineCosts.AirlineAircraftRoutesCostsDatabaseFile import AirlineAircraftRoutesCost
 from Home.Guidance.RouteFile import Route
 from Home.AirlineFleet.AirlineFleetReader import AirlineFleetDataBase
 
@@ -148,7 +148,7 @@ class TestMethods(unittest.TestCase):
                                     print ( "Flight Duration (seconds) = {0}".format( ( flightDurationSeconds ) ) )
      
                                     airlineAircraftRoutesCost = AirlineAircraftRoutesCost(airlineAircraft, acBada , route, flightDurationSeconds , takeOffMassKilograms, finalMassKilograms)
-                                    #self.airlineAircraftRoutesCosts.append(airlineAircraftRoutesCost)
+                                    self.airlineAircraftRoutesCosts.append(airlineAircraftRoutesCost)
    
                                 
                                     
