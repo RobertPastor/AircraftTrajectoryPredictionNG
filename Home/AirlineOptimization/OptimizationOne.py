@@ -193,9 +193,8 @@ class TestMethods(unittest.TestCase):
         for route in airlineRoutesAirports.getDepartureArrivalAirportICAOcode():
             print (route)
             
-        ''' create the costs table '''
+        print ( " ----------- create the costs table ------------------ ")
         costs = []
-        
         
         for airlineAircraft in airlineFleet.getAirlineAircrafts():
             if ( airlineAircraft.hasICAOcode() ):
@@ -220,6 +219,7 @@ class TestMethods(unittest.TestCase):
         
         num_aircrafts = len(costs)
         print (" number of aircrafts = {0}".format(num_aircrafts))
+        
         num_flight_legs = len(costs[0])
         print (" number of flight legs = {0}".format(num_flight_legs))
 

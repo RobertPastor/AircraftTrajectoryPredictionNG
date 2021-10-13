@@ -34,6 +34,9 @@ class AirlineRoute(object):
     def getArrivalAirportICAOcode(self):
         return self.arrivalAirportICAOcode
     
+    def __str__(self):
+        return "departure airport= {0} - arrival airport= {1}".format(self.departureAirportICAOcode, self.arrivalAirportICAOcode)
+    
 
 class AirlineRoutesAirportsDataBase(object):
     FilePath = ''
@@ -100,14 +103,14 @@ class AirlineRoutesAirportsDataBase(object):
             print ( route )
     
     
-    def getDepartureArrivalAirportICAOcode(self):
-        for route in self.RoutesAirports:
-            yield route[HeaderNames[1]] , route[HeaderNames[3]]
+    #def getDepartureArrivalAirportICAOcode(self):
+    #    for route in self.RoutesAirports:
+    #        yield route[HeaderNames[1]] , route[HeaderNames[3]]
             
             
     def getRoutes(self):
         for route in self.RoutesAirports:
-            airlineRoute = AirlineRoute()
+            airlineRoute = AirlineRoute(route[HeaderNames[1]], route[HeaderNames[3]])
             airlineRoute.setRoute(route)
             yield airlineRoute
     

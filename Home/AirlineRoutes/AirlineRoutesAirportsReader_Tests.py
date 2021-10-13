@@ -7,6 +7,7 @@ import time
 import unittest
 
 from Home.AirlineRoutes.AirlineRoutesAirportsReader import AirlineRoutesAirportsDataBase
+from Home.AirlineRoutes.AirlineRoutesAirportsReader import AirlineRoute
 from Home.Environment.AirportDatabaseFile import AirportsDatabase
 
 from Home.Guidance.WayPointFile import Airport
@@ -51,11 +52,12 @@ class TestMethods(unittest.TestCase):
                         print ( "--> found -> {0} --> name = {1}".format( airport.getICAOcode() , airport.getName()) )
             
             
-            for route in routesAirports.getDepartureArrivalAirportICAOcode():
+            for route in routesAirports.getRoutes():
                 print ( route )
-                departureAirport = airportsDb.getAirportFromICAOCode(route[0])
+                self.assertTrue( isinstance( route, AirlineRoute ) )
+                departureAirport = airportsDb.getAirportFromICAOCode(route.getDepartureAirportICAOcode())
                 print ( departureAirport )
-                arrivalAirport = airportsDb.getAirportFromICAOCode(route[1])
+                arrivalAirport = airportsDb.getAirportFromICAOCode(route.getArrivalAirportICAOcode())
                 print ( arrivalAirport )
                 
                 distanceMeters = departureAirport.getDistanceMetersTo(arrivalAirport)
@@ -63,6 +65,25 @@ class TestMethods(unittest.TestCase):
                 print ( "distance from {0} - to {1} - dist = {2} nautical miles".format(departureAirport.getICAOcode() , arrivalAirport.getICAOcode() , distanceMeters*Meter2NauticalMiles))
         
         
+    def test_two(self):
+    
+        t0 = time.clock()
+        print ( '================ test one =================' )
+        
+        airlineRoutesAirportsDataBase = AirlineRoutesAirportsDataBase()
+        ret = airlineRoutesAirportsDataBase.read()
+        self.assertTrue (ret)
+        t1 = time.clock()
+        print ( 'duration= {0} seconds'.format(t1-t0) )
+        
+        if ret:
+            print ("--> airline routes read correctly ")
+        
+        print ("------------- airline routes airports OR flight legs --------------")
+        for route in airlineRoutesAirportsDataBase.getRoutes():
+            print (route)
+
+
         
 if __name__ == '__main__':
     unittest.main()
