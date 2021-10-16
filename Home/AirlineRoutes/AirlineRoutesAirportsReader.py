@@ -19,7 +19,6 @@ class AirlineRoute(object):
         self.departureAirportICAOcode = _departureAirportICAOcode
         self.arrivalAirportICAOcode = _arrivalAirportICAOcode
         
-        
     def setRoute(self, route):
         assert ( type(route) is dict )
         assert ( "Departure Airport ICAO Code" in route.keys())
@@ -27,12 +26,14 @@ class AirlineRoute(object):
         self.departureAirportICAOcode =  route["Departure Airport ICAO Code"]
         self.arrivalAirportICAOcode =  route["Arrival Airport ICAO Code"]
         
-        
     def getDepartureAirportICAOcode(self):
         return self.departureAirportICAOcode
     
     def getArrivalAirportICAOcode(self):
         return self.arrivalAirportICAOcode
+    
+    def getFlightLegAsString (self):
+        return self.departureAirportICAOcode + "-" + self.arrivalAirportICAOcode
     
     def __str__(self):
         return "departure airport= {0} - arrival airport= {1}".format(self.departureAirportICAOcode, self.arrivalAirportICAOcode)
@@ -69,7 +70,7 @@ class AirlineRoutesAirportsDataBase(object):
         self.sheet = book.sheet_by_index(0)
         print ( 'Sheet contains - number of rows = {0}'.format(self.sheet.nrows))
         for row in range(self.sheet.nrows):
-            print ( '--> row --> {0}'.format(row) )
+            #print ( '--> row --> {0}'.format(row) )
             rowValues = self.sheet.row_values(row, start_colx=0, end_colx=self.sheet.ncols)
             if row == 0:
                 self.ColumnNames = {}
@@ -89,7 +90,7 @@ class AirlineRoutesAirportsDataBase(object):
                 for cell in rowValues:
                     
                     if len(str(cell))>0:
-                        print ( str(cell) )
+                        #print ( str(cell) )
                         route[HeaderNames[index]] = str(cell)
                         
                     index = index + 1
@@ -112,6 +113,7 @@ class AirlineRoutesAirportsDataBase(object):
         for route in self.RoutesAirports:
             airlineRoute = AirlineRoute(route[HeaderNames[1]], route[HeaderNames[3]])
             airlineRoute.setRoute(route)
+            #print (route)
             yield airlineRoute
     
     

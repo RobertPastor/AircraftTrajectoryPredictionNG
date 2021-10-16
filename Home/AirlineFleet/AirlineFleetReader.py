@@ -108,9 +108,9 @@ class AirlineFleetDataBase(object):
         book = open_workbook(self.FilePath, formatting_info=True)
         ''' assert there is only one sheet '''
         self.sheet = book.sheet_by_index(0)
-        print ( 'Sheet contains - number of rows = {0}'.format(self.sheet.nrows))
+        #print ( 'Sheet contains - number of rows = {0}'.format(self.sheet.nrows))
         for row in range(self.sheet.nrows):
-            print ( '--> row --> {0}'.format(row) )
+            #print ( '--> row --> {0}'.format(row) )
             rowValues = self.sheet.row_values(row, start_colx=0, end_colx=self.sheet.ncols)
             if row == 0:
                 self.ColumnNames = {}
@@ -133,26 +133,26 @@ class AirlineFleetDataBase(object):
                 for cell in rowValues:
                     if index == 0:
                         if len(str(cell))>0:
-                            print ( cell )
+                            #print ( cell )
                             aircraftFullName = str(cell).strip()
                         index = index + 1
                     else:
                         if (HeaderNames[index] == "In service"):
                             if len (str(cell).strip()) > 0 :
-                                print ( str(cell).strip() )
-                                print ( type ( str(cell).strip() ) )
+                                #print ( str(cell).strip() )
+                                #print ( type ( str(cell).strip() ) )
                                 nbAvailableAircrafts = float(str(cell).strip())
                                 nbAvailableAircrafts = int ( nbAvailableAircrafts )
                             
                         if (HeaderNames[index] == "Passengers Total"):
                             if len (str(cell).strip()) > 0 :
-                                print ( str(cell).strip() )
+                                #print ( str(cell).strip() )
                                 nbMaxPassengers = float(str(cell).strip())
                                 nbMaxPassengers = int ( nbMaxPassengers )
 
                         if (HeaderNames[index] == "Costs per flying hours dollars"):
                             if len (str(cell).strip()) > 0 :
-                                print ( cell )
+                                #print ( cell )
                                 assert ( type (str(cell).strip() == float ))
                                 costsFlyingDollars = float( str(cell).strip() )
                             
@@ -195,8 +195,8 @@ class AirlineFleetDataBase(object):
                 assert( isinstance( airlineAircraft, AirlineAircraft ) )
                 
                 acType = airlineAircraft.getAircraftFullName()
-                print ( str(acType).upper() )
-                print (" ---------------- " , str(acType).upper() , " -----------------")
+                #print ( str(acType).upper() )
+                #print (" ---------------- " , str(acType).upper() , " -----------------")
 
                 for aircraftICAOcode in acBd.getAircraftICAOcodes():
                     ''' check if ac full name found in BADA database '''
@@ -205,25 +205,25 @@ class AirlineFleetDataBase(object):
                         if ( acBd.aircraftExists(aircraftICAOcode) 
                              and acBd.aircraftPerformanceFileExists(aircraftICAOcode)):
                             
-                            print (" ---------------- " , str(acType).upper() , " -----------------")
-                            print ( 'FOUND -> aircraft full name = {0} -- aircraft ICAO code = {1}'.format( acType , aircraftICAOcode  ) )
-                            print (" ---------------- " , str(acType).upper() , " -----------------")
+                            print (self.className + " ---------------- " , str(acType).upper() , " -----------------")
+                            print (self.className + ' FOUND -> aircraft full name = {0} -- aircraft ICAO code = {1}'.format( acType , aircraftICAOcode  ) )
+                            print (self.className + " ---------------- " , str(acType).upper() , " -----------------")
 
                             ac = BadaAircraft(ICAOcode = aircraftICAOcode , 
                                               aircraftFullName = acBd.getAircraftFullName(aircraftICAOcode), 
                                               badaPerformanceFilePath =  acBd.getAircraftPerformanceFile(aircraftICAOcode),
                                       atmosphere = atmosphere, earth = earth)
                             if (ac is None) == False:
-                                print ( "Landing length meters = {0}".format(ac.getLandingLengthMeters()) )
-                                print ( "Take-off length meters = {0}".format(ac.getTakeOffLengthMeters()) )
+                                print (self.className +  "Landing length meters = {0}".format(ac.getLandingLengthMeters()) )
+                                print (self.className +  "Take-off length meters = {0}".format(ac.getTakeOffLengthMeters()) )
                                 airlineAircraft.setAircraftICAOcode(aircraftICAOcode)
                                 airlineAircraft.setLandingLengthMeters(ac.getLandingLengthMeters())
                                 airlineAircraft.setTakeOffMTOWLengthMeters(ac.getTakeOffLengthMeters())
                                 
                         else:
-                            print (" ---------------- " , str(acType).upper() , " -----------------")
-                            print ( 'NOT FOUND -> aircraft full name = {0} -- aircraft ICAO code = {1}'.format( acType , aircraftICAOcode  ) )
-                            print (" ---------------- " , str(acType).upper() , " -----------------")
+                            print (self.className + " ---------------- " , str(acType).upper() , " -----------------")
+                            print (self.className + ' NOT FOUND -> aircraft full name = {0} -- aircraft ICAO code = {1}'.format( acType , aircraftICAOcode  ) )
+                            print (self.className + " ---------------- " , str(acType).upper() , " -----------------")
                      
                     
             return True

@@ -239,11 +239,12 @@ class AirlineAircraftRoutesCosts(object):
         print ( self.FilePath )
         if os.path.exists(self.FilePath):
             df = pd.DataFrame(pd.read_excel(self.FilePath, sheet_name=self.sheetName, names=self.costsHeaders))
-            for row in df:
-                print ( row )
-            print ( "data frame shape = {0}".format(df.shape) )
+            #for row in df:
+                #pass
+                #print ( row )
+            #print ( "data frame shape = {0}".format(df.shape) )
             temp = ""
-            for index in range(len(df)):
+            '''for index in range(len(df)):
                 temp += df[self.costsHeaders[0]].iloc[index] 
                 temp += " - " + df[self.costsHeaders[1]].iloc[index] 
                 temp += " - " + df[self.costsHeaders[2]].iloc[index]
@@ -252,13 +253,31 @@ class AirlineAircraftRoutesCosts(object):
                 temp += " - " + df[self.costsHeaders[5]].iloc[index]
                 temp += " - " + str ( df[self.costsHeaders[6]].iloc[index] )
                 temp += " - " + str ( df[self.costsHeaders[7]].iloc[index] )
-                temp += "\n"
-            print ( temp )
-            print  ( df.shape[0] > 0 )
+                temp += "\n" '''
+            #print ( temp )
+            #print  ( df.shape[0] > 0 )
             return df.to_numpy()
         else:
             return None
+        
+    def getFlightLegDurationInHours(self, aircraftICAOcode, departureAirportICAOcode, arrivalAirportICAOcode ):
+        #print (aircraftICAOcode , departureAirportICAOcode , arrivalAirportICAOcode)
+        
+        durationHours = 0.0
 
+        if os.path.exists(self.FilePath):
+            df = pd.DataFrame(pd.read_excel(self.FilePath, sheet_name=self.sheetName, names=self.costsHeaders))
+            np_array = df.to_numpy()
+            for row in np_array:
+                #print ( "--- numpy array row = {0}".format(row) )
+                
+                if ( row[1] == aircraftICAOcode and \
+                     row[3] == departureAirportICAOcode and \
+                     row[5] == arrivalAirportICAOcode):
+                    durationHours = row[7]
+        
+        return durationHours
+                
 
 class AirlineAircraftRoutesCost(object):
     
@@ -306,6 +325,9 @@ class AirlineAircraftRoutesCost(object):
     
     def getflightDurationSeconds(self):
         return self.flightDurationSeconds
+    
+    def getflightDurationHours(self):
+        return self.flightDurationSeconds / 3600.0
     
     def getTakeOffMassKilograms(self):
         return self.takeOffMassKilograms
