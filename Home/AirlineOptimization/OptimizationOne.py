@@ -21,9 +21,6 @@ US_gallon_to_US_dollars = 3.25
 class TestMethods(unittest.TestCase):
 #============================================
 
-
-
-
     def test_two(self):
     
         t0 = time.clock()
@@ -95,7 +92,7 @@ class TestMethods(unittest.TestCase):
                             ''' airline cost [5] = arrival airport ICAO code '''
                             ''' airlineCost[7] -> operational costs in dollars '''
                             print ( "{0}-{1}-{2}-{3}".format(airlineAircraft.getAircraftICAOcode(), route.getDepartureAirportICAOcode(), route.getArrivalAirportICAOcode(), airlineCost[8] ))
-                            aircraftCosts.append( airlineCost[8] + airlineCost[10] * kerosene_kilo_to_US_gallons * US_gallon_to_US_dollars)
+                            aircraftCosts.append( airlineCost[8] + airlineCost[10] * kerosene_kilo_to_US_gallons * US_gallon_to_US_dollars )
                 print ( aircraftCosts )
                 costs.append(aircraftCosts)
                 

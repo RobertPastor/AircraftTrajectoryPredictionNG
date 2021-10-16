@@ -30,6 +30,9 @@ from Home.BadaAircraftPerformance.BadaAircraftPerformanceFile import AircraftPer
 from Home.Environment.AirportDatabaseFile import AirportsDatabase
 from Home.Guidance.WayPointFile import Airport
 
+kerosene_kilo_to_US_gallons = 0.33
+US_gallon_to_US_dollars = 3.25
+
 class AirlineAircraftRoutesCosts(object):
     
     airlineAircraftRoutesCosts = []
@@ -48,20 +51,22 @@ class AirlineAircraftRoutesCosts(object):
         self.sheetName = "costs"
         
         self.costsHeaders = []
-        self.costsHeaders.append( "aircraft full name" )
-        self.costsHeaders.append( "aircraft ICAO code" )
-        self.costsHeaders.append( "departure Airport"  )
-        self.costsHeaders.append( "departure Airport ICAO code" )
-        self.costsHeaders.append( "arrival Airport" )
-        self.costsHeaders.append( "arrival Airport ICAO code" )
+        self.costsHeaders.append( "Aircraft full name" )
+        self.costsHeaders.append( "Aircraft ICAO code" )
+        self.costsHeaders.append( "Departure Airport"  )
+        self.costsHeaders.append( "Departure Airport ICAO code" )
+        self.costsHeaders.append( "Arrival Airport" )
+        self.costsHeaders.append( "Arrival Airport ICAO code" )
         
-        self.costsHeaders.append( "flight duration (seconds)" )
+        self.costsHeaders.append( "Flight duration (seconds)" )
         self.costsHeaders.append( "Flight Duration (Decimal Hours)" )
 
-        self.costsHeaders.append( "total operational costs (dollars)" )
+        self.costsHeaders.append( "Operational costs (US dollars)" )
         
         self.costsHeaders.append( "take-off Mass (Kilograms)" )
         self.costsHeaders.append( "Fuel Consumption Mass (Kilograms)" )
+        self.costsHeaders.append( "Fuel costs (US dollars)" )
+        self.costsHeaders.append( "Operational plus fuel costs (US dollars)" )
 
     
     def build(self):
@@ -213,14 +218,26 @@ class AirlineAircraftRoutesCosts(object):
             costDict[self.costsHeaders[index]] = "{0:.2f}".format( cost.getflightDurationSeconds() / 3600.0 )
 
             index = index + 1    
-            costDict[self.costsHeaders[index]] = "{0:.2f}".format( ( cost.getflightDurationSeconds() / 3600.0 ) *  cost.getAirlineAircraft().getCostsFlyingPerHoursDollars() )
+            ''' total operational costs '''
+            operationalCostsUSdollars = ( cost.getflightDurationSeconds() / 3600.0 ) *  cost.getAirlineAircraft().getCostsFlyingPerHoursDollars()
+            costDict[self.costsHeaders[index]] = "{0:.2f}".format( operationalCostsUSdollars )
                 
             index = index + 1    
             costDict[self.costsHeaders[index]] = "{0:.2f}".format( cost.getTakeOffMassKilograms() )
                 
             index = index + 1    
             costDict[self.costsHeaders[index]] = "{0:.2f}".format( cost.getFuelConsumptionKilograms() )
+            
+            index = index +1
+            ''' fuel kerosene costs '''
+            fuelCostsUSdollars =  ( cost.getFuelConsumptionKilograms() * kerosene_kilo_to_US_gallons * US_gallon_to_US_dollars )
+            costDict[self.costsHeaders[index]] = "{0:.2f}".format( fuelCostsUSdollars )
 
+            index = index +1
+            ''' total costs = operational + kerosene costs '''
+            operationalPlusFuelCostsUSdollars = operationalCostsUSdollars + ( cost.getFuelConsumptionKilograms() * kerosene_kilo_to_US_gallons * US_gallon_to_US_dollars )
+            costDict[self.costsHeaders[index]] = "{0:.2f}".format( operationalPlusFuelCostsUSdollars )
+            
             costs.append(costDict)
             print ( costDict )
                 
@@ -331,7 +348,6 @@ class AirlineAircraftRoutesCost(object):
     
     def getTakeOffMassKilograms(self):
         return self.takeOffMassKilograms
-
     
     def getFuelConsumptionKilograms(self):
         return self.takeOffMassKilograms - self.finalMassKilograms
