@@ -105,6 +105,10 @@ class TestMethods(unittest.TestCase):
         
         num_flight_legs = len(costs[0])
         print (" number of flight legs = {0}".format(num_flight_legs))
+        
+        xnum_flight_legs = len(airlineFlightLegsList)
+        print (" another number of flight legs = {0}".format(xnum_flight_legs))
+
 
         '''  x[i, j] is an array of 0-1 variables, which will be 1 '''
         '''  if worker i is assigned to task j. '''

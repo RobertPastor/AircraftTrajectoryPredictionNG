@@ -262,10 +262,18 @@ class AirlineFleetDataBase(object):
         for aircraft in self.FleetAircraftTypes:
             print ( 'fleet aircraft type -> {0}'.format( aircraft ))
                 
-                
     def getAirlineAircrafts(self):
-        for aircraft in self.FleetAircrafts:
-            yield aircraft
+        for airlineAircraft in self.FleetAircrafts:
+            assert( isinstance( airlineAircraft, AirlineAircraft ) )
+            yield airlineAircraft
             
+    def getAircraftNumberOfInstances(self, aircraftICAOcode):
+        nbAvailable = 0
+        for airlineAircraft in self.FleetAircrafts:
+            assert( isinstance( airlineAircraft, AirlineAircraft ) )
+            if ( airlineAircraft.getAircraftICAOcode() == aircraftICAOcode ):
+                nbAvailable = airlineAircraft.getNumberOfAircraftInstances()
+                
+        return nbAvailable
     
         
