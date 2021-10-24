@@ -125,6 +125,7 @@ class TestMethods(unittest.TestCase):
         for j in range(num_flight_legs):
             solver.Add(solver.Sum([x[i, j] for i in range(num_aircrafts)]) == 1)
 
+        ''' --------- objective --------------'''
         objective_terms = []
         for i in range(num_aircrafts):
             for j in range(num_flight_legs):

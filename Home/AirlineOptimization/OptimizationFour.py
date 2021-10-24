@@ -122,13 +122,14 @@ class TestMethods(unittest.TestCase):
             #print ( i )
             dailyHoursMinutes.append( t )
             
-        departureTime = []
-        for t in range(dailyMinutesSpan):
-            departureTime.append(t)
+        departureTime = {}
+        for k in range(len(airlineAircraftICAOcodeList)):
+            ''' 0800 - 800 means 8 o'clock '''
+            departureTime[k] = 800
             
-        arrivalTime = []
-        for t in range(dailyMinutesSpan):
-            arrivalTime.append(t)
+        arrivalTime = {}
+        for k in range(len(airlineAircraftICAOcodeList)):
+            arrivalTime[k] = 1300
             
         print ("-----------airline routes costs---------")
 
@@ -195,12 +196,30 @@ class TestMethods(unittest.TestCase):
             print ("Number of available aircrafts for aircraft ICAO code= {0} - nb instances = {1}".format( aircraftICAOcode , nbAircraftsAvailable ) ) 
 
 
+        ''' ------------- departure time of each flight leg -------- '''
+        for l in range(len(flightLegsList)):
+            
+
+
         ''' derived sets to be completed '''
         ''' nodes[k,i] set of times '''
         nodes = {}
         for k in range(len(airlineAircraftICAOcodeList)):
             for i in range(len(listOfCities)):
                 nodes[k , i] = 0
+
+        ''' ------------ count air -------------'''
+        ''' capture the set of cities where an aircraft of type k might be in the air at midnight '''
+        count_air = {}
+        for k in range(len(airlineAircraftICAOcodeList)):
+            pass
+
+
+        ''' ------------ count ground  -------------'''
+        ''' capture the set of cities where an aircraft of type k might be sitting on the ground at midnight  '''
+        count_ground = {}
+        for k in range(len(airlineAircraftICAOcodeList)):
+            pass
 
         ''' ------------ variable ------------'''
         '''  x[i, j] is an array of 0-1 variables, which will be 1 '''
@@ -214,20 +233,62 @@ class TestMethods(unittest.TestCase):
                 x[k, l] = solver.IntVar(0, 1, '{0}-{1}'.format(airlineAircraftICAOcodeList[k] , flightLegsList[l]))
 
         ''' -------- variable -------- number of aircrafts on the ground '''
-        y = {}
+        yOnTheGround = {}
         for k in range(len(airlineAircraftICAOcodeList)):
             for i in range(len(listOfCities)):
                 for t in range(dailyMinutesSpan):
-                    y[k, i , t] =  solver.IntVar(0, 999, '{0}-{1}'.format(airlineAircraftICAOcodeList[k] , listOfCities[i] , nodes[k, i]))
+                    yOnTheGround[k, i , t] =  solver.IntVar(0, 999, '{0}-{1}'.format(airlineAircraftICAOcodeList[k] , listOfCities[i] , nodes[k, i]))
 
         ''' --------- variable -> number of used aircrafts ----------'''
-        z = {}
+        zUsedAircrafs = {}
         for k in range(len(airlineAircraftICAOcodeList)):
-            z[k] = solver.IntVar(0, 999, '{0}'.format(airlineAircraftICAOcodeList[k] ))
+            zUsedAircrafs[k] = solver.IntVar(0, 999, '{0}'.format(airlineAircraftICAOcodeList[k] ))
 
                     
         ''' ----------- constraints ---------- '''
             
+        ''' COVER - Each flight leg is assigned to exactly one aircraft '''
+            
+        ''' Each flight leg is assigned to exactly one aircraft '''
+        for l in range(len(flightLegsList)):
+            ''' sum of all ONEs for any aircraft different type for one leg is always ONE '''
+            solver.Add(solver.Sum([x[k, l] for k in range(len(airlineAircraftICAOcodeList))]) == 1)
+
+
+        ''' constraint - for one aircraft type - number of instances are limited '''
+        ''' number of aircraft on the ground PLUS number of aircraft in the air = size of a fleet '''
+        for k in range(len(airlineAircraftICAOcodeList)):
+            pass
+            #zUsedAircrafs[k] 
+            
+
+        ''' --------- objective --------------'''
+        objective_terms = []
+        for i in range(num_aircrafts):
+            for j in range(num_flight_legs):
+                objective_terms.append(costs[i][j] * x[i, j])
+                
+        
+        ''' minimize the costs '''
+        solver.Minimize(solver.Sum(objective_terms))
+        
+        ''' invoke the solver '''
+        status = solver.Solve()
+        
+        print ("---------- costs with Kerosene -----------")
+        
+        if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
+            print ('solver status - Optimal = {0} - Feasible = {1} - solver result value = {0}'.format(pywraplp.Solver.OPTIMAL, pywraplp.Solver.FEASIBLE, status))
+            print('Total costs = {0:.2f} in US dollars'.format( solver.Objective().Value() ) )
+            for k in range(len(airlineAircraftICAOcodeList)):
+                for l in range(len(flightLegsList)):
+                    # Test if x[i,j] is 1 (with tolerance for floating point arithmetic).
+                    if x[k, l].solution_value() > 0.5:
+                        print('aircraft {0} assigned to flight leg {1} - Costs = {2:.2f} in US dollars'.format( k, j, costs[k][l]))
+                        print('aircraft {0} - ICAO code {1} - assigned to flight leg {2} - Cost = {3:.2f} US dollars for the flight duration'.format( airlineAircraftFullNameList[k], airlineAircraftICAOcodeList[k], flightLegsList[l], costs[k][l] ) )
+                        print('aircraft {0} - ICAO code {1} - assigned to flight leg {2} - number of seats = {3} for the selected aircraft'.format( airlineAircraftFullNameList[k], airlineAircraftICAOcodeList[k], flightLegsList[l], airlineAircraftNumberOfSeatsList[k] ) )
+
+
 
         t1 = time.clock()
         print ( 'duration= {0} seconds'.format(t1-t0) )
