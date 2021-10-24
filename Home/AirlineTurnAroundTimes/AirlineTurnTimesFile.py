@@ -40,20 +40,22 @@ class AirlineTurnAroundTimes(object):
         pass
 
 
-class AirlineTurnAroundTime(object):
+class AirlineTurnAroundTimesDatabase(object):
     ''' defines a Turn Time duration in seconds (or hours and minutes) for a given aircraft of the fleet 
     to turn from the arrival airport to the same departure airport '''
     
     ''' the airport city playing both a role or arrival and of departure airport '''
     airportICAOcode = ""
 
-    def __init__(self, _airportICAOcode, _aircraftICAOcode, _turnAroundTimeInSeconds):
+    def __init__(self):
         pass
-        self.airportCity = _airportICAOcode
-        self.turnAroundTimeInSeconds = _turnAroundTimeInSeconds
+        #self.airportCity = _airportICAOcode
+        #self.turnAroundTimeInSeconds = _turnAroundTimeInSeconds
         
-    def getTurnTimeInSeconds(self, airportICAOcode, aircraftICAOcode):
+    def getTurnAroundTimeInSeconds(self,  aircraftICAOcode , airportICAOcode):
         ''' return 1 hour default value '''
         ''' the bigger the aircraft , the more number of seats, the more increased turn time is needed '''
         ''' the bigger the airport, the more crowed airport, the more increased turn time is needed '''
         return ( 1 * 60 * 60 )
+    
+    

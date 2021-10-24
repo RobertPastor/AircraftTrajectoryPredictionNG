@@ -13,14 +13,14 @@ from Home.Environment.WayPointsDatabaseFile import WayPointsDatabase
 Adep = "KATL" #  US Atlanta-Hartsfield Jackson Atlanta Intl
 Ades = "KLAX" # US Los Angeles-Los Angeles Intl    
 
-#Adep = "PANC" # US Alaska Anchorage
-#Ades = "KATL" #   US Atlanta-Hartsfield Jackson Atlanta Intl
+Adep = "PANC" # US Alaska Anchorage
+Ades = "KATL" #   US Atlanta-Hartsfield Jackson Atlanta Intl
 
-#Adep = "KJFK" # US John F. Kennedy
-#Ades = "KSEA" # US Seattle-Seattle Tacoma Intl
+Adep = "KJFK" # US John F. Kennedy
+Ades = "KSEA" # US Seattle-Seattle Tacoma Intl
 
-#Adep = "KATL" # Atlanta
-#Ades = "PHNL" # US Honolulu Intl States 
+Adep = "KATL" # Atlanta
+Ades = "PHNL" # US Honolulu Intl States 
 
 Adep = "KATL" #  US Atlanta-Hartsfield Jackson Atlanta Intl
 Ades = "KMSP" # Minneapolie
@@ -33,6 +33,27 @@ Ades = "KORD"
 
 Adep = "KIAD"
 Ades = "KSFO"
+
+Adep = "KLAX"
+Ades = "KATL"
+
+Adep = "KMSP"
+Ades = "KATL"
+
+Adep = "KSEA"
+Ades = "KJFK"
+
+Adep = "KATL"
+Ades = "KBOS"
+
+Adep = "KORD"
+Ades = "KIAH"
+
+Adep = "KSFO"
+Ades = "KIAD"
+
+Adep = "KATL" #   US Atlanta-Hartsfield Jackson Atlanta Intl
+Ades = "PANC" # US Alaska Anchorage
 
 routeDict = {}
 routeDict["Adep"] = Adep
@@ -47,7 +68,7 @@ class Test_Main(unittest.TestCase):
         wayPointsDb = WayPointsDatabase()
         assert ( wayPointsDb.read() )
         
-        print ("Departure = {0} - arrivale = {1}".format(Adep, Ades))
+        print ("Departure = {0} - arrival = {1}".format(Adep, Ades))
     
         print ( "=========== Route Finder start  =========== " + time.strftime("%c") )
     

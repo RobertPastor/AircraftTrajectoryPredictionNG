@@ -68,7 +68,7 @@ class AirlineRoutesAirportsDataBase(object):
         book = open_workbook(self.FilePath, formatting_info=True)
         ''' assert there is only one sheet '''
         self.sheet = book.sheet_by_index(0)
-        print ( 'Sheet contains - number of rows = {0}'.format(self.sheet.nrows))
+        #print ( self.className + ' Sheet contains - number of rows = {0}'.format(self.sheet.nrows))
         for row in range(self.sheet.nrows):
             #print ( '--> row --> {0}'.format(row) )
             rowValues = self.sheet.row_values(row, start_colx=0, end_colx=self.sheet.ncols)
@@ -116,14 +116,56 @@ class AirlineRoutesAirportsDataBase(object):
             #print (route)
             yield airlineRoute
     
+    def getFlightLegList(self):
+        flightLegList = []
+        for route in self.RoutesAirports:
+            Adep = route[HeaderNames[1]]
+            Ades = route[HeaderNames[3]]
+            flightLegList.append( Adep + "-" + Ades)
+        return flightLegList
     
     def getDepartureAirportsICAOcode(self):
         for route in self.RoutesAirports:
             airportICAOcode = route[HeaderNames[1]]
             yield airportICAOcode
+            
+            
+    def getDepartureAirportsICAOcodeList(self):
+        
+        departureAirportICAOcodeList = []
+        for route in self.RoutesAirports:
+            airportICAOcode = route[HeaderNames[1]]
+            departureAirportICAOcodeList.append(airportICAOcode)
                 
+        return departureAirportICAOcodeList
 
     def getArrivalAirportsICAOcode(self):
         for route in self.RoutesAirports:
             airportICAOcode = route[HeaderNames[3]]
             yield airportICAOcode
+            
+    def getArrivalAirportsICAOcodeList(self):
+        
+        arrivalAirportICAOcodeList = []
+        for route in self.RoutesAirports:
+            airportICAOcode = route[HeaderNames[3]]
+            arrivalAirportICAOcodeList.append(airportICAOcode)
+
+        return arrivalAirportICAOcodeList
+            
+    def getAirportsICAOcode(self):
+        
+        listOfAirportICAOcodes = set()
+        for route in self.RoutesAirports:
+            AdepICAOcode = route[HeaderNames[1]]
+            #print ( self.className + ' - Adep= {0} '.format(AdepICAOcode) )
+
+            listOfAirportICAOcodes.add(AdepICAOcode)
+            
+            AdesICAOcode = route[HeaderNames[3]]
+            #print ( self.className + ' - Ades= {0} '.format(AdesICAOcode) )
+
+            listOfAirportICAOcodes.add(AdesICAOcode)
+            
+        #print ( listOfAirportICAOcodes )
+        return list(listOfAirportICAOcodes)

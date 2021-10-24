@@ -155,11 +155,12 @@ class TestMethods(unittest.TestCase):
         status = solver.Solve()
         
         print ("---------- solving -----------")
-        
+        print ('----- solver status= {0} - optimal= {1} - feasible= {2}'.format(status, pywraplp.Solver.OPTIMAL, pywraplp.Solver.FEASIBLE))
         if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
             print ('solver status - Optimal = {0} - Feasible = {1} - solver result value = {0}'.format(pywraplp.Solver.OPTIMAL, pywraplp.Solver.FEASIBLE, status))
 
-
+        else:
+            print(" solver status is neither OPTIMAL nor FEASIBLE")
                 
             
 
