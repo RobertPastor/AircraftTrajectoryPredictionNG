@@ -129,7 +129,6 @@ class TestMethods(unittest.TestCase):
                 dailyHoursMinutes.append( str(hour).zfill(2) + ":" +  str(minute).zfill(2) )
             
 
-            
         print ("-----------airline routes costs---------")
 
         airlineAircraftRoutesCosts = AirlineAircraftRoutesCosts()
@@ -211,7 +210,6 @@ class TestMethods(unittest.TestCase):
             flightLegArrivalTime[l] = str("1300")
 
 
-
         ''' derived sets to be completed '''
         ''' nodes[k,i] set of times '''
         nodes = {}
@@ -245,7 +243,7 @@ class TestMethods(unittest.TestCase):
 
             for l in range(len(flightLegsList)):
                 #print ( flightLegsList[l] )
-                xFleetAssignments[k, l] = solver.IntVar(0, nbAircraftsAvailable, '{0}-{1}'.format(airlineAircraftICAOcodeList[k] , flightLegsList[l]))
+                xFleetAssignments[k, l] = solver.IntVar(0, 1, '{0}-{1}'.format(airlineAircraftICAOcodeList[k] , flightLegsList[l]))
 
 
         ''' -------- variable -------- number of aircrafts on the ground '''
@@ -313,11 +311,18 @@ class TestMethods(unittest.TestCase):
             for k in range(len(airlineAircraftICAOcodeList)):
                 for l in range(len(flightLegsList)):
                     # Test if x[i,j] is 1 (with tolerance for floating point arithmetic).
-                    print ( xFleetAssignments[k, l] )
+                    print ( "---------- {0} -----------------".format(xFleetAssignments[k, l]) )
                     if xFleetAssignments[k, l].solution_value() > 0.5:
-                        print('aircraft {0} assigned to flight leg {1} - Costs = {2:.2f} in US dollars'.format( k, j, costs[k][l]))
-                        print('aircraft {0} - ICAO code {1} - assigned to flight leg {2} - Cost = {3:.2f} US dollars for the flight duration'.format( airlineAircraftFullNameList[k], airlineAircraftICAOcodeList[k], flightLegsList[l], costs[k][l] ) )
-                        print('aircraft {0} - ICAO code {1} - assigned to flight leg {2} - number of seats = {3} for the selected aircraft'.format( airlineAircraftFullNameList[k], airlineAircraftICAOcodeList[k], flightLegsList[l], airlineAircraftNumberOfSeatsList[k] ) )
+                        print('aircraft= {0} assigned to flight leg= {1} - Costs= {2:.2f} in US dollars'.format( k, l, costs[k][l]))
+                        print('aircraft= {0} - ICAO code= {1} - assigned to flight leg {2} - Costs= {3:.2f} US dollars for the flight duration'.format( airlineAircraftFullNameList[k], airlineAircraftICAOcodeList[k], flightLegsList[l], costs[k][l] ) )
+                        print('aircraft= {0} - ICAO code= {1} - assigned to flight leg {2} - number of seats= {3} for the selected aircraft'.format( airlineAircraftFullNameList[k], airlineAircraftICAOcodeList[k], flightLegsList[l], airlineAircraftNumberOfSeatsList[k] ) )
+
+                        departureAirportICAOcode = str(flightLegsList[l]).split("-")[0]
+                        arrivalAirportICAOcode = str(flightLegsList[l]).split("-")[1]
+                        durationHours = airlineAircraftRoutesCosts.getFlightLegDurationInHours(airlineAircraftICAOcodeList[k], departureAirportICAOcode, arrivalAirportICAOcode)
+                        print('aircraft= {0} - ICAO code= {1} - assigned to flight leg= {2} - duration of flight= {3} Hours for the selected aircraft and the selected flight leg'.format( airlineAircraftFullNameList[k], airlineAircraftICAOcodeList[k], flightLegsList[l], durationHours ) )
+                        seatCostDollars = costs[k][l] / airlineAircraftNumberOfSeatsList[k]
+                        print('aircraft= {0} - ICAO code= {1} - assigned to flight leg= {2} - seat costs= {3:.2f} in US dollars for the selected aircraft and the selected flight leg'.format( airlineAircraftFullNameList[k], airlineAircraftICAOcodeList[k], flightLegsList[l], seatCostDollars ) )
 
 
 

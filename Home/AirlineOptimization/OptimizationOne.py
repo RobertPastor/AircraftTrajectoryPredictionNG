@@ -157,6 +157,9 @@ class TestMethods(unittest.TestCase):
                         print('aircraft {0} - ICAO code {1} - assigned to flight leg {2} - seat costs  = {3:.2f} in US dollars for the selected aircraft and the selected flight leg'.format( airlineAircraftFullNameList[i], airlineAircraftICAOcodeList[i], airlineFlightLegsList[j], seatCostDollars ) )
                         print ( "===== next ======")
 
+        else:
+            print ("solver status = {0} - Optimal= {1} - Feasible= {2}".format(status, pywraplp.Solver.OPTIMAL, pywraplp.Solver.FEASIBLE))
+
         t1 = time.clock()
         print ( 'duration= {0} seconds'.format(t1-t0) )
 

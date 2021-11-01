@@ -162,7 +162,9 @@ class TestMethods(unittest.TestCase):
         else:
             print(" solver status is neither OPTIMAL nor FEASIBLE")
                 
-            
+        t1 = time.clock()
+        print ( 'duration= {0} seconds'.format(t1-t0) )
+           
 
 if __name__ == '__main__':
     unittest.main()
