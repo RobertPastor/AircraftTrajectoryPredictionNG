@@ -260,7 +260,7 @@ class AirlineAircraftRoutesCosts(object):
                 #pass
                 #print ( row )
             #print ( "data frame shape = {0}".format(df.shape) )
-            temp = ""
+            #temp = ""
             '''for index in range(len(df)):
                 temp += df[self.costsHeaders[0]].iloc[index] 
                 temp += " - " + df[self.costsHeaders[1]].iloc[index] 
@@ -277,6 +277,22 @@ class AirlineAircraftRoutesCosts(object):
         else:
             return None
         
+    def getFlightLegOperationalPlusFuelCostsDollars(self, aircraftICAOcode, departureAirportICAOcode, arrivalAirportICAOcode):
+        operationalPlusFuelCostsDollars = 0.0
+        
+        if os.path.exists(self.FilePath):
+            df = pd.DataFrame(pd.read_excel(self.FilePath, sheet_name=self.sheetName, names=self.costsHeaders))
+            np_array = df.to_numpy()
+            for row in np_array:
+                #print ( "--- numpy array row = {0}".format(row) )
+                
+                if ( row[1] == aircraftICAOcode and \
+                     row[3] == departureAirportICAOcode and \
+                     row[5] == arrivalAirportICAOcode):
+                    operationalPlusFuelCostsDollars = row[12]
+        
+        return operationalPlusFuelCostsDollars
+    
     def getFlightLegDurationInHours(self, aircraftICAOcode, departureAirportICAOcode, arrivalAirportICAOcode ):
         #print (aircraftICAOcode , departureAirportICAOcode , arrivalAirportICAOcode)
         
