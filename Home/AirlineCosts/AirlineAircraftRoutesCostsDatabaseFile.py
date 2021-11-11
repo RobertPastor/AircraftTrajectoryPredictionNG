@@ -310,6 +310,19 @@ class AirlineAircraftRoutesCosts(object):
                     durationHours = row[7]
         
         return durationHours
+    
+    def getFlightLegDurationInMinutes(self, aircraftICAOcode, departureAirportICAOcode, arrivalAirportICAOcode ):
+        #print (aircraftICAOcode , departureAirportICAOcode , arrivalAirportICAOcode)
+        
+        durationHours = self.getFlightLegDurationInHours( aircraftICAOcode, departureAirportICAOcode, arrivalAirportICAOcode )
+
+        hourPart = int( durationHours )
+        minutesPart = durationHours - hourPart
+        minutesPart = int ( minutesPart * 60 )
+        
+        durationMinutes = int ( hourPart * 60.) + minutesPart
+        
+        return durationMinutes
                 
 
 class AirlineAircraftRoutesCost(object):

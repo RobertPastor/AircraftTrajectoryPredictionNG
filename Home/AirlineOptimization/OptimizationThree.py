@@ -136,7 +136,7 @@ class TestMethods(unittest.TestCase):
         flightLegDurationHours = {}
         turnAroundDurationHours = 0.5
         for d in range(len(airlineFlightLegsList)):
-            flightLegStr = airlineFlightLegsList[j]
+            flightLegStr = airlineFlightLegsList[d]
             #print ( flightLegStr )
             flightLegDurationHours[d] = self.computeMaxOfFlightLegDurationHours(flightLegStr , airlineAircraftICAOcodeList, airlineAircraftRoutesCosts)
             flightLegFrequency[d] =  int ( 20. / ( flightLegDurationHours[d] + turnAroundDurationHours ) )
