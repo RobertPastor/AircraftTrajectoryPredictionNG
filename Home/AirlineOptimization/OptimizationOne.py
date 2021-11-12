@@ -14,6 +14,7 @@ from Home.AirlineRoutes.AirlineRoutesAirportsReader import AirlineRoutesAirports
 
 from Home.AirlineFleet.AirlineFleetReader import AirlineFleetDataBase
 from Home.AirlineFleet.AirlineFleetReader import AirlineAircraft
+from _ast import Pass
 
 kerosene_kilo_to_US_gallons = 0.33
 US_gallon_to_US_dollars = 3.25
@@ -59,9 +60,17 @@ class TestMethods(unittest.TestCase):
         airlineFlightLegsList = []
         for route in airlineRoutesAirports.getRoutes():
             print (route)
-            airlineFlightLegsList.append( route.getFlightLegAsString() )
+            flightLegOneWay = route.getFlightLegAsString()
+            flightLegReturn = str(flightLegOneWay).split("-")[1] + "-" + str(flightLegOneWay).split("-")[0]
+            
+            if ( flightLegOneWay in airlineFlightLegsList) or ( flightLegReturn in airlineFlightLegsList):
+                pass
+            else:
+                print ( "{0} ---- {1}".format( flightLegOneWay , flightLegReturn ) )
+                airlineFlightLegsList.append( flightLegOneWay )
 
         print ( "length of airline flight legs list = {0}".format( len ( airlineFlightLegsList ) ) )
+        #stop()
 
         print ("-----------airline routes costs---------")
 
@@ -73,56 +82,64 @@ class TestMethods(unittest.TestCase):
         print ( " ----------- create the costs table ------------------ ")
         costs = []
         
-        for airlineAircraft in airlineFleet.getAirlineAircrafts():
-            if ( airlineAircraft.hasICAOcode() ):
-                ''' here we are building the costs for one aircraft '''
-                aircraftCosts = []
-                print ( airlineAircraft.getAircraftICAOcode() )
-                ''' Warning - should result in the same index as in the above mentioned lists '''
-                for route in airlineRoutesAirports.getRoutes():
-                    #print (route)
-                    for airlineCost in airlineCosts_np_array:
-                        #print ("=== airline cost ===")
-                        #print ( airlineCost[1] , airlineCost[3] , airlineCost[5] )
-                        # airline cost [1] = ICAO code
-                        if ( airlineCost[1] == airlineAircraft.getAircraftICAOcode() ) and \
-                            ( airlineCost[3] == route.getDepartureAirportICAOcode() )  and \
-                            ( airlineCost[5] == route.getArrivalAirportICAOcode() ):
-                            ''' airline cost [3] = departure airport ICAO code '''
-                            ''' airline cost [5] = arrival airport ICAO code '''
-                            ''' airlineCost[7] -> operational costs in dollars '''
-                            print ( "{0}-{1}-{2}-{3}".format(airlineAircraft.getAircraftICAOcode(), route.getDepartureAirportICAOcode(), route.getArrivalAirportICAOcode(), airlineCost[8] ))
-                            aircraftCosts.append( airlineCost[8] + airlineCost[10] * kerosene_kilo_to_US_gallons * US_gallon_to_US_dollars )
-                print ( aircraftCosts )
-                costs.append(aircraftCosts)
+        for i in range(len(airlineAircraftICAOcodeList)):
+            aircraftICAOcode = airlineAircraftICAOcodeList[i]
+            print ( aircraftICAOcode )
+            ''' Warning - should result in the same index as in the above mentioned lists '''
+            aircraftCosts = []
+
+            for j in range(len(airlineFlightLegsList)):
+                print (airlineFlightLegsList[j])
+                departureAirportICAOcode = str(airlineFlightLegsList[j]).split("-")[0]
+                arrivalAirportICAOcode = str(airlineFlightLegsList[j]).split("-")[1]
+                for airlineCost in airlineCosts_np_array:
+                    #print ("=== airline cost ===")
+                    print ( airlineCost[1] , airlineCost[3] , airlineCost[5] )
+                    # airline cost [1] = ICAO code
+                    if ( airlineCost[1] == aircraftICAOcode) and \
+                        ( airlineCost[3] == departureAirportICAOcode )  and \
+                        ( airlineCost[5] == arrivalAirportICAOcode ):
+                        ''' airline cost [3] = departure airport ICAO code '''
+                        ''' airline cost [5] = arrival airport ICAO code '''
+                        ''' airlineCost[7] -> operational costs in dollars '''
+                        print ( "{0}-{1}-{2}-{3}".format(aircraftICAOcode, departureAirportICAOcode, arrivalAirportICAOcode, airlineCost[8] ))
+                        aircraftCosts.append( airlineCost[8] + airlineCost[10] * kerosene_kilo_to_US_gallons * US_gallon_to_US_dollars )
+                        
+            print ( aircraftCosts )
+            costs.append(aircraftCosts)
                 
         print ( " ----------- costs table with Kerosene ------------------ ")
         print ( costs )
         print ( " ----------- costs table with Kerosene ------------------ ")
 
         num_aircrafts = len(costs)
-        print (" number of aircrafts = {0}".format(num_aircrafts))
+        print ("number of aircrafts = {0}".format(num_aircrafts))
         
         num_flight_legs = len(costs[0])
-        print (" number of flight legs = {0}".format(num_flight_legs))
+        print ("number of flight legs = {0}".format(num_flight_legs))
         
         xnum_flight_legs = len(airlineFlightLegsList)
-        print (" another number of flight legs = {0}".format(xnum_flight_legs))
+        print ("another number of flight legs = {0}".format(xnum_flight_legs))
 
 
         '''  x[i, j] is an array of 0-1 variables, which will be 1 '''
         '''  if worker i is assigned to task j. '''
         x = {}
         for i in range(num_aircrafts):
+            print ( "{0}".format(airlineAircraftICAOcodeList[i]))
             for j in range(num_flight_legs):
-                x[i, j] = solver.IntVar(0, 1, '')
+                #print ( '{0}-{1}'.format(airlineAircraftICAOcodeList[i], airlineFlightLegsList[j]) )
+                x[i, j] = solver.IntVar(0, 1, '{0}-{1}'.format(airlineAircraftICAOcodeList[i], airlineFlightLegsList[j]))
                 
         '''  Each aircraft is assigned to at most 1 flight leg. '''
         for i in range(num_aircrafts):
+            pass
             solver.Add(solver.Sum([x[i, j] for j in range(num_flight_legs)]) <= 1)
+        
         
         ''' Each flight leg is assigned to exactly one aircraft '''
         for j in range(num_flight_legs):
+            pass 
             solver.Add(solver.Sum([x[i, j] for i in range(num_aircrafts)]) == 1)
 
         ''' --------- objective --------------'''
