@@ -56,12 +56,12 @@ class AirlineTurnAroundTimesDatabase(object):
         ''' return 1 hour default value '''
         ''' the bigger the aircraft , the more number of seats, the more increased turn time is needed '''
         ''' the bigger the airport, the more crowed airport, the more increased turn time is needed '''
-        return ( 1 * 60 * 60 )
+        return int( 1 * 60 * 60 )
     
     def getTurnAroundTimeInHours(self,  aircraftICAOcode , airportICAOcode):
         ''' return 1 hour default value '''
         ''' the bigger the aircraft , the more number of seats, the more increased turn time is needed '''
         ''' the bigger the airport, the more crowed airport, the more increased turn time is needed '''
-        return ( 1. )
+        return int( 1. )
     
     

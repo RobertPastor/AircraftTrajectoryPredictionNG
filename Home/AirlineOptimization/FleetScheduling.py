@@ -114,13 +114,13 @@ class TestMethods(unittest.TestCase):
         flightLegFrequency = {}
         flightLegDurationHours = {}
 
-        for d in range(len(airlineFlightLegsList)):
-            flightLegStr = airlineFlightLegsList[d]
-            #print ( flightLegStr )
-            flightLegDurationHours[d] = self.computeMaxOfFlightLegDurationHours(flightLegStr , airlineAircraftICAOcodeList, airlineAircraftRoutesCosts)
-            flightLegFrequency[d] =  int ( 20. / ( flightLegDurationHours[d] + turnAroundDurationHours ) )
-            print ( "flight leg = {0} - max flight leg duration in hours {1} - frequency for 20 hours = {2}".format( flightLegStr , flightLegDurationHours[d] , flightLegFrequency[d]) )
-
+#        for d in range(len(airlineFlightLegsList)):
+#            flightLegStr = airlineFlightLegsList[d]
+#            #print ( flightLegStr )
+#            flightLegDurationHours[d] = self.computeMaxOfFlightLegDurationHours(flightLegStr , airlineAircraftICAOcodeList, airlineAircraftRoutesCosts)
+#            flightLegFrequency[d] =  int ( 20. / ( flightLegDurationHours[d] + turnAroundDurationHours ) )
+#            print ( "flight leg = {0} - max flight leg duration in hours {1} - frequency for 20 hours = {2}".format( flightLegStr , flightLegDurationHours[d] , flightLegFrequency[d]) )
+#
         print ("-------- turn around times --------")
         airlineTurnAroundTimesDatabase = AirlineTurnAroundTimesDatabase()
 
@@ -139,65 +139,93 @@ class TestMethods(unittest.TestCase):
         #    [(1, 4), (2, 3)]  # Job2
         #]
         jobs_data = []
+        jobs_info = []
         for acIndex in range(len(airlineAircraftInstancesList)):
             
             aircraftICAOcode = str(airlineAircraftInstancesList[acIndex]).split("-")[0]
             print ( "index= {0} - aircraft= {1} - ICAO code= {2}".format( acIndex, airlineAircraftInstancesList[acIndex] , aircraftICAOcode) )
 
-            if ( aircraftICAOcode == "B712"):
-                job = []
+            if ( aircraftICAOcode == "B712" ) or ( aircraftICAOcode == "A332" ):
+                job_data = []
+                job_info = []
+                
                 flightLeg = "PANC-KATL"
                 departureAirportICAOcode = str(flightLeg).split("-")[0]
                 arrivalAirportICAOcode = str(flightLeg).split("-")[1]
 
                 flightLedDurationMinutes = airlineAircraftRoutesCosts.getFlightLegDurationInMinutes(aircraftICAOcode, departureAirportICAOcode, arrivalAirportICAOcode)
-                job.append( ( acIndex , int(flightLedDurationMinutes) ) )
-                job.append( ( acIndex , int ( airlineTurnAroundTimesDatabase.getTurnAroundTimeInHours(aircraftICAOcode, departureAirportICAOcode) * 60.)) )
+                job_data.append( ( acIndex , int(flightLedDurationMinutes) ) )
+                job_info.append( (aircraftICAOcode, flightLeg ) )
+                
+                job_data.append( ( acIndex , int ( airlineTurnAroundTimesDatabase.getTurnAroundTimeInHours(aircraftICAOcode, departureAirportICAOcode) * 60.)) )
+                job_info.append( (aircraftICAOcode , "{0}-{1}".format(arrivalAirportICAOcode , arrivalAirportICAOcode) ) )
                 
                 flightLeg = "KATL-PANC"
                 departureAirportICAOcode = str(flightLeg).split("-")[0]
                 arrivalAirportICAOcode = str(flightLeg).split("-")[1]
                 
                 flightLedDurationMinutes = airlineAircraftRoutesCosts.getFlightLegDurationInMinutes(aircraftICAOcode, departureAirportICAOcode, arrivalAirportICAOcode)
-                job.append( ( acIndex , int(flightLedDurationMinutes)) )
-                print ( job )
-                jobs_data.append(job)
+                job_data.append( ( acIndex , int(flightLedDurationMinutes)) )
+                job_info.append( (aircraftICAOcode, flightLeg ) )
+                
+                jobs_data.append(job_data)
+                jobs_info.append(job_info)
+                
                 
             if ( aircraftICAOcode == "B738" ):
-                job = []
+                job_data = []
+                job_info = []
+                
                 flightLeg = "KATL-KBOS"
                 departureAirportICAOcode = str(flightLeg).split("-")[0]
                 arrivalAirportICAOcode = str(flightLeg).split("-")[1]
                 
                 flightLedDurationMinutes = airlineAircraftRoutesCosts.getFlightLegDurationInMinutes(aircraftICAOcode, departureAirportICAOcode, arrivalAirportICAOcode)
-                job.append( ( acIndex , int ( flightLedDurationMinutes) ) )
-                job.append( ( acIndex , int ( airlineTurnAroundTimesDatabase.getTurnAroundTimeInHours(aircraftICAOcode, departureAirportICAOcode) * 60.)) )
+                job_data.append( ( acIndex , int ( flightLedDurationMinutes) ) )
+                job_info.append( ( aircraftICAOcode, flightLeg ) )
+
+                job_data.append( ( acIndex , int ( airlineTurnAroundTimesDatabase.getTurnAroundTimeInHours(aircraftICAOcode, departureAirportICAOcode) * 60.)) )
+                job_info.append( ( aircraftICAOcode , "{0}-{1}".format(arrivalAirportICAOcode , arrivalAirportICAOcode) ) )
+
                 flightLeg = "KBOS-KATL"
                 departureAirportICAOcode = str(flightLeg).split("-")[0]
                 arrivalAirportICAOcode = str(flightLeg).split("-")[1]
                 
                 flightLedDurationMinutes = airlineAircraftRoutesCosts.getFlightLegDurationInMinutes(aircraftICAOcode, departureAirportICAOcode, arrivalAirportICAOcode)
-                job.append( ( acIndex , int ( flightLedDurationMinutes) ) )
-                print ( job )
-                jobs_data.append(job)
+                job_data.append( ( acIndex , int ( flightLedDurationMinutes) ) )
+                job_info.append( ( aircraftICAOcode, flightLeg ) )
+                
+                jobs_data.append(job_data)
+                jobs_info.append(job_info)
+
                 
             if ( aircraftICAOcode == "A319" ):
+                job_data = []
+                job_info = []
+
                 flightLeg = "KSEA-KJFK"
                 departureAirportICAOcode = str(flightLeg).split("-")[0]
                 arrivalAirportICAOcode = str(flightLeg).split("-")[1]
-                job = []
+            
                 flightLedDurationMinutes = airlineAircraftRoutesCosts.getFlightLegDurationInMinutes(aircraftICAOcode, departureAirportICAOcode, arrivalAirportICAOcode)
-                job.append( ( acIndex , int ( flightLedDurationMinutes) ) )
-                job.append( ( acIndex , int ( airlineTurnAroundTimesDatabase.getTurnAroundTimeInHours(aircraftICAOcode, departureAirportICAOcode) * 60.)) )
+                job_data.append( ( acIndex , int ( flightLedDurationMinutes) ) )
+                job_info.append( ( aircraftICAOcode, flightLeg ) )                
+                
+                job_data.append( ( acIndex , int ( airlineTurnAroundTimesDatabase.getTurnAroundTimeInHours(aircraftICAOcode, departureAirportICAOcode) * 60.)) )
+                job_info.append( ( aircraftICAOcode , "{0}-{1}".format(arrivalAirportICAOcode , arrivalAirportICAOcode) ) )
+
                 flightLeg = "KJFK-KSEA"
                 departureAirportICAOcode = str(flightLeg).split("-")[0]
                 arrivalAirportICAOcode = str(flightLeg).split("-")[1]
                 
                 flightLedDurationMinutes = airlineAircraftRoutesCosts.getFlightLegDurationInMinutes(aircraftICAOcode, departureAirportICAOcode, arrivalAirportICAOcode)
-                job.append( ( acIndex , int ( flightLedDurationMinutes) ) )
-                print ( job )
-                jobs_data.append(job)
- 
+                job_data.append( ( acIndex , int ( flightLedDurationMinutes) ) )
+                job_info.append( ( aircraftICAOcode, flightLeg ) )                
+
+                print ( job_data )
+                jobs_data.append(job_data)
+                jobs_info.append(job_info)
+
                 
         print (jobs_data)
         
@@ -212,7 +240,7 @@ class TestMethods(unittest.TestCase):
 
         machines_count = 1 + max(task[0] for job in jobs_data for task in job)
         all_machines = range(machines_count)
-        print ( "machine count = {0}".format ( machines_count ))
+        print ( "aircraft count = {0}".format ( machines_count ))
         # Computes horizon dynamically as the sum of all durations.
         horizon = sum(task[1] for job in jobs_data for task in job)
 
@@ -253,7 +281,7 @@ class TestMethods(unittest.TestCase):
             for task_id in range(len(job) - 1):
                 model.Add(all_tasks[job_id, task_id + 1].start >= all_tasks[job_id, task_id].end)
     
-        # Makespan objective.
+        ''' Makespan objective. '''
         obj_var = model.NewIntVar(0, horizon, 'makespan')
         model.AddMaxEquality(obj_var, [
             all_tasks[job_id, len(job) - 1].end
@@ -270,6 +298,7 @@ class TestMethods(unittest.TestCase):
             # Create one list of assigned tasks per machine.
             assigned_jobs = collections.defaultdict(list)
             for job_id, job in enumerate(jobs_data):
+                print ( jobs_info[job_id] )
                 for task_id, task in enumerate(job):
                     machine = task[0]
                     assigned_jobs[machine].append(
@@ -284,21 +313,28 @@ class TestMethods(unittest.TestCase):
             for machine in all_machines:
                 # Sort by starting time.
                 assigned_jobs[machine].sort()
-                sol_line_tasks = 'Machine ' + str(machine) + ': '
+                print ("------- next aircraft -----------")
+                sol_line_aircraft = 'Aircraft index ' + str(machine) + ' - ' + airlineAircraftInstancesList[machine] + ':'
+                print ( sol_line_aircraft )
                 sol_line = '           '
+                sol_line_tasks = ''
+                sol_line_duration = ''
     
                 for assigned_task in assigned_jobs[machine]:
-                    name = 'job_%i_task_%i' % (assigned_task.job,
-                                               assigned_task.index)
+                    name =  'job_%i_task_%i' % (assigned_task.job, assigned_task.index)
                     # Add spaces to output to align columns.
-                    sol_line_tasks += '%-15s' % name
-    
+                    sol_line_tasks += sol_line + '%-15s' % name
+                    #print ( sol_line_tasks )
+                    
                     start = assigned_task.start
                     duration = assigned_task.duration
                     sol_tmp = '[%i,%i]' % (start, start + duration)
                     # Add spaces to output to align columns.
-                    sol_line += '%-15s' % sol_tmp
+                    sol_line_duration += sol_line + '%-15s' % sol_tmp
+                    
     
+                print ( sol_line_tasks )
+                print ( sol_line_duration )
                 sol_line += '\n'
                 sol_line_tasks += '\n'
                 output += sol_line_tasks
@@ -306,7 +342,7 @@ class TestMethods(unittest.TestCase):
     
             # Finally print the solution found.
             print(f'Optimal Schedule Length: {solver.ObjectiveValue()}')
-            print(output)
+            #print(output)
         else:
             print('No solution found.')
 
