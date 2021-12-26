@@ -104,7 +104,7 @@ class TestMethods(unittest.TestCase):
         dailyHoursMinutes = []
         dailyMinutesSpan = 2360
         for i in range(dailyMinutesSpan):
-            print ( i )
+            #print ( i )
             dailyHoursMinutes.append( i )
             
         schedule = {}
@@ -115,7 +115,7 @@ class TestMethods(unittest.TestCase):
                 for s in range(len(dailyHoursMinutes)):
                     dailyHour = dailyHoursMinutes[s]
                     key = '{0} - {1} - {2}'.format( acInstance , flightLeg, dailyHour) 
-                    print ( key )
+                    #print ( key )
                     schedule[(n, d, s)] = solver.IntVar(0, 1, key)
                     
         #shifts[(n, d, s)] equals 1 if shift s is assigned to nurse n on day d, and 0 otherwise.
