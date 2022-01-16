@@ -301,10 +301,10 @@ class TestMethods(unittest.TestCase):
         solver.Minimize(solver.Sum(objective_terms))
         
         ''' invoke the solver '''
-        status = solver.Solve()
+        #status = solver.Solve()
         
         print ("---------- costs with Kerosene -----------")
-        
+        '''
         if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
             print ('solver status - Optimal = {0} - Feasible = {1} - solver result value = {0}'.format(pywraplp.Solver.OPTIMAL, pywraplp.Solver.FEASIBLE, status))
             print('Total costs = {0:.2f} in US dollars'.format( solver.Objective().Value() ) )
@@ -324,7 +324,7 @@ class TestMethods(unittest.TestCase):
                         seatCostDollars = costs[k][l] / airlineAircraftNumberOfSeatsList[k]
                         print('aircraft= {0} - ICAO code= {1} - assigned to flight leg= {2} - seat costs= {3:.2f} in US dollars for the selected aircraft and the selected flight leg'.format( airlineAircraftFullNameList[k], airlineAircraftICAOcodeList[k], flightLegsList[l], seatCostDollars ) )
 
-
+        '''
 
         t1 = time.clock()
         print ( 'duration= {0} seconds'.format(t1-t0) )

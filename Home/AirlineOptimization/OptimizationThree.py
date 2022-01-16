@@ -152,7 +152,8 @@ class TestMethods(unittest.TestCase):
 
         
         print (' --------- invoke the solver -------------')
-        status = solver.Solve()
+        #status = solver.Solve()
+        status = False
         
         print ("---------- solving -----------")
         print ('----- solver status= {0} - optimal= {1} - feasible= {2}'.format(status, pywraplp.Solver.OPTIMAL, pywraplp.Solver.FEASIBLE))
