@@ -35,6 +35,7 @@ The aircraft speed is used to calculate a turn radius.
 '''
 
 import math
+import sys
 
 from Home.Environment.Atmosphere import Atmosphere
 from Home.Environment.Earth import Earth
@@ -383,7 +384,9 @@ class FlightPath(FlightPlan):
                            initialHeadingDegrees = initialHeadingDegrees, 
                            aircraft = self.aircraft,
                            reverse = True)
-        lastTurnLeg.buildNewSimulatedArrivalTurnLeg(deltaTimeSeconds = self.deltaTimeSeconds,
+        
+        ''' 16th January 2022 - final radius of turn '''
+        finalRadiusOfTurnMeters = lastTurnLeg.buildNewSimulatedArrivalTurnLeg(deltaTimeSeconds = self.deltaTimeSeconds,
                                                  elapsedTimeSeconds = 0.0,
                                                  distanceStillToFlyMeters = 0.0,
                                                  simulatedAltitudeSeaLevelMeters = self.firstGlideSlopeWayPoint.getAltitudeMeanSeaLevelMeters(),
@@ -412,8 +415,11 @@ class FlightPath(FlightPlan):
         self.aircraft.setArrivalRunwayTouchDownWayPoint(self.touchDownWayPoint)
         print ( self.className + ': fix list= {0}'.format(self.fixList) )
         
+        ''' 16th January 2022 - Robert - return the final radius of turn '''
+        return finalRadiusOfTurnMeters
+        
 
-    def buildArrivalPhase(self, initialHeadingDegrees ):
+    def buildArrivalPhase(self, initialHeadingDegrees , finalRadiusOfTurnMeters):
         
         print ( self.className + ': initial heading= {0:.2f} degrees'.format(initialHeadingDegrees) )
         
@@ -446,7 +452,8 @@ class FlightPath(FlightPlan):
                                  finalHeadingDegrees = finalHeadingDegrees,
                                  lastTurn = True,
                                  bankAngleDegrees = 5.0,
-                                 arrivalRunway = self.arrivalRunway)
+                                 arrivalRunway = self.arrivalRunway,
+                                 finalRadiusOfTurnMeters = finalRadiusOfTurnMeters)
             self.finalRoute.addGraph(turnLeg)
                 
             endOfTurnLegWayPoint = self.finalRoute.getLastVertex().getWeight()
@@ -510,7 +517,9 @@ class FlightPath(FlightPlan):
           
             if self.isDomestic() or self.isInBound():
                 assert not(self.arrivalAirport is None)
-                self.buildSimulatedArrivalPhase()
+                finalRadiusOfTurnMeters = self.buildSimulatedArrivalPhase()
+                print ( "final radius of turn = {0} meters".format(finalRadiusOfTurnMeters))
+                #sys.exit()
             
             #print '==================== Loop over the fix list ==================== '
             
@@ -519,7 +528,7 @@ class FlightPath(FlightPlan):
             
             if (self.endOfSimulation == False):
                 #print '=========== build arrival phase =============='
-                self.buildArrivalPhase(initialHeadingDegrees)
+                self.buildArrivalPhase(initialHeadingDegrees, finalRadiusOfTurnMeters)
                 
     
             print ( self.className + ' ========== delta mass status ==============' )

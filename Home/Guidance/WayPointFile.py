@@ -73,7 +73,6 @@ class WayPoint(GeographicalPoint):
     def getElapsedTimeSeconds(self):
         return self.elapsedTimeSeconds
     
-    
     def getName(self):
         return self.Name
     

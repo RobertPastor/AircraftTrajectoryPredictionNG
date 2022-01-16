@@ -43,30 +43,17 @@ TAS [kt] RADIUS (15° Φ) [NM] RADIUS (25° Φ) [NM]
 480             12.5                 7.2
 
 '''
-import time
 import math
-import unittest
 
 from Home.aerocalc.airspeed import cas2tas
 
-from Home.Environment.Atmosphere import Atmosphere
-from Home.Environment.Earth import Earth
-
 from Home.Guidance.GraphFile import Graph
 
-from Home.Environment.AirportDatabaseFile import AirportsDatabase
-from Home.Environment.RunWaysDatabaseFile import RunWayDataBase
-from Home.Environment.WayPointsDatabaseFile import WayPointsDatabase
-from Home.Environment.Constants import Meter2Feet, MeterPerSecond2Knots, Knot2MetersPerSecond, Meter2NauticalMiles
-
-from Home.Guidance.GroundRunLegFile import GroundRunLeg
-from Home.Guidance.DescentGlideSlopeFile import DescentGlideSlope
-
-from Home.Guidance.BaseTurnLegFile import BaseTurnLeg
-from Home.Guidance.WayPointFile import WayPoint
-
-from Home.BadaAircraftPerformance.BadaAircraftDatabaseFile import BadaAircraftDatabase
+from Home.Environment.Constants import MeterPerSecond2Knots, Knot2MetersPerSecond, Meter2NauticalMiles
 from Home.BadaAircraftPerformance.BadaAircraftFile import BadaAircraft
+
+from Home.Guidance.TurnLegBaseFile import BaseTurnLeg
+from Home.Guidance.WayPointFile import WayPoint
 
 #Meter2Feet = 3.2808399 # one meter approx == 3 feet (3 feet 3â…œ inches)
 
@@ -188,7 +175,8 @@ class TurnLeg(Graph):
                      finalHeadingDegrees = 0.0,
                      lastTurn = False,
                      bankAngleDegrees = 15.0,
-                     arrivalRunway = None):
+                     arrivalRunway = None,
+                     finalRadiusOfTurnMeters = None):
         
         ''' start building a set of turning legs from initial heading to final heading '''
         ''' heading changes according to an aircraft speed => radius of turn '''
@@ -234,6 +222,10 @@ class TurnLeg(Graph):
                 print ("{0} - new radius of turn greater --> take this one = {1} meters".format(self.className, newRadiusOfTurnMeters))
                 radiusOfTurnMeters = newRadiusOfTurnMeters
             #exit()
+            
+            radiusOfTurnMeters = finalRadiusOfTurnMeters
+            print ("{0} - final radius of turn = {1:.2f} in meters".format(self.className, radiusOfTurnMeters))
+
         
         print ( self.className + ': tas= {0:.2f} knots - radius of turn= {1:.2f} meters - radius of turn= {2:.2f} nautics'.format(tasKnots, radiusOfTurnMeters, radiusOfTurnMeters*Meter2NauticalMiles) )           
         ''' index used to initialise the loop '''        
@@ -488,6 +480,7 @@ class TurnLeg(Graph):
         radiusOfTurnMeters = (tasMetersPerSecond * tasMetersPerSecond) / (9.81 * math.tan(math.radians(bankAngleDegrees)))
         print ( '{0} - tas= {1:.2f} knots - radius of turn= {2:.2f} meters - radius of turn= {3:.2f} nautics'.format(self.className, tasKnots, radiusOfTurnMeters, radiusOfTurnMeters*Meter2NauticalMiles) )        
  
+        #stop()
         ''' index used to initialise the loop '''        
         index = 0
         ''' build a list that can be reversed afterwards '''
@@ -586,103 +579,9 @@ class TurnLeg(Graph):
             for point in turnLegList:
                 self.addVertex(point)
         
+        ''' 16th January 2022 - return the radius of turn '''
+        return radiusOfTurnMeters        
+        
 
 
-class Test_TurnLeg(unittest.TestCase):
-
-    def test_TurnLeg(self):
-
-        print ( '==================== Turn Leg ==================== '+ time.strftime("%c") )
-        atmosphere = Atmosphere()
-        earth = Earth()
-        
-        acBd = BadaAircraftDatabase()
-        aircraftICAOcode = 'A320'
-        assert acBd.read()
-        assert acBd.aircraftExists(aircraftICAOcode) 
-        assert acBd.aircraftPerformanceFileExists(aircraftICAOcode)
-                
-        print ( '==================== aircraft found  ==================== '+ time.strftime("%c") )
-        aircraft = BadaAircraft(ICAOcode = aircraftICAOcode, 
-                                aircraftFullName = acBd.getAircraftFullName(aircraftICAOcode),
-                                badaPerformanceFilePath = acBd.getAircraftPerformanceFile(aircraftICAOcode),
-                                atmosphere = atmosphere,
-                                earth = earth)
-        aircraft.dump()
-                
-        print ( '==================== Get Airport ==================== '+ time.strftime("%c") )
-        airportsDB = AirportsDatabase()
-        assert airportsDB.read()
-        
-        print ( '==================== Get Arrival Airport ==================== '+ time.strftime("%c") )
-        Lisbonne = airportsDB.getAirportFromICAOCode('LPPT')
-        print ( Lisbonne )
-        
-        print ( '====================  find the run-ways ==================== '+ time.strftime("%c") )
-        runWaysDatabase = RunWayDataBase()
-        if runWaysDatabase.read():
-            print ( 'runways DB correctly read' )
-            
-        print ( '====================  take off run-way ==================== '+ time.strftime("%c") )
-        arrivalRunway = runWaysDatabase.getFilteredRunWays(airportICAOcode = 'LPPT',  runwayName = '')
-        print ( arrivalRunway )
-        
-        print ( '==================== Ground run ==================== '+ time.strftime("%c") )
-        groundRun = GroundRunLeg(runway = arrivalRunway, 
-                                 aircraft = aircraft,
-                                 airport = Lisbonne)
-        
-        touchDownWayPoint = groundRun.computeTouchDownWayPoint()
-        print ( touchDownWayPoint )
-        groundRun.buildDepartureGroundRun(deltaTimeSeconds = 1.0,
-                                          elapsedTimeSeconds = 0.0,
-                                          distanceStillToFlyMeters = 0.0,
-                                          distanceToLastFixMeters = 0.0)
-        print ( '==================== Climb Ramp ==================== '+ time.strftime("%c") )
-        
-        initialWayPoint = groundRun.getLastVertex().getWeight()
-    
-        descentGlideSlope = DescentGlideSlope( runway = arrivalRunway,
-                                                aircraft = aircraft,
-                                                arrivalAirport = Lisbonne ,
-                                                descentGlideSlopeDegrees = 3.0)
-        
-        ''' if there is a fix nearer to 5 nautics of the touch-down then limit size of simulated glide slope '''
-        descentGlideSlope.buildSimulatedGlideSlope(descentGlideSlopeSizeNautics = 5.0)
-        descentGlideSlope.createKmlOutputFile()
-        
-        firstGlideSlopeWayPoint = descentGlideSlope.getVertex(v=0).getWeight()
-    
-        print ( '==================== Climb Ramp ==================== '+ time.strftime("%c") )
-        initialWayPoint = groundRun.getLastVertex().getWeight()
-    
-        print ( ' ================== turn leg end =============== ' )
-        wayPointsDb = WayPointsDatabase()
-        assert (wayPointsDb.read())
-        Exona = wayPointsDb.getWayPoint('EXONA')
-        Rosal = wayPointsDb.getWayPoint('ROSAL')
-    
-        print ( Rosal.getBearingDegreesTo(Exona) )
-        initialHeadingDegrees = arrivalRunway.getTrueHeadingDegrees()
-        
-        lastTurnLeg = TurnLeg( initialWayPoint = firstGlideSlopeWayPoint, 
-                               finalWayPoint = Exona,
-                               initialHeadingDegrees = initialHeadingDegrees, 
-                               aircraft = aircraft,
-                               reverse = True)
-        deltaTimeSeconds = 1.0
-        lastTurnLeg.buildNewSimulatedArrivalTurnLeg(deltaTimeSeconds = deltaTimeSeconds,
-                                                     elapsedTimeSeconds = 0.0,
-                                                     distanceStillToFlyMeters = 0.0,
-                                                     simulatedAltitudeSeaLevelMeters = firstGlideSlopeWayPoint.getAltitudeMeanSeaLevelMeters(),
-                                                     flightPathAngleDegrees = 3.0)
-        lastTurnLeg.createKmlOutputFile()
-        descentGlideSlope.addGraph(lastTurnLeg)
-        #descentGlideSlope.createXlsxOutputFile()
-        descentGlideSlope.createKmlOutputFile()
-        
-        print ( ' ================== turn leg end =============== ' )
-
-if __name__ == '__main__':
-    unittest.main()
     

@@ -27,10 +27,8 @@ Created on 6 mars 2015
 this class is responsible for managing the AeroDynamics data provided for each aircraft by BADA
 '''
 
-import unittest
 
 from Home.BadaAircraftPerformance.BadaAircraftPerformanceFile import AircraftPerformance
-from Home.BadaAircraftPerformance.BadaAircraftDatabaseFile import BadaAircraftDatabase
 
 from Home.Environment.Atmosphere import Atmosphere
 from Home.Environment.Earth import Earth
@@ -81,6 +79,7 @@ class AeroDynamics(object):
         print ( self.className + ': Wing Area Surface= {0} Square-Meters'.format(self.WingAreaSurfaceSquareMeters) )
         print ( self.className + ': stall speed= {0} knots'.format(self.VstallKcas) )
         
+        
     def getVstallKcas(self, phase):
         ''' calibrated air speed in Knots '''
         assert (phase in ['CR', 'IC', 'TO', 'AP', 'LD'])
@@ -106,62 +105,3 @@ class AeroDynamics(object):
         print ( self.className + ': stall speed= {0} knots'.format(self.VstallKcas) )
         
 
-class Test_Class(unittest.TestCase):
-
-    def test_Class_One(self):
-            
-        print ( '================ test one ====================' )
-        acBd = BadaAircraftDatabase()
-        assert acBd.read()
-        
-        atmosphere = Atmosphere()
-        earth = Earth()
-        
-        aircraftICAOcode = 'A320'
-        if ( acBd.aircraftExists(aircraftICAOcode) and
-             acBd.aircraftPerformanceFileExists(aircraftICAOcode)):
-            
-            print ( acBd.getAircraftFullName(aircraftICAOcode) )
-            
-            aircraftPerformance = AircraftPerformance(acBd.getAircraftPerformanceFile(aircraftICAOcode))
-            aeroDynamics = AeroDynamics(aircraftPerformance, atmosphere, earth)
-            
-            print ( aeroDynamics )
-            for phase in ['CR', 'IC', 'TO', 'AP', 'LD']:
-                print ( 'phase= {0} - Vstall CAS= {1} knots'.format(phase, aeroDynamics.getVstallKcas(phase)) )
-                
-            for phase in ['CR', 'IC', 'TO', 'AP', 'LD']:
-                print ( 'phase= {0} - Drag Coeff= {1}'.format(phase, aeroDynamics.getDragCoeff(phase)) )
-
-            print ( 'Wing Area Surface={0} Square-meters'.format(aeroDynamics.getWingAreaSurfaceSquareMeters()) )
-        
-        
-    def test_Class_Two(self):
-            
-        print ( '================ test Two ====================' )
-        acBd = BadaAircraftDatabase()
-        assert acBd.read()
-        
-        atmosphere = Atmosphere()
-        earth = Earth()
-        
-        aircraftICAOcode = 'A320'
-        if ( acBd.aircraftExists(aircraftICAOcode) and
-             acBd.aircraftPerformanceFileExists(aircraftICAOcode)):
-            
-            print ( acBd.getAircraftFullName(aircraftICAOcode) )
-            
-            aircraftPerformance = AircraftPerformance(acBd.getAircraftPerformanceFile(aircraftICAOcode))
-            aeroDynamics = AeroDynamics(aircraftPerformance, atmosphere, earth)
-            
-            print ( aeroDynamics )
-            phase = 'XX'
-            try:
-                print ( aeroDynamics.getDragCoeff(phase) )
-            except Exception as e: 
-                print ( 'test two = {0}'.format(e) )
-                self.assertTrue(isinstance(e, AssertionError))
-            
-            
-if __name__ == '__main__':
-    unittest.main()
