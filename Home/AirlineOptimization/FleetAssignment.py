@@ -69,10 +69,10 @@ class TestMethods(unittest.TestCase):
                 print ( "{0} ---- {1}".format( flightLegOneWay , flightLegReturn ) )
                 airlineFlightLegsList.append( flightLegOneWay )
 
-        print ( "length of airline flight legs list = {0}".format( len ( airlineFlightLegsList ) ) )
+        print ( "Fleet Assignment - length of airline flight legs list = {0}".format( len ( airlineFlightLegsList ) ) )
         #stop()
 
-        print ("-----------airline routes costs---------")
+        print ("-----------Fleet Assignment - airline routes costs---------")
 
         airlineAircraftRoutesCosts = AirlineAircraftRoutesCosts()
         airlineCosts_np_array = airlineAircraftRoutesCosts.read()

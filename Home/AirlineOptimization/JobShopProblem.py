@@ -70,7 +70,7 @@ class TestMethods(unittest.TestCase):
             index = index + 1
 
 
-        print ("-----------airline routes costs---------")
+        print ("-----------Job Shop Problem - airline routes costs---------")
 
         airlineAircraftRoutesCosts = AirlineAircraftRoutesCosts()
         airlineCosts_np_array = airlineAircraftRoutesCosts.read()

@@ -122,7 +122,7 @@ class TestMethods(unittest.TestCase):
             print ("index= {0} - task = {1}".format( tk, task_data) )
             index = index + 1
 
-        print ("-----------airline routes costs---------")
+        print ("-----------Optimization Two with Tasks - airline routes costs---------")
 
         airlineAircraftRoutesCosts = AirlineAircraftRoutesCosts()
         airlineCosts_np_array = airlineAircraftRoutesCosts.read()
@@ -176,6 +176,7 @@ class TestMethods(unittest.TestCase):
             ''' here we are building the costs for one aircraft instance '''
             aircraftInstanceCosts = []
             
+            '''
             for tk , task in enumerate(tasks_data):
                 print ("index= {0} - task = {1}".format( tk, task) )
 
@@ -189,6 +190,7 @@ class TestMethods(unittest.TestCase):
                 print ("index= {0} - task = {1} - costs = {2}".format( tk, task, operationnalPlusFuelCostsDollars) )
 
                 aircraftInstanceCosts.append( operationnalPlusFuelCostsDollars )
+            '''
             costs.append(aircraftInstanceCosts)
 
                 

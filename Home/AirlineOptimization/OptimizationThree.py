@@ -92,7 +92,7 @@ class TestMethods(unittest.TestCase):
         print ( "length of airline flight legs list = {0}".format( len ( airlineFlightLegsList ) ) )
         
         
-        print ("-----------airline routes costs---------")
+        print ("-----------Optimization Three - airline routes costs---------")
 
         airlineAircraftRoutesCosts = AirlineAircraftRoutesCosts()
         airlineCosts_np_array = airlineAircraftRoutesCosts.read()
@@ -103,9 +103,9 @@ class TestMethods(unittest.TestCase):
         ''' define a daily schedule made of minutes from 00h00 to 23h59 '''
         dailyHoursMinutes = []
         dailyMinutesSpan = 2360
-        for i in range(dailyMinutesSpan):
+        #for i in range(dailyMinutesSpan):
             #print ( i )
-            dailyHoursMinutes.append( i )
+        #    dailyHoursMinutes.append( i )
             
         schedule = {}
         for n in range(len(airlineAircraftInstancesList)):

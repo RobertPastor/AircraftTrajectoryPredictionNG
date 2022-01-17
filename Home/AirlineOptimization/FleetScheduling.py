@@ -101,7 +101,7 @@ class TestMethods(unittest.TestCase):
 
         print ( "length of airline flight legs list = {0}".format( len ( airlineFlightLegsList ) ) )
         
-        print ("-----------airline routes costs---------")
+        print ("-----------Fleet Scheduling - airline routes costs---------")
 
         airlineAircraftRoutesCosts = AirlineAircraftRoutesCosts()
         airlineCosts_np_array = airlineAircraftRoutesCosts.read()
@@ -291,8 +291,8 @@ class TestMethods(unittest.TestCase):
 
         # Creates the solver and solve.
         solver = cp_model.CpSolver()
-        status = solver.Solve(model)
-    
+        #status = solver.Solve(model)
+        status = False
         if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
             print('Solution:')
             # Create one list of assigned tasks per machine.
@@ -343,17 +343,20 @@ class TestMethods(unittest.TestCase):
             # Finally print the solution found.
             print(f'Optimal Schedule Length: {solver.ObjectiveValue()}')
             #print(output)
+            
+            # Statistics.
+            print('\nStatistics')
+            print('  - conflicts: %i' % solver.NumConflicts())
+            print('  - branches : %i' % solver.NumBranches())
+            print('  - wall time: %f s' % solver.WallTime())
+
+
         else:
             print('No solution found.')
 
-           
     
-        # Statistics.
-        print('\nStatistics')
-        print('  - conflicts: %i' % solver.NumConflicts())
-        print('  - branches : %i' % solver.NumBranches())
-        print('  - wall time: %f s' % solver.WallTime())
-
+    
+ 
         
         print ("------------- end --------------")
 

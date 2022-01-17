@@ -92,7 +92,7 @@ class TestMethods(unittest.TestCase):
 
         print ( "length of airline flight legs list = {0}".format( len ( airlineFlightLegsList ) ) )
 
-        print ("-----------airline routes costs---------")
+        print ("-----------Optimization Two - airline routes costs---------")
 
         airlineAircraftRoutesCosts = AirlineAircraftRoutesCosts()
         airlineCosts_np_array = airlineAircraftRoutesCosts.read()
