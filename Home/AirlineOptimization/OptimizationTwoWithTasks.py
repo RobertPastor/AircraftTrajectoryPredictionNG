@@ -15,6 +15,7 @@ from Home.AirlineRoutes.AirlineRoutesAirportsReader import AirlineRoutesAirports
 
 from Home.AirlineFleet.AirlineFleetReader import AirlineFleetDataBase
 from Home.AirlineFleet.AirlineFleetReader import AirlineAircraft
+from _ast import Pass
 
 kerosene_kilo_to_US_gallons = 0.33
 US_gallon_to_US_dollars = 3.25
@@ -265,7 +266,8 @@ class TestMethods(unittest.TestCase):
         objective_terms = []
         for i in range(num_aircrafts):
             for tk , task in enumerate(tasks_data):
-                objective_terms.append(costs[i][tk] * x[i, tk])
+                pass
+                #objective_terms.append(costs[i][tk] * x[i, tk])
                 
         ''' minimize the costs '''
         solver.Minimize(solver.Sum(objective_terms))
@@ -284,7 +286,9 @@ class TestMethods(unittest.TestCase):
                     
                 for tk , task in enumerate(tasks_data):
                     if x[i, tk].solution_value() > 0.5:
-                                
+                        pass
+                        
+                        '''        
                         print('aircraft {0} assigned to task {1} - Costs = {2:.2f} in US dollars'.format( i, tk, costs[i][tk]))
                         print('aircraft {0} - ICAO code {1} - assigned to task {2} - Cost = {3:.2f} US dollars for the flight duration'.format( airlineAircraftFullNameList[i], acInstance, task, costs[i][tk] ) )
                         print('aircraft {0} - ICAO code {1} - assigned to task {2} - number of seats = {3} for the selected aircraft'.format( airlineAircraftFullNameList[i], acInstance, task, 2 * airlineAircraftNumberOfSeatsList[i] ) )
@@ -298,7 +302,7 @@ class TestMethods(unittest.TestCase):
                         arrivalAirportICAOcode = str(flightLeg).split("-")[1]
                         durationHours += airlineAircraftRoutesCosts.getFlightLegDurationInHours(aircraftICAOcode, departureAirportICAOcode, arrivalAirportICAOcode)
                         
-                        ''' add turn around time '''
+                        add turn around time 
                         turnAroundDurationHours = 1.0
                         durationHours += turnAroundDurationHours
                         
@@ -306,7 +310,7 @@ class TestMethods(unittest.TestCase):
                         seatCostDollars = costs[i][tk] / ( airlineAircraftNumberOfSeatsList[i] * 2 )
                         print('aircraft {0} - ICAO code {1} - assigned to flight leg {2} - seat costs  = {3:.2f} in US dollars for the selected aircraft and the selected flight leg'.format( airlineAircraftFullNameList[i], acInstance, task, seatCostDollars ) )
                         print ( "===== next ======")
-                                
+                        '''
 
         t1 = time.clock()
         print ( 'duration= {0} seconds'.format(t1-t0) )
