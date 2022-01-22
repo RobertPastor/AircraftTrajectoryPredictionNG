@@ -11,7 +11,7 @@ Home/Guidance/__pycache__/
 .settings
 
 Home/BadaAircraftPerformance/SYNONYM.NEW
-Home/Bada381DataFiles/
+
 Home/Bada381DataFiles/*.OPF
 Home/Bada381DataFiles/*.APF
 Home/Bada381DataFiles/*.PTD
