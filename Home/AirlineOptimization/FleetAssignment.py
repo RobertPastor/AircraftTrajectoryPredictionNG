@@ -7,14 +7,12 @@ import time
 import unittest
 
 from ortools.linear_solver import pywraplp
-import numpy as np
 
 from Home.AirlineCosts.AirlineAircraftRoutesCostsDatabaseFile import AirlineAircraftRoutesCosts
 from Home.AirlineRoutes.AirlineRoutesAirportsReader import AirlineRoutesAirportsDataBase
 
 from Home.AirlineFleet.AirlineFleetReader import AirlineFleetDataBase
 from Home.AirlineFleet.AirlineFleetReader import AirlineAircraft
-from _ast import Pass
 
 kerosene_kilo_to_US_gallons = 0.33
 US_gallon_to_US_dollars = 3.25

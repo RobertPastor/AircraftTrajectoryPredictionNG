@@ -101,7 +101,7 @@ class Test_ClimbRamp(unittest.TestCase):
         
         groundRun.addGraph(climbRamp)
         
-        groundRun.createKmlOutputFile()
+        groundRun.createKmlOutputFile(False, aircraftICAOcode, CharlesDeGaulle.getICAOcode() , "EndOfClimbRamp")
         print ( "=========== ThreeDegreesGlideSlope end =========== " + time.strftime("%c") )
     
 

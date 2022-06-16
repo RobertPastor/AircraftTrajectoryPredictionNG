@@ -39,8 +39,6 @@ fieldNames = ['id' , 'airport_ref', 'airport_ident' , 'length_ft' , 'width_ft' ,
               'he_ident' , 'he_latitude_deg' , 'he_longitude_deg' , 
               'he_elevation_ft' , 'he_heading_degT', 'he_displaced_threshold_ft' ]
 
-
-    
     
 class RunWayDataBase(object):
     FilePath = ''

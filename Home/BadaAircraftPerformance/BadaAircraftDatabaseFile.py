@@ -30,8 +30,6 @@ this class is aware of the synonym file structure
 
 '''
 import os
-import time
-import unittest
 
 BADA_381_DATA_FILES = 'Bada381DataFiles'
 
@@ -63,7 +61,6 @@ class BadaSynonymAircraft(object):
 
 class BadaAircraftDatabase(object):
     ''' this class is responsible for reading the synonym file '''
-    
     
     def __init__(self):
         self.className = self.__class__.__name__
