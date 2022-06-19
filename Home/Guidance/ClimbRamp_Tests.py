@@ -59,6 +59,7 @@ class Test_ClimbRamp(unittest.TestCase):
         assert ( isinstance(CharlesDeGaulle, Airport))
         
         print ( CharlesDeGaulle )
+        print ( "Airport Mean See Level = {0} meters".format( CharlesDeGaulle.getAltitudeMeanSeaLevelMeters() ))
         
         aircraft.setTargetCruiseFlightLevel(RequestedFlightLevel = 390, 
                                             departureAirportAltitudeMSLmeters = CharlesDeGaulle.getAltitudeMeanSeaLevelMeters())

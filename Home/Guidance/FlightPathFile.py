@@ -35,7 +35,6 @@ The aircraft speed is used to calculate a turn radius.
 '''
 
 import math
-import sys
 
 from Home.Environment.Atmosphere import Atmosphere
 from Home.Environment.Earth import Earth

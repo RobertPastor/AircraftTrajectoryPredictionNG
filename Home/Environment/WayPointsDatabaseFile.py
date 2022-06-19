@@ -107,10 +107,13 @@ class WayPointsDatabase(object):
     ColumnNames = []
     className = ''
     
-    def __init__(self):
+    def __init__(self, defaultDatabase = "Europe"):
         self.className = self.__class__.__name__
         
-        self.FilePath = 'WayPoints.xls'  
+        if (defaultDatabase == None) or (defaultDatabase == "Europe"):
+            self.FilePath = 'WayPoints-Europe.xls'
+        else:
+            self.FilePath = 'WayPoints-NorthAmerica.xls'
         self.FilesFolder = os.path.dirname(__file__)
 
         print ( self.className + ': file folder= {0}'.format(self.FilesFolder) )

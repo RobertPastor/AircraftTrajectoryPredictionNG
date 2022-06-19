@@ -49,7 +49,7 @@ class Test_DescentGlideSlope(unittest.TestCase):
         runWaysDatabase = RunWayDataBase()
         assert runWaysDatabase.read()
         
-        runway = runWaysDatabase.getFilteredRunWays(airportICAOcode = 'LFML', runwayName = '')
+        runway = runWaysDatabase.getFilteredRunWays(airportICAOcode = 'LFML', runwayName = '31R')
         print ( runway )
       
         print ( "=========== airports  =========== " + time.strftime("%c") )
@@ -84,8 +84,8 @@ class Test_DescentGlideSlope(unittest.TestCase):
         print ( "get number of edges= {0}".format ( threeDegreesGlideSlope.getNumberOfEdges() ) )
         print ( 'Glide Slope overall length= {0} meters'.format( threeDegreesGlideSlope.computeLengthMeters() ) )
         
-        threeDegreesGlideSlope.createKmlOutputFile()
-        threeDegreesGlideSlope.createXlsxOutputFile()
+        threeDegreesGlideSlope.createKmlOutputFile(False, aircraftICAOcode, "Descent-Glide-Scope" + "-{0}".format(runway.getName()), MarseilleMarignane.getName())
+        threeDegreesGlideSlope.createXlsxOutputFile(False, aircraftICAOcode, "Descent-Glide-Scope" + "-{0}".format(runway.getName()), MarseilleMarignane.getName())
         print ( '==================== three degrees Descent Slope End  ==================== '+ time.strftime("%c") )
 
 
@@ -144,12 +144,11 @@ class Test_DescentGlideSlope(unittest.TestCase):
         print ( "get number of edges= {0}".format ( threeDegreesGlideSlope.getNumberOfEdges() ) )
         print ( 'Glide Slope overall length= {0} meters'.format( threeDegreesGlideSlope.computeLengthMeters() ) )
         
-        threeDegreesGlideSlope.createKmlOutputFile()
-        threeDegreesGlideSlope.createXlsxOutputFile()
+        threeDegreesGlideSlope.createKmlOutputFile(False, aircraftICAOcode, "Descent-Glide-Scope" + "-{0}".format(runway.getName()), CharlesDeGaulle.getName())
+        threeDegreesGlideSlope.createXlsxOutputFile(False, aircraftICAOcode, "Descent-Glide-Scope" + "-{0}".format(runway.getName()), CharlesDeGaulle.getName())
         print ( '==================== three degrees Descent Slope End  ==================== '+ time.strftime("%c") )
 
 
-        
 
 if __name__ == '__main__':
     unittest.main()

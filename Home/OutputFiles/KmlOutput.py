@@ -79,11 +79,18 @@ class KmlOutput():
         extrudeElement.appendChild(self.kmlDoc.createTextNode("1"))
         pointElement.appendChild(extrudeElement)
         
+        ''' 16th June 2022 - altitude above Sea Level '''
+        altitudeElement = self.kmlDoc.createElement('altitude')
+        altitudeElement.appendChild(self.kmlDoc.createTextNode(str(AltitudeAboveSeaLevelMeters)))
+        pointElement.appendChild(altitudeElement)
+
+        
         altitudeModeElement = self.kmlDoc.createElement('altitudeMode')
         altitudeModeElement.appendChild(self.kmlDoc.createTextNode("absolute"))
         pointElement.appendChild(altitudeModeElement)
         
         coordinates = str(float(LongitudeDegrees))+","+str(float(LatitudeDegrees))+","+str(AltitudeAboveSeaLevelMeters)
+        #coordinates = str(float(LongitudeDegrees))+","+str(float(LatitudeDegrees))
         coorElement = self.kmlDoc.createElement('coordinates')
         coorElement.appendChild(self.kmlDoc.createTextNode(coordinates))
         pointElement.appendChild(coorElement)
