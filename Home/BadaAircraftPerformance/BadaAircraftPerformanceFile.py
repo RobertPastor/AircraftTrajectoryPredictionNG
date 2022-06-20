@@ -28,7 +28,7 @@
 
 import os.path
 import re
-
+import logging
 '''
 The wake category can also be one of three values:
 H - heavy
@@ -52,7 +52,7 @@ def fortran_float(input_string):
             processed_string = match.group(1)+'E'+match.group(2)
             fl = float(processed_string)
         else:
-            print ( "Trying to find number from ",input_string )
+            logging.info ( "Trying to find number from ",input_string )
             raise ValueError()
     return fl
 
@@ -81,7 +81,7 @@ class AircraftPerformance(object):
             
     def exists(self):
         if os.path.isfile(self.filePath):
-            #print self.className + ' : Performance file= ' + self.filePath + " exists"
+            #logging.info self.className + ' : Performance file= ' + self.filePath + " exists"
             return True
         else:
             raise ValueError(self.className +": BADA Performance File not found: "+self.filePath)
@@ -96,7 +96,7 @@ class AircraftPerformance(object):
                 line = line.strip()
                 ''' data lines are starting with 'CD' '''
                 if str(line).startswith('CD'):
-                    #print line
+                    #logging.info line
                     self.dataLines[dataLineIndex] = line.strip()
                     dataLineIndex += 1
             f.close()
@@ -257,15 +257,15 @@ class AircraftPerformance(object):
    
     def getVstallKcasKnots(self):
         VstallKcasKnots = {}
-        #print self.className + ': get Cruise Vstall KCAS'
+        #logging.info self.className + ': get Cruise Vstall KCAS'
         try:
             if len(self.dataLines)>0:
                 for line in range(self.ConfigurationCharacteristicsLine, self.ConfigurationCharacteristicsLine+5):
-                    #print line
+                    #logging.info line
                     key = str(self.dataLines[line]).split()[2]
-                    #print key
+                    #logging.info key
                     VstallKcasKnots[key] = fortran_float(str(self.dataLines[line]).split()[4])
-                    #print VstallKcas[key]
+                    #logging.info VstallKcas[key]
         except Exception as e:
             raise ValueError('BadaPerformanceFile: error while reading V Stall Speeds {0}'.format(e))
         return VstallKcasKnots
@@ -314,16 +314,16 @@ class AircraftPerformance(object):
         DragCoeff = {}
         CD0 = {}
         CD2 = {}
-        #print self.className + ': get Drag coeff'
+        #logging.info self.className + ': get Drag coeff'
         try:
             if len(self.dataLines)>0:
                 for line in range(self.ConfigurationCharacteristicsLine, self.ConfigurationCharacteristicsLine+5):
-                    #print line
+                    #logging.info line
                     key = str(self.dataLines[line]).split()[2]
-                    #print key
+                    #logging.info key
                     CD0[key] = fortran_float(str(self.dataLines[line]).split()[5])
                     CD2[key] = fortran_float(str(self.dataLines[line]).split()[6])
-                    #print VstallKcas[key]
+                    #logging.info VstallKcas[key]
         except Exception as e:
             raise ValueError('BadaPerformanceFile: error while reading drag coeff {0}'.format(e))
         DragCoeff['CD0'] = CD0
@@ -341,14 +341,14 @@ class AircraftPerformance(object):
                 line = self.ConfigurationCharacteristicsLine + 8
                 
                 return fortran_float(str(self.dataLines[line]).split()[3])
-                    #print VstallKcas[key]
+                    #logging.info VstallKcas[key]
         except Exception as e:
             raise ValueError('BadaPerformanceFile: error while reading landing gear drag coeff {0}'.format(e))
         
         return 0.0
 
     def getFuelConsumptionCoeff(self):
-        #print self.className + ': get Fuel Consumption'
+        #logging.info self.className + ': get Fuel Consumption'
         FuelConsumptionCoeff = {}
         try:
             index = 0
@@ -356,13 +356,13 @@ class AircraftPerformance(object):
                 for line in range(self.FuelConsumptionLine, self.FuelConsumptionLine+3):
                     # from each line we extract 2 values
                     count = 0
-                    #print line
+                    #logging.info line
                     FuelConsumptionCoeff[index] = fortran_float(str(self.dataLines[line]).split()[count+1])
                     count += 1
                     index += 1
                     FuelConsumptionCoeff[index] = fortran_float(str(self.dataLines[line]).split()[count+1])
                     index += 1
-                    #print VstallKcas[key]
+                    #logging.info VstallKcas[key]
         except Exception as e:
             raise ValueError('BadaPerformanceFile: error while reading fuel consumption coeff {0}'.format(e))
         

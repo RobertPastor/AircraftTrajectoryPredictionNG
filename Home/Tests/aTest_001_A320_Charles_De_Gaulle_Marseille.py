@@ -27,7 +27,7 @@ Created on 6 janvier 2015
 
 import time
 import unittest
-
+import logging
 
 from Home.Guidance.FlightPathFile import FlightPath
 
@@ -40,11 +40,13 @@ NauticalMiles2Meter = 1852
 class Test_Route(unittest.TestCase):
 
     def test_route(self):
+        
+        logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S' , level=logging.INFO)
 
         print ( "=========== Flight Plan start  =========== "  )
         
-        strRoute = 'ADEP/LFPG-ERMONT-GIF-JURAN-MEIL-CHALM-ADES/LFML'
-        strRoute = 'ADEP/LFPG/08R-LATRA-LAMUT-LAKOB-OBEPA-LERGA-ADES/LFML/31R'
+        #strRoute = 'ADEP/LFPG-ERMONT-GIF-JURAN-MEIL-CHALM-ADES/LFML'
+        strRoute = 'ADEP/LFPG/08R-LATRA-LAMUT-F290-LAKOB-OBEPA-F250-LERGA-ADES/LFML/31R'
         flightPath = FlightPath(route = strRoute, 
                                 aircraftICAOcode = 'A320',
                                 RequestedFlightLevel = 330, 

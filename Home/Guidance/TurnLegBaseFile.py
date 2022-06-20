@@ -31,6 +31,7 @@ is used in case of SIMULATED arrival turn.
 '''
 import time
 import unittest
+import logging
 
 
 class BaseTurnLeg(object):
@@ -63,7 +64,7 @@ class BaseTurnLeg(object):
         strMsg = self.className + ' - initial Heading= ' + str(self.initialHeadingDegrees) + ' degrees'
         strMsg += ' final Heading= ' + str(self.finalHeadingDegrees)+ ' degrees '
         strMsg += ' increment= ' + str(self.incrementDegrees) + ' degrees'
-        print ( strMsg )
+        logging.info ( strMsg )
         
         self.turnLegList = []
                     
@@ -71,16 +72,16 @@ class BaseTurnLeg(object):
     def build(self):
         
         self.turnLegList = []
-        #print self.initialHeadingDegrees
+        #logging.info self.initialHeadingDegrees
         self.turnLegList.append(self.initialHeadingDegrees)
         
         if self.incrementDegrees > 0.0:
-            print ( self.className + ': increment is > 0.0 => turn clock-wise ' )
+            logging.info ( self.className + ': increment is > 0.0 => turn clock-wise ' )
             if self.initialHeadingDegrees < self.finalHeadingDegrees:
                 while self.initialHeadingDegrees < self.finalHeadingDegrees:
                     self.initialHeadingDegrees += self.incrementDegrees
                     self.turnLegList.append(self.initialHeadingDegrees)
-                    #print self.initialHeadingDegrees
+                    #logging.info self.initialHeadingDegrees
             else:
                 ''' initial heading greater to final ... value will increase then go through 360.0 '''
                 while (self.initialHeadingDegrees < 360.0):
@@ -95,12 +96,12 @@ class BaseTurnLeg(object):
                     ''' need to cope with the situation where initial heading will be greater to 360 '''
                     self.initialHeadingDegrees += self.incrementDegrees
                     self.turnLegList.append(self.initialHeadingDegrees)
-                    #print self.initialHeadingDegrees
+                    #logging.info self.initialHeadingDegrees
             
         else:
-            print ( self.className + ': increment is < 0.0 => turn anti-clock wise ' )
+            logging.info ( self.className + ': increment is < 0.0 => turn anti-clock wise ' )
             if self.initialHeadingDegrees < self.finalHeadingDegrees:
-                #print ''' initial heading lower to final heading '''
+                #logging.info ''' initial heading lower to final heading '''
                 while self.initialHeadingDegrees > 0.0:
                     self.initialHeadingDegrees += self.incrementDegrees
                     if self.initialHeadingDegrees > 0.0:
@@ -114,7 +115,7 @@ class BaseTurnLeg(object):
                     self.turnLegList.append(self.initialHeadingDegrees)
 
             else:
-                #print self.className + ': initial heading greater to final'
+                #logging.info self.className + ': initial heading greater to final'
                 while self.finalHeadingDegrees < self.initialHeadingDegrees:
                     self.initialHeadingDegrees += self.incrementDegrees
                     self.turnLegList.append(self.initialHeadingDegrees)
@@ -131,29 +132,29 @@ class Test_Class(unittest.TestCase):
     def test_Class(self):
 
     
-        print ( "=========== Base Turn Leg testing   =========== " + time.strftime("%c") )
+        logging.info ( "=========== Base Turn Leg testing   =========== " + time.strftime("%c") )
         
         baseTurnLeg = BaseTurnLeg(150.0, 190.0, 1.0)
         baseTurnLeg.build()
-        print ( baseTurnLeg )
+        logging.info ( baseTurnLeg )
         
-        print ( "=========== Base Turn Leg testing   =========== " + time.strftime("%c") )
+        logging.info ( "=========== Base Turn Leg testing   =========== " + time.strftime("%c") )
     
         baseTurnLeg = BaseTurnLeg(350.0, 10.0, 1.0)
         baseTurnLeg.build()
-        print ( baseTurnLeg )
+        logging.info ( baseTurnLeg )
         
-        print ( "=========== Base Turn Leg testing   =========== " + time.strftime("%c") )
+        logging.info ( "=========== Base Turn Leg testing   =========== " + time.strftime("%c") )
         baseTurnLeg = BaseTurnLeg(10.0, 350.0, -1.0)
         baseTurnLeg.build()
-        print ( baseTurnLeg )
+        logging.info ( baseTurnLeg )
         
-        print ( "=========== Base Turn Leg testing   =========== " + time.strftime("%c") )
+        logging.info ( "=========== Base Turn Leg testing   =========== " + time.strftime("%c") )
         baseTurnLeg = BaseTurnLeg(270.0, 80.0, -1.0)
         baseTurnLeg.build()
-        print ( baseTurnLeg )
+        logging.info ( baseTurnLeg )
         
-        print ( "=========== Base Turn Leg testing   =========== " + time.strftime("%c") )
+        logging.info ( "=========== Base Turn Leg testing   =========== " + time.strftime("%c") )
         try:
             BaseTurnLeg(361.0, 0.0, 0.0)
             self.assertFalse(True)

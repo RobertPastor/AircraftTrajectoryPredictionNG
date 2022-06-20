@@ -51,6 +51,7 @@ The great circles are the geodesics of the sphere.
 '''
 
 import math
+import logging
 
 from Home.Guidance.WayPointFile import WayPoint
 from Home.BadaAircraftPerformance.BadaAircraftFile import BadaAircraft
@@ -122,13 +123,13 @@ class GreatCircleRoute(Graph):
         ''' 6371.009 represents the mean radius of the earth'''
         ''' shortest path distance'''
         distanceMeters = EarthMeanRadiusMeters * distance_radians
-        #print self.className + ': computeGreatCircle shortest path distance= ' + str(distanceMeters) + ' meters'
+        #logging.info self.className + ': computeGreatCircle shortest path distance= ' + str(distanceMeters) + ' meters'
 
         ''' init the loop index '''
         index = 0
         elapsedTimeSeconds = elapsedTimeSeconds
         
-        #print self.className + ': initial True Air Speed= ' + str(trueAirSpeedMetersSecond) + ' meters/second'
+        #logging.info self.className + ': initial True Air Speed= ' + str(trueAirSpeedMetersSecond) + ' meters/second'
         overflownDistanceMeters = 0.0
         ''' loop over the over-flown distance '''
         endOfSimulation = False
@@ -136,7 +137,7 @@ class GreatCircleRoute(Graph):
             
             ''' initialization of the loop '''
             if index == 0:
-                print ( self.className + ': initial way-point= {0}'.format(self.initialWayPoint) )
+                logging.info ( self.className + ': initial way-point= {0}'.format(self.initialWayPoint) )
                 intermediateWayPoint = self.initialWayPoint
             
             if self.aircraft.isCruiseSpeedReached():
@@ -152,7 +153,7 @@ class GreatCircleRoute(Graph):
                                                                     distanceStillToFlyMeters = distanceStillToFlyMeters,
                                                                     currentPosition = intermediateWayPoint,
                                                                     distanceToLastFixMeters = distanceToLastFixMeters)
-            #print self.className + ': True AirSpeed= ' + str(trueAirSpeedMetersSecond) + ' meters/second'
+            #logging.info self.className + ': True AirSpeed= ' + str(trueAirSpeedMetersSecond) + ' meters/second'
 
             ''' cumulated  over-flown distance '''
             overflownDistanceMeters += deltaDistanceMeters
@@ -160,7 +161,7 @@ class GreatCircleRoute(Graph):
             distanceToLastFixMeters -= deltaDistanceMeters
             fprime = overflownDistanceMeters / distanceMeters
             
-            #print self.className + ': altitude= ' + str(altitudeMeanSeaLevelMeters) + ' meters'
+            #logging.info self.className + ': altitude= ' + str(altitudeMeanSeaLevelMeters) + ' meters'
 
             ''' fprime is expressed as a fraction along the route from point 1 to point 2 '''
             A = math.sin((1-fprime)*distance_radians) / math.sin(distance_radians)
@@ -203,8 +204,8 @@ class GreatCircleRoute(Graph):
 #                                                     altitudeMeanSeaLevelMeters * Meter2Feet,
 #                                                     self.computeLengthMeters()* Meter2NauticalMiles,
 #                                                     elapsedTimeSeconds, int(minutes), int(seconds))
-#         print self.className + strMsg                                               
-        print ( self.className + ': final way-point= {0}'.format(intermediateWayPoint) )
+#         logging.info self.className + strMsg                                               
+        logging.info ( self.className + ': final way-point= {0}'.format(intermediateWayPoint) )
         return endOfSimulation
        
 

@@ -47,6 +47,7 @@ VFR pour un vol VFR sans niveau de croisière déterminé à l’avance.
 
 '''
 
+
 feet2Meters = 0.3048 #meters
 Meters2Feet = 3.2808399
 
@@ -166,6 +167,21 @@ def mayBeMachSpeedConstraint(fixIndex, fix):
     
     return constraintFound, levelConstraint, speedConstraint
                     
+                    
+def mayBeFlightLevelConstraint(fixIndex, fix):
+    constraintFound = False
+    speedConstraint = None
+    levelConstraint = None
+    flightLevel = str(fix[1:])
+    if str(flightLevel).isdigit():
+        constraintFound = True
+        print ("----------- FLight Level constraint found -----------")
+        levelConstraint = LevelConstraint ( fixIndex = fixIndex ,  level = flightLevel, units = 'FL')
+    else:
+        constraintFound = False
+        
+    return constraintFound, levelConstraint, speedConstraint
+        
 
 def analyseConstraint(fixIndex , fix):
         
@@ -177,6 +193,7 @@ def analyseConstraint(fixIndex , fix):
         F suivi de 3 chiffres : niveau de vol (exemple : F080),
         A suivi de 3 chiffres : altitude en centaines de pieds (exemple : A100 pour 10 000 ft),
     '''
+    #print ("analyse Constraint")
     constraintFound = False
     speedConstraint = None
     levelConstraint = None
@@ -187,6 +204,9 @@ def analyseConstraint(fixIndex , fix):
     elif str(fix).startswith('M'):
         ''' may be a Mach Speed Constraint '''
         return mayBeMachSpeedConstraint(fixIndex, fix)
+    
+    elif str(fix).startswith('F'):
+        return mayBeFlightLevelConstraint(fixIndex, fix)
                         
     return constraintFound, levelConstraint, speedConstraint
 
@@ -267,13 +287,22 @@ class LevelConstraint(Constraints):
         
         self.targetLevelMeters = 0.0
         if units == 'feet':
-            self.targetLevelMeters = float(level) * 100.0 * feet2Meters
+            self.targetLevelMeters = (float(level) / 100.0 ) * feet2Meters
+            self.targetFlightLevel = float(level) / 100.0
         elif units == 'FL':
             self.targetLevelMeters = float(level) * 100.0 * feet2Meters
+            self.targetFlightLevel = float(level) 
 
-        print ( self.className + ': level constraints after fixIndex= {0} - level= {1} meters - level= {2} feet'.format(self.fixIndex,
+        print ( self.className + ': level constraints after fixIndex= {0} - level= {1:.2f} meters - level= {2:.2f} feet'.format(self.fixIndex,
                                                                                                          self.targetLevelMeters,
                                                                                                          self.targetLevelMeters * Meters2Feet) )
+    def getLevelConstraintUnits(self):
+        return self.units 
+    
+    def getLevelConstraintAsFLightLevel(self):
+        return self.targetFlightLevel
+    
+    
 
 class ArrivalRunWayTouchDownConstraint(Constraints):
 
@@ -286,6 +315,7 @@ class ArrivalRunWayTouchDownConstraint(Constraints):
         
         assert isinstance(touchDownWayPoint, WayPoint)
         self.touchDownWayPoint = touchDownWayPoint
+        
         
 class TargetApproachConstraint(Constraints):
     

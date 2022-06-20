@@ -32,7 +32,7 @@ from Home.Guidance.GeographicalPointFile import GeographicalPoint
 import time
 import math
 import unittest
-
+import logging
 
 def to_positive_angle(angleDegrees):
     angleDegrees = math.fmod(angleDegrees, 360);
@@ -125,11 +125,11 @@ class WayPoint(GeographicalPoint):
         return WayPoint(Name, latitudeDegrees, longitudeDegrees)    
     
     def dump(self):
-        print ( "WayPoint Name= ", self.Name, " Lat-deg= ",self.LatitudeDegrees, " Long-deg= ",self.LongitudeDegrees, " flight-level= ", self.AltitudeMeanSeaLevelMeters, " meters" )
+        logging.info ( "WayPoint Name= ", self.Name, " Lat-deg= ",self.LatitudeDegrees, " Long-deg= ",self.LongitudeDegrees, " flight-level= ", self.AltitudeMeanSeaLevelMeters, " meters" )
         if isinstance(self, Airport):
-            print ( "way point is an airport" )
+            logging.info ( "way point is an airport" )
         if self.isTopOfDescent==True:
-            print ( "way Point is Top Of Descent !!! " )
+            logging.info ( "way Point is Top Of Descent !!! " )
 
 
 class Airport(WayPoint):
@@ -201,8 +201,8 @@ class Airport(WayPoint):
     
     def dump(self):
         WayPoint.dump(self)
-        print ( "airport field Elevation above Sea Level Meters=",self.fieldElevationAboveSeaLevelMeters, " meters" )
-        print ( 'airport ICAO code= ' + self.ICAOcode )
+        logging.info ( "airport field Elevation above Sea Level Meters=",self.fieldElevationAboveSeaLevelMeters, " meters" )
+        logging.info ( 'airport ICAO code= ' + self.ICAOcode )
 
 
 
@@ -210,20 +210,20 @@ class Test_WayPoint(unittest.TestCase):
 
     def test_WayPoint(self):
     
-        print ( "=========== WayPoint start  =========== " + time.strftime("%c") )
+        logging.info ( "=========== WayPoint start  =========== " + time.strftime("%c") )
         London = WayPoint('London-Heathrow', 51.5, 0.0)
         Orly = WayPoint('Orly', 48.726254, 2.365247)
-        print ( "distance from London to Orly= ", London.getDistanceMetersTo(Orly), " meters" )
-        print ( "bearing from London to Orly= ", London.getBearingDegreesTo(Orly), " degrees" )
+        logging.info ( "distance from London to Orly= ", London.getDistanceMetersTo(Orly), " meters" )
+        logging.info ( "bearing from London to Orly= ", London.getBearingDegreesTo(Orly), " degrees" )
         
         #Zurich = WayPoint('Zurich-Kloten', 47.458215, 8.555424)
         Marseille = WayPoint('Marseille-Marignane', 43.438431, 5.214382 )
         Zurich = WayPoint('Zurich-Kloten', 47.458215, 8.555424)
         
-        print ( "=========== WayPoint resume  =========== " + time.strftime("%c") )
+        logging.info ( "=========== WayPoint resume  =========== " + time.strftime("%c") )
     
-        print ( "distance from Marseille to Zurich= ", Marseille.getDistanceMetersTo(Zurich), " meters" )
-        print ( "bearing from Zurich to Marseille = ", Zurich.getBearingDegreesTo(Marseille), " degrees" )
+        logging.info ( "distance from Marseille to Zurich= ", Marseille.getDistanceMetersTo(Zurich), " meters" )
+        logging.info ( "bearing from Zurich to Marseille = ", Zurich.getBearingDegreesTo(Marseille), " degrees" )
         
         distanceMeters = 321584.699454
         bearingDegrees = Zurich.getBearingDegreesTo(Marseille)
@@ -233,11 +233,11 @@ class Test_WayPoint(unittest.TestCase):
         TopOfDescent = Zurich.getWayPointAtDistanceBearing('TopOfDescent', distanceMeters, bearingDegrees)
         TopOfDescent.dump()
         
-        print ( "=========== WayPoint resume  =========== " + time.strftime("%c") )
+        logging.info ( "=========== WayPoint resume  =========== " + time.strftime("%c") )
         London.dump()
         Orly.dump()
         bearingDegrees = Orly.getBearingDegreesTo(London)
-        print ( "bearing from London to Orly= ", London.getBearingDegreesTo(Orly), " degrees" )
+        logging.info ( "bearing from London to Orly= ", London.getBearingDegreesTo(Orly), " degrees" )
     
         TopOfDescent = Orly.getWayPointAtDistanceBearing('TopOfDescent', distanceMeters, bearingDegrees)
         TopOfDescent.dump()
@@ -245,7 +245,7 @@ class Test_WayPoint(unittest.TestCase):
 
     def test_Airport(self):
 
-        print ( "=========== Airport  =========== " + time.strftime("%c") )
+        logging.info ( "=========== Airport  =========== " + time.strftime("%c") )
 
         airportICAOcode = 'LFPG'
         CharlesDeGaulle = Airport(Name = 'CharlesDeGaulle',
@@ -257,17 +257,17 @@ class Test_WayPoint(unittest.TestCase):
         self.assertTrue( runWaysDatabase.read() , 'run ways DB read correctly')
         
         self.assertTrue( CharlesDeGaulle.hasRunWays(runWaysDatabase) )
-        print ( 'airport= {0} has run-ways= {1}'.format(CharlesDeGaulle, CharlesDeGaulle.hasRunWays(runWaysDatabase)) )
+        logging.info ( 'airport= {0} has run-ways= {1}'.format(CharlesDeGaulle, CharlesDeGaulle.hasRunWays(runWaysDatabase)) )
         
-        print ( "=========== Airport run ways ONE =========== " + time.strftime("%c") )
+        logging.info ( "=========== Airport run ways ONE =========== " + time.strftime("%c") )
 
         for runway in CharlesDeGaulle.getRunWaysAsDict(runWaysDatabase):
-            print ( runway )
+            logging.info ( runway )
             
-        print ( "=========== Airport run ways TWO =========== " + time.strftime("%c") )
+        logging.info ( "=========== Airport run ways TWO =========== " + time.strftime("%c") )
 
         for runway in CharlesDeGaulle.getRunWays(runWaysDatabase):
-            print ( runway )
+            logging.info ( runway )
 
 
 if __name__ == '__main__':

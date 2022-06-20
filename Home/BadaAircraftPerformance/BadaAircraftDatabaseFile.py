@@ -30,7 +30,7 @@ this class is aware of the synonym file structure
 
 '''
 import os
-
+import logging
 BADA_381_DATA_FILES = 'Bada381DataFiles'
 
 class BadaSynonymAircraft(object):
@@ -70,9 +70,9 @@ class BadaAircraftDatabase(object):
         
         self.FilesFolder = os.path.dirname(__file__)
             
-        print ( self.className + ': file folder= {0}'.format(self.FilesFolder) )
+        logging.info ( self.className + ': file folder= {0}'.format(self.FilesFolder) )
         self.BadaSynonymFilePath = (self.FilesFolder + os.path.sep + self.BadaSynonymFilePath)
-        print ( self.className + ': file path= {0}'.format(self.BadaSynonymFilePath) )
+        logging.info ( self.className + ': file path= {0}'.format(self.BadaSynonymFilePath) )
 
         self.aircraftFilesFolder = BADA_381_DATA_FILES
         self.aircraftFilesFolder = (os.path.dirname(__file__) + os.path.sep   + self.aircraftFilesFolder)
@@ -86,14 +86,14 @@ class BadaAircraftDatabase(object):
         return self.BadaSynonymFilePath
     
     def read(self):
-        print ( self.className + ': opening file= ', self.BadaSynonymFilePath )
+        logging.info ( "{0} - : opening file= ".format( self.className , self.BadaSynonymFilePath ) )
         try:
             f = open(self.BadaSynonymFilePath, "r")
             for line in f:
                 line = line.strip()
                 useSynonym = False
                 if str(line).startswith('CD'):
-                    #print self.className + ' line= {0}'.format(line)
+                    #logging.info self.className + ' line= {0}'.format(line)
                     itemIndex = 0
                     aircraftFullName = ''
                     aircraftICAOcode = ''
@@ -101,16 +101,16 @@ class BadaAircraftDatabase(object):
                         ''' second item 0..1..2 is the aircraft ICAO code '''
                         if itemIndex == 1:
                             if str(item).strip() == '-':
-                                #print self.className +' : has main OPF file'
+                                #logging.info self.className +' : has main OPF file'
                                 useSynonym = False
                             elif str(item).strip() == '*':
-                                #print self.className +' : use synonym OPF file'
+                                #logging.info self.className +' : use synonym OPF file'
                                 useSynonym = True
 
                         if itemIndex == 2:
                             ''' second item is the ICAO code '''
                             aircraftICAOcode = str(item).strip()
-                            #print self.className + ': aircraft ICAO code= {0}'.format(aircraftICAOcode)
+                            #logging.info self.className + ': aircraft ICAO code= {0}'.format(aircraftICAOcode)
                             
                         if (item.endswith('_')):
                             break
@@ -123,17 +123,17 @@ class BadaAircraftDatabase(object):
                         
                         itemIndex += 1
                     OPFfilePrefix = str(str(line).split()[-3])
-                    #print self.className + ': OPF file prefix= {0}'.format(OPFfilePrefix)
+                    #logging.info self.className + ': OPF file prefix= {0}'.format(OPFfilePrefix)
                     ''' situation after the item finishing with two underscores __ '''
                     if aircraftICAOcode in self.aircraftDict:
-                        print ( self.className + ': aircraft ICAO code already in Database' )
+                        logging.info ( self.className + ': aircraft ICAO code already in Database' )
                     else:
                         self.aircraftDict[aircraftICAOcode] = BadaSynonymAircraft(aircraftICAOcode = aircraftICAOcode,
                                                                         aircraftFullName = aircraftFullName,
                                                                         OPFfilePrefix = OPFfilePrefix,
                                                                         useSynonym = useSynonym)         
             f.close()
-            print ( self.className + ': number of aircrafts in db= {0}'.format(len(self.aircraftDict)) )
+            logging.info ( self.className + ': number of aircrafts in db= {0}'.format(len(self.aircraftDict)) )
             return True
         except Exception as e:
             raise ValueError(self.className + ': error= {0} while reading= {1} '.format(e, self.BadaSynonymFilePath))
@@ -142,7 +142,7 @@ class BadaAircraftDatabase(object):
 
     def aircraftExists(self, aircraftICAOcode):
         aircraftICAOcode = str(aircraftICAOcode).upper()
-        print ( self.className + ': aircraft= {0} exists= {1}'.format(aircraftICAOcode, aircraftICAOcode in self.aircraftDict ) )
+        logging.info ( self.className + ': aircraft= {0} exists= {1}'.format(aircraftICAOcode, aircraftICAOcode in self.aircraftDict ) )
         return aircraftICAOcode in self.aircraftDict
 
 
@@ -172,12 +172,12 @@ class BadaAircraftDatabase(object):
         ''' checks that the performance file OPF exists in its specific folder '''
         aircraftICAOcode = str(aircraftICAOcode).upper()
         if aircraftICAOcode in self.aircraftDict:
-            print ( self.className + ': aircraft= {0} - found in database'.format(aircraftICAOcode) )
+            logging.info ( self.className + ': aircraft= {0} - found in database'.format(aircraftICAOcode) )
             ac = self.aircraftDict[aircraftICAOcode]
             OPFfilePrefix = ac.getAircraftOPFfilePrefix()
 
             filePath = os.path.dirname(__file__) + os.path.sep + ".." + os.path.sep + BADA_381_DATA_FILES + os.path.sep + OPFfilePrefix + self.OPFfileExtension
-            print ( self.className + ': aircraft= {0} - OPF file= {1} - exists= {2}'.format(aircraftICAOcode,
+            logging.info ( self.className + ': aircraft= {0} - OPF file= {1} - exists= {2}'.format(aircraftICAOcode,
                                                                                           filePath,
                                                                                           os.path.exists(filePath)) )
             return os.path.exists(filePath) and os.path.isfile(filePath)
@@ -187,8 +187,8 @@ class BadaAircraftDatabase(object):
 
     def dump(self):
         for key, value in self.aircraftDict.items():
-            print ( key )
-            print ( self.getAircraftFullName(key) )
+            logging.info ( key )
+            logging.info ( self.getAircraftFullName(key) )
 
 
     def getAircraftICAOcodes(self):

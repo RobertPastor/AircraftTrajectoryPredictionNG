@@ -29,6 +29,7 @@ read an EXCEL file containing the way points
 '''
 
 import os
+import logging
 
 from Home.Guidance.WayPointFile import WayPoint
 from xlrd import open_workbook
@@ -72,13 +73,13 @@ def convertDegreeMinuteSecondToDecimal(DegreeMinuteSecond='43-40-51.00-N'):
         ''' suppress first char and split '''
         strSplitList = str(DegreeMinuteSecond[1:]).split('-')
 
-    #print strSplitList[0]
+    #logging.info strSplitList[0]
     if str(strSplitList[0]).isdigit() and str(strSplitList[1]).isdigit():
         DecimalDegreeValue = int(strSplitList[0])
         DecimalMinutesValue = int(strSplitList[1])
-        #print strSplitList[1]
+        #logging.info strSplitList[1]
         strSplitList2 = str(strSplitList[2]).split(".")
-        #print strSplitList2[0]
+        #logging.info strSplitList2[0]
         if (len(strSplitList2)==2 and str(strSplitList2[0]).isdigit() and str(strSplitList2[1]).isdigit()):
                 
             DecimalSecondsValue = int(strSplitList2[0])
@@ -98,7 +99,7 @@ def convertDegreeMinuteSecondToDecimal(DegreeMinuteSecond='43-40-51.00-N'):
     else:
         raise ValueError ('unexpected Degrees Minutes Seconds format')
 
-    #print "DegreeMinuteSecond= ", DegreeMinuteSecond, " DecimalValue= ", DecimalValue
+    #logging.info "DegreeMinuteSecond= ", DegreeMinuteSecond, " DecimalValue= ", DecimalValue
     return DecimalValue
 
 
@@ -116,9 +117,9 @@ class WayPointsDatabase(object):
             self.FilePath = 'WayPoints-NorthAmerica.xls'
         self.FilesFolder = os.path.dirname(__file__)
 
-        print ( self.className + ': file folder= {0}'.format(self.FilesFolder) )
+        logging.info ( self.className + ': file folder= {0}'.format(self.FilesFolder) )
         self.FilePath = os.path.abspath(self.FilesFolder+ os.path.sep + self.FilePath)
-        print ( self.className + ': file path= {0}'.format(self.FilePath) )
+        logging.info ( self.className + ': file path= {0}'.format(self.FilePath) )
 
         self.WayPointsDict = {}
         self.ColumnNames = {}
@@ -131,13 +132,13 @@ class WayPointsDatabase(object):
         sheet = self.book.sheet_by_name('WayPoints')
         for row in range(sheet.nrows): 
             rowValues = sheet.row_values(row, start_colx=0, end_colx=sheet.ncols)
-            # Print the values of the row formatted to 10 characters wide
+            # logging.info the values of the row formatted to 10 characters wide
             if row == 0:
                 self.ColumnNames = {}
                 index = 0
                 for column in rowValues:
                     if column not in fieldNames:
-                        print ( self.className + ': ERROR - expected way-points column name= {0} not in field names'.format(column) )
+                        logging.info ( self.className + ': ERROR - expected way-points column name= {0} not in field names'.format(column) )
                         return False
                     else:
                         self.ColumnNames[column] = index
@@ -156,7 +157,7 @@ class WayPointsDatabase(object):
                                 #strLatLong = strLatLong.encode('ascii', 'ignore')
     
                             strLatLong = str(strLatLong).strip().replace("'", '-').replace(' ','').replace('"','')
-                            #print 'lat-long= '+ strLatLong
+                            #logging.info 'lat-long= '+ strLatLong
                             wayPointDict[column] = convertDegreeMinuteSecondToDecimal(strLatLong)
     
                         else:
@@ -168,7 +169,7 @@ class WayPointsDatabase(object):
                                         wayPointDict['Longitude'])
                     self.WayPointsDict[WayPointName] = wayPoint
                 else:
-                    print ("duplicates found in Way Points database - way Point= {0}".format(WayPointName))
+                    logging.info ("duplicates found in Way Points database - way Point= {0}".format(WayPointName))
         return True
 
     
@@ -177,7 +178,7 @@ class WayPointsDatabase(object):
         if str(Name).upper() in self.WayPointsDict.keys():
             return self.WayPointsDict[str(Name).upper()]
         else:
-            print ( self.className + ': WARNING - way point= {0} not in the database !!!'.format(str(Name).upper()) )
+            logging.info ( self.className + ': WARNING - way point= {0} not in the database !!!'.format(str(Name).upper()) )
             return None
     
     
@@ -224,7 +225,7 @@ class WayPointsDatabase(object):
                     '''  Copy the values to target worksheet ''' 
                     writableSheet.write(row, col, oneValue) 
             
-            #print self.className + ' - sheet= {0} - number of rows= {1}'.format(writableSheet.get_name(), len(writableSheet.get_rows()))
+            #logging.info self.className + ' - sheet= {0} - number of rows= {1}'.format(writableSheet.get_name(), len(writableSheet.get_rows()))
             writableSheet.write(numRow , 0, wayPointName)
             writableSheet.write(numRow , 1, 'SomeWhere')
             writableSheet.write(numRow , 2, 'waypoint')

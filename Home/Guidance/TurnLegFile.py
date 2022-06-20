@@ -44,7 +44,7 @@ TAS [kt] RADIUS (15° Φ) [NM] RADIUS (25° Φ) [NM]
 
 '''
 import math
-
+import logging
 from Home.aerocalc.airspeed import cas2tas
 
 from Home.Guidance.GraphFile import Graph
@@ -78,10 +78,10 @@ class TurnLeg(Graph):
         finalAngleRadians = math.radians(self.finalHeadingDegrees)
         angleDifferenceDegrees = math.degrees(math.atan2(math.sin(finalAngleRadians-initialAngleRadians), math.cos(finalAngleRadians-initialAngleRadians)))
         if (angleDifferenceDegrees < 0.0):
-            print ( "{0} --- turn anti-clock wise --".format(self.className))
+            logging.info ( "{0} --- turn anti-clock wise --".format(self.className))
         else :
-            print ( "{0} --- turn clock wise --".format(self.className))
-        print ("{0} - angle difference between initial and final heading = {1:.2f}".format(self.className, angleDifferenceDegrees))
+            logging.info ( "{0} --- turn clock wise --".format(self.className))
+        logging.info ("{0} - angle difference between initial and final heading = {1:.2f}".format(self.className, angleDifferenceDegrees))
         return angleDifferenceDegrees
             
             
@@ -144,7 +144,7 @@ class TurnLeg(Graph):
         self.aircraft = aircraft
                 
         ''' compute angle difference '''
-        #print self.className + ': turn from= {0:.2f} degrees to {1:.2f} degrees'.format(self.initialHeadingDegrees, self.finalHeadingDegrees)
+        #logging.info self.className + ': turn from= {0:.2f} degrees to {1:.2f} degrees'.format(self.initialHeadingDegrees, self.finalHeadingDegrees)
         
         ''' default value - for turn angle steps '''
         self.stepDegrees = self.BaseStepDegrees # degrees
@@ -163,7 +163,7 @@ class TurnLeg(Graph):
         strMsg += ' to {0:.2f} degrees'.format(self.finalHeadingDegrees)
         strMsg += ' - turn step is= {0:.2f} degrees'.format(self.stepDegrees) 
                                                 
-        print ( self.className + strMsg )
+        logging.info ( self.className + strMsg )
         self.previousDistanceToArrivalAxisMeters = 0.0
         
         
@@ -209,25 +209,25 @@ class TurnLeg(Graph):
         
             ''' Radius = (tas*tas) / (gravity * tan(bank angle = 15 degrees)) '''
             radiusOfTurnMeters = (tasMetersPerSecond * tasMetersPerSecond) / (9.81 * math.tan(math.radians(bankAngleDegrees)))
-            print ("{0} - radius of turn = {1:.2f} in meters - for a 15 degrees bank angle".format(self.className, radiusOfTurnMeters))
+            logging.info ("{0} - radius of turn = {1:.2f} in meters - for a 15 degrees bank angle".format(self.className, radiusOfTurnMeters))
             
-            #print ( self.initialHeadingDegrees )
-            #print ( self.finalHeadingDegrees )
+            #logging.info ( self.initialHeadingDegrees )
+            #logging.info ( self.finalHeadingDegrees )
             #angleDifferencesDegrees = self.computeAngleDifferenceDegrees()
             
             #newRadiusOfTurnMeters = self.computeRadiusOfTurn()
             shortestDistanceMeters = arrivalRunway.computeShortestDistanceToRunway(self.initialWayPoint)
             newRadiusOfTurnMeters = shortestDistanceMeters / 2.0
             if (newRadiusOfTurnMeters > radiusOfTurnMeters):
-                print ("{0} - new radius of turn greater --> take this one = {1} meters".format(self.className, newRadiusOfTurnMeters))
+                logging.info ("{0} - new radius of turn greater --> take this one = {1} meters".format(self.className, newRadiusOfTurnMeters))
                 radiusOfTurnMeters = newRadiusOfTurnMeters
             #exit()
             
             radiusOfTurnMeters = finalRadiusOfTurnMeters
-            print ("{0} - final radius of turn = {1:.2f} in meters".format(self.className, radiusOfTurnMeters))
+            logging.info ("{0} - final radius of turn = {1:.2f} in meters".format(self.className, radiusOfTurnMeters))
 
         
-        print ( self.className + ': tas= {0:.2f} knots - radius of turn= {1:.2f} meters - radius of turn= {2:.2f} nautics'.format(tasKnots, radiusOfTurnMeters, radiusOfTurnMeters*Meter2NauticalMiles) )           
+        logging.info ( self.className + ': tas= {0:.2f} knots - radius of turn= {1:.2f} meters - radius of turn= {2:.2f} nautics'.format(tasKnots, radiusOfTurnMeters, radiusOfTurnMeters*Meter2NauticalMiles) )           
         ''' index used to initialise the loop '''        
         index = 0
             
@@ -241,13 +241,13 @@ class TurnLeg(Graph):
         ''' loop from initial heading to final heading '''
         continueTurning = True
         currentHeadingDegrees = self.initialHeadingDegrees
-        print ( '{0} - initial heading= {1:.2f} degrees'.format(self.className, self.initialHeadingDegrees) )
+        logging.info ( '{0} - initial heading= {1:.2f} degrees'.format(self.className, self.initialHeadingDegrees) )
         passedThrough360 = False
         endOfSimulation = False
         
         while ( (endOfSimulation == False) and (continueTurning == True)):
             ''' initial index - loop initialisation '''
-            #print 'altitude= ' + str(altitudeMeanSeaLevelMeters) + ' meters'
+            #logging.info 'altitude= ' + str(altitudeMeanSeaLevelMeters) + ' meters'
             
             ''' init the loop '''
             if index == 0:
@@ -269,11 +269,11 @@ class TurnLeg(Graph):
             distanceStillToFlyMeters -= deltaDistanceMeters
             ''' compute delta heading '''
             deltaHeadingDegrees = math.degrees(math.atan(deltaDistanceMeters / radiusOfTurnMeters))
-            #print self.className + ': delta distance= {0:.2f} meters - delta Heading = {1:.2f} degrees'.format(deltaDistanceMeters, deltaHeadingDegrees)
+            #logging.info self.className + ': delta distance= {0:.2f} meters - delta Heading = {1:.2f} degrees'.format(deltaDistanceMeters, deltaHeadingDegrees)
             if self.stepDegrees > 0:
                 ''' turn clock-wise => angle increases '''
                 currentHeadingDegrees += deltaHeadingDegrees
-                #print currentHeadingDegrees ,
+                #logging.info currentHeadingDegrees ,
                 if self.initialHeadingDegrees <= self.finalHeadingDegrees:
                     continueTurning = (currentHeadingDegrees <= self.finalHeadingDegrees)
                 else:
@@ -311,7 +311,7 @@ class TurnLeg(Graph):
             name = 'turn-pt-{0}-{1:.2f}-degrees'.format(index, currentHeadingDegrees)
             ''' patch do not define a name as it slows opening the KML file in Google Earth '''
             name = ''
-            #print self.className + ' next way-point= ' + name
+            #logging.info self.className + ' next way-point= ' + name
             ''' convert heading into bearing '''
             bearingDegrees = math.fmod ( currentHeadingDegrees + 180.0 , 360.0 ) - 180.0
             newIntermediateWayPoint = intermediateWayPoint.getWayPointAtDistanceBearing(
@@ -327,7 +327,7 @@ class TurnLeg(Graph):
 #                                                                                       DistanceMeters = distanceToArrivalTouchDownMeters,
 #                                                                                       BearingDegrees = arrivalRunWayBearingDegrees)
 #                 distanceToArrivalRunwayAxis = newIntermediateWayPoint.getDistanceMetersTo(pointAlongRunwayAxis)
-#                 print self.className + ': distance to arrival runway axis= {0:.2f} meters'.format(distanceToArrivalRunwayAxis)
+#                 logging.info self.className + ': distance to arrival runway axis= {0:.2f} meters'.format(distanceToArrivalRunwayAxis)
 #                 if (self.previousDistanceToArrivalAxisMeters > 1.0) and (distanceToArrivalRunwayAxis > self.previousDistanceToArrivalAxisMeters):
 #                     continueTurning = False 
 #                 self.previousDistanceToArrivalAxisMeters = distanceToArrivalRunwayAxis
@@ -342,7 +342,7 @@ class TurnLeg(Graph):
             ''' increment the index '''
             index += 1
             ''' insert in the route '''
-            #print index , type(index)
+            #logging.info index , type(index)
             turnLegList.append(newIntermediateWayPoint)
             ''' copy the intermediate way-point '''
             intermediateWayPoint = newIntermediateWayPoint
@@ -361,8 +361,8 @@ class TurnLeg(Graph):
             for point in turnLegList:
                 self.addVertex(point)
         
-        '''' print final heading  '''
-        print ( self.className + ': final heading= {0:.2f} degrees'.format(currentHeadingDegrees) )
+        '''' logging.info final heading  '''
+        logging.info ( self.className + ': final heading= {0:.2f} degrees'.format(currentHeadingDegrees) )
         return endOfSimulation
 
 
@@ -395,7 +395,7 @@ class TurnLeg(Graph):
         ''' loop through the list of angles '''
         for angleDegrees in self.listOfAngleDegrees:
             ''' initial index - loop initialisation '''
-            #print 'altitude= ' + str(altitudeMeanSeaLevelMeters) + ' meters'
+            #logging.info 'altitude= ' + str(altitudeMeanSeaLevelMeters) + ' meters'
             
             ''' init the loop '''
             if index == 0:
@@ -416,11 +416,11 @@ class TurnLeg(Graph):
             elapsedTimeSeconds += deltaTimeSeconds
 
             ''' distance over flown for each degree - depends upon true air speed '''
-            #print self.className + ': distance flown when 1 degrees of heading angle changes= '+ str(distanceMeters) + ' meters'
+            #logging.info self.className + ': distance flown when 1 degrees of heading angle changes= '+ str(distanceMeters) + ' meters'
                 
             ''' define the name of the new way-point '''
             name = 'turn-pt-{0}-{1:.2f}-degrees'.format(index, angleDegrees)
-            #print self.className + ' next way-point= ' + name
+            #logging.info self.className + ' next way-point= ' + name
             
             ''' convert heading into bearing '''
             bearingDegrees = math.fmod ( angleDegrees + 180.0 , 360.0 ) - 180.0
@@ -433,7 +433,7 @@ class TurnLeg(Graph):
             ''' increment the index '''
             index += 1
             ''' insert in the route '''
-            #print index , type(index)
+            #logging.info index , type(index)
             turnLegList.append(newIntermediateWayPoint)
             ''' copy the intermediate '''
             intermediateWayPoint = newIntermediateWayPoint
@@ -453,11 +453,11 @@ class TurnLeg(Graph):
                 self.addVertex(index, point)
                 index += 1
         
-        ''''''''' print location of the last point of the route '''
+        ''''''''' logging.info location of the last point of the route '''
         assert (self.getNumberOfVertices()>1)
         lastVertex = self.getVertex(self.getNumberOfVertices()-1)
         lastWayPoint = lastVertex.getWeight()
-        print ( '{0} - location of the last point {1}'.format(self.className,lastWayPoint) )
+        logging.info ( '{0} - location of the last point {1}'.format(self.className,lastWayPoint) )
         
         
     def buildNewSimulatedArrivalTurnLeg(self, 
@@ -478,7 +478,7 @@ class TurnLeg(Graph):
         
         ''' Radius = (tas*tas) / (gravity * tan(bank angle = 15 degrees)) '''
         radiusOfTurnMeters = (tasMetersPerSecond * tasMetersPerSecond) / (9.81 * math.tan(math.radians(bankAngleDegrees)))
-        print ( '{0} - tas= {1:.2f} knots - radius of turn= {2:.2f} meters - radius of turn= {3:.2f} nautics'.format(self.className, tasKnots, radiusOfTurnMeters, radiusOfTurnMeters*Meter2NauticalMiles) )        
+        logging.info ( '{0} - tas= {1:.2f} knots - radius of turn= {2:.2f} meters - radius of turn= {3:.2f} nautics'.format(self.className, tasKnots, radiusOfTurnMeters, radiusOfTurnMeters*Meter2NauticalMiles) )        
  
         #stop()
         ''' index used to initialise the loop '''        
@@ -494,7 +494,7 @@ class TurnLeg(Graph):
         ''' loop from initial heading to final heading '''
         continueTurning = True
         currentHeadingDegrees = self.initialHeadingDegrees
-        print ( '{0} - initial heading= {1:.2f} degrees'.format(self.className, self.initialHeadingDegrees) )
+        logging.info ( '{0} - initial heading= {1:.2f} degrees'.format(self.className, self.initialHeadingDegrees) )
         passedThrough360 = False
 
         while ( continueTurning == True ):
@@ -513,7 +513,7 @@ class TurnLeg(Graph):
             if self.stepDegrees > 0:
                 ''' turn clock-wise => angle increases '''
                 currentHeadingDegrees += deltaHeadingDegrees
-                #print currentHeadingDegrees ,
+                #logging.info currentHeadingDegrees ,
                 if self.initialHeadingDegrees <= self.finalHeadingDegrees:
                     continueTurning = (currentHeadingDegrees <= self.finalHeadingDegrees)
                 else:
@@ -549,7 +549,7 @@ class TurnLeg(Graph):
                 
             ''' define the name of the new way-point '''
             name = 'turn-pt-{0}-{1:.2f}-degrees'.format(index, currentHeadingDegrees)
-            #print self.className + ' next way-point= ' + name
+            #logging.info self.className + ' next way-point= ' + name
             ''' convert heading into bearing '''
             bearingDegrees = math.fmod ( currentHeadingDegrees + 180.0 , 360.0 ) - 180.0
             newIntermediateWayPoint = intermediateWayPoint.getWayPointAtDistanceBearing(Name=name, 
@@ -563,7 +563,7 @@ class TurnLeg(Graph):
             ''' increment the index '''
             index += 1
             ''' insert in the route '''
-            #print index , type(index)
+            #logging.info index , type(index)
             turnLegList.append(newIntermediateWayPoint)
             ''' copy the intermediate '''
             intermediateWayPoint = newIntermediateWayPoint
