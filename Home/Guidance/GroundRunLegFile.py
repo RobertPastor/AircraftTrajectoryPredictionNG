@@ -27,22 +27,16 @@ Created on 31 December 2014
 Manage the ground run phase
 
 '''
-import time
+
 import math
 import logging
 from Home.aerocalc.airspeed import tas2cas
 
-from Home.Environment.RunWaysDatabaseFile import RunWay, RunWayDataBase
-from Home.Environment.AirportDatabaseFile import AirportsDatabase
-
-from Home.Environment.Atmosphere import Atmosphere
-from Home.Environment.Earth import Earth
-
 from Home.Guidance.GraphFile import Graph
 from Home.Guidance.WayPointFile import WayPoint, Airport
+from Home.Environment.RunWayFile import RunWay
 
 from Home.BadaAircraftPerformance.BadaAircraftFile import BadaAircraft
-from Home.BadaAircraftPerformance.BadaAircraftDatabaseFile import BadaAircraftDatabase
 
 Meter2Feet = 3.2808399 # feet (3 feet 3⅜ inches)
 Knots2MetersPerSecond = 0.514444444 # meters / second
@@ -281,71 +275,3 @@ class GroundRunLeg(Graph):
     def getElapsedTimeSeconds(self):
         return self.elapsedTimeSeconds
 
-if __name__ == '__main__':
-
-    atmosphere = Atmosphere()
-    earth = Earth()
-    
-    logging.info ( '==================== Ground run ==================== '+ time.strftime("%c") )
-    acBd = BadaAircraftDatabase()
-    aircraftICAOcode = 'A320'
-    if acBd.read():
-        if ( acBd.aircraftExists(aircraftICAOcode) 
-             and acBd.aircraftPerformanceFileExists(acBd.getAircraftPerformanceFile(aircraftICAOcode))):
-            
-            logging.info ( '==================== aircraft found  ==================== '+ time.strftime("%c") )
-            aircraft = BadaAircraft(aircraftICAOcode, 
-                                  acBd.getAircraftPerformanceFile(aircraftICAOcode),
-                                  atmosphere,
-                                  earth)
-            aircraft.dump()
-    
-    logging.info ( '==================== Ground run ==================== '+ time.strftime("%c") )
-    airportsDB = AirportsDatabase()
-    assert airportsDB.read()
-    
-    CharlesDeGaulle = airportsDB.getAirportFromICAOCode('LFPG')
-    logging.info ( CharlesDeGaulle )
-    
-    logging.info ( '==================== Ground run - read runway database ==================== '+ time.strftime("%c") )
-    runWaysDatabase = RunWayDataBase()
-    assert runWaysDatabase.read()
-    
-    logging.info ( '==================== Ground run ==================== '+ time.strftime("%c") )
-    runway = runWaysDatabase.getFilteredRunWays('LFPG', aircraft.WakeTurbulenceCategory)
-    logging.info ( runway )
-    
-    logging.info ( '==================== departure Ground run ==================== '+ time.strftime("%c") )
-    groundRun = GroundRunLeg(runway=runway, 
-                             aircraft=aircraft,
-                             airport=CharlesDeGaulle)
-    groundRun.buildDepartureGroundRun(deltaTimeSeconds = 0.1,
-                                elapsedTimeSeconds = 0.0,
-                                distanceStillToFlyMeters = 100000.0)
-    groundRun.createKmlOutputFile()
-    groundRun.createXlsxOutputFile()
-        
-    logging.info ( '==================== Get Arrival Airport ==================== '+ time.strftime("%c") )
-    arrivalAirportIcaoCode = 'LFML'
-    arrivalAirport = airportsDB.getAirportFromICAOCode(arrivalAirportIcaoCode)
-    logging.info ( arrivalAirport )
-    
-    logging.info ( '====================  arrival run-way ==================== '+ time.strftime("%c") )
-    arrivalRunway = runWaysDatabase.getFilteredRunWays(arrivalAirportIcaoCode,
-                                                        aircraft.WakeTurbulenceCategory)
-    logging.info ( arrivalRunway )
-    logging.info ( '==================== arrival Ground run ==================== '+ time.strftime("%c") )
-#     aircraft.setLandingConfiguration(elapsedTimeSeconds = 0.0)
-#     
-#     aircraft.initStateVector(elapsedTimeSeconds = 0.0,
-#                           trueAirSpeedMetersSecond = 101.0 * Knots2MetersPerSecond, 
-#                           airportFieldElevationAboveSeaLevelMeters = arrivalAirport.getFieldElevationAboveSeaLevelMeters())
-# 
-#     groundRun = GroundRunLeg(runway = runway, 
-#                              aircraft = aircraft,
-#                              airport = CharlesDeGaulle)
-#     groundRun.buildArrivalGroundRun(deltaTimeSeconds = 0.1,
-#                               elapsedTimeSeconds = 0.0,
-#                               initialWayPoint)
-#     groundRun.createXlsxOutputFile()
-#     groundRun.createKmlOutputFile()

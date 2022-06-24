@@ -181,7 +181,8 @@ class BadaAircraftDatabase(object):
                                                                                           filePath,
                                                                                           os.path.exists(filePath)) )
             return os.path.exists(filePath) and os.path.isfile(filePath)
-        
+        else:
+            logging.warning ( self.className + ': aircraft= {0} - NOT found in database'.format(aircraftICAOcode) )
         return False
 
 
