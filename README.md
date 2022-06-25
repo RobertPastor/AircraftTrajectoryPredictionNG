@@ -3,6 +3,8 @@
 Open source free software to compute airline aircraft/jet trajectories.  
 Based upon BADA from Eurocontrol.
 
+You will need a SYNONYM file and a performance file for the aircraft used in the computation.
+
 # Documentation (in French and in English)
 https://trajectoire-predict.monsite-orange.fr/index.html 
 
