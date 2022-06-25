@@ -1,9 +1,12 @@
 # AircraftTrajectoryPredictionNG
+
+Open source free software to compute airline aircraft/jet trajectories.
+
 Port of the Aircraft Trajectory Prediction from Python 2. to Python 3.7
 of 
 https://github.com/RobertPastor/AircraftTrajectoryPredictor/
 
-# Documentation (in French)
+# Documentation (in French and in English)
 https://trajectoire-predict.monsite-orange.fr/index.html 
 
 # Required packages
