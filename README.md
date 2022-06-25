@@ -1,6 +1,7 @@
 # AircraftTrajectoryPredictionNG
 
 Open source free software to compute airline aircraft/jet trajectories.
+Based upon BADA from Eurocontrol.
 
 # Documentation (in French and in English)
 https://trajectoire-predict.monsite-orange.fr/index.html 
