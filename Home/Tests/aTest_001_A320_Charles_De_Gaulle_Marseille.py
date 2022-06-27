@@ -41,13 +41,13 @@ class Test_Route(unittest.TestCase):
 
     def test_route(self):
         
-        #logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S' , level=logging.INFO)
-        logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S' )
+        logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S' , level=logging.INFO)
+        #logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S' )
 
         print ( "=========== Flight Plan start  =========== "  )
         
         #strRoute = 'ADEP/LFPG-ERMONT-GIF-JURAN-MEIL-CHALM-ADES/LFML'
-        strRoute = 'ADEP/LFPG/08R-LATRA-LAMUT-F290-LAKOB-OBEPA-LERGA-ADES/LFML/31R'
+        strRoute = 'ADEP/LFPG/08R-LATRA-LAMUT-F290-LAKOB-F250-OBEPA-LERGA-ADES/LFML/31R'
         #strRoute = 'ADEP/LFPG/08R-LATRA-LAMUT-LAKOB-OBEPA-LERGA-ADES/LFML/31R'
         flightPath = FlightPath(route = strRoute, 
                                 aircraftICAOcode = 'A320',

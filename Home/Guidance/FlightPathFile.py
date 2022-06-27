@@ -263,9 +263,9 @@ class FlightPath(FlightPlan):
             
             ''' 20 June 2022 - check if there is a constraint in the Flight Plan '''
             if self.nextFixHasConstraint (self.flightListIndex) and self.nextConstraintIsLevel(self.flightListIndex):
-                print ( "======> next fix has constraint and constraint is of Level type ==========>")
+                logging.warn ( self.className + "======> next fix has constraint and constraint is of Level type = {0} ".format(self.fixList[self.flightListIndex]))
                 newTargetFlightLevel = self.getNextLevelConstraintasFlightLevel(self.flightListIndex)
-                print ( "-------> new Target Flight Level = {0}".format(newTargetFlightLevel) )
+                logging.warn ( self.className + "----------> new Target Flight Level = {0}".format(newTargetFlightLevel) )
                 self.aircraft.setTargetCruiseFlightLevel(RequestedFlightLevel=newTargetFlightLevel, 
                                    departureAirportAltitudeMSLmeters=self.departureAirport.AltitudeMeanSeaLevelMeters)
                 

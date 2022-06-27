@@ -38,9 +38,12 @@ from Home.Environment.RunWayFile import RunWay
 
 from Home.BadaAircraftPerformance.BadaAircraftFile import BadaAircraft
 
-Meter2Feet = 3.2808399 # feet (3 feet 3⅜ inches)
+from Home.Environment.Constants import Meter2Feet
+from Home.Environment.Constants import Knots2MetersPerSecond
+from Home.Environment.Constants import MeterPerSecond2Knots
+#Meter2Feet = 3.2808399 # feet (3 feet 3⅜ inches)
 Knots2MetersPerSecond = 0.514444444 # meters / second
-MeterPerSecond2Knots = 1.94384449 # 1 meter per second = 11.94384449 knots
+#MeterPerSecond2Knots = 1.94384449 # 1 meter per second = 11.94384449 knots
 
 class GroundRunLeg(Graph):
     '''

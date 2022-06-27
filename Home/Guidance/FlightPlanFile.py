@@ -169,7 +169,7 @@ class FixList(object):
         answer = False
         for constraint in self.constraintsList:
             if constraint["fixIndex"] == fixIndex:
-                print ( "---------- there is a constraint associated with this fix -------")
+                logging.warn ( self.className + "----------> there is a constraint associated with the fix = {0} ".format(self.fixList[fixIndex]))
                 answer = True
                 #raise ValueError("---------- there is a constraint associated with this fix -------")
         return answer
@@ -178,7 +178,7 @@ class FixList(object):
         answer = False
         for constraint in self.constraintsList:
             if constraint["fixIndex"] == fixIndex and (( constraint["level"] is None ) == False ):
-                print ( "---------- there is a Level constraint associated with this fix -------")
+                logging.warn ( self.className + "----------> there is a Level constraint associated with the fix = {0} ".format(self.fixList[fixIndex]))
                 answer = True
                 #raise ValueError("---------- there is a constraint associated with this fix -------")
         return answer
@@ -187,7 +187,7 @@ class FixList(object):
         flightLevel = 0.0
         for constraint in self.constraintsList:
             if constraint["fixIndex"] == fixIndex and (( constraint["level"] is None ) == False ):
-                print ( "---------- there is a Level constraint associated with this fix -------")
+                logging.warn ( self.className + "----------> there is a Level constraint associated with the fix = {0} ".format(self.fixList[fixIndex]))
                 levelConstraint = constraint['level']
                 flightLevel = levelConstraint.getLevelConstraintAsFLightLevel()
                 #raise ValueError("---------- there is a constraint associated with this fix -------")

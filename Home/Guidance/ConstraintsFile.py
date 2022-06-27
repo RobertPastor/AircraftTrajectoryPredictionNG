@@ -47,6 +47,7 @@ VFR pour un vol VFR sans niveau de croisière déterminé à l’avance.
 
 '''
 
+import logging
 
 feet2Meters = 0.3048 #meters
 Meters2Feet = 3.2808399
@@ -175,7 +176,7 @@ def mayBeFlightLevelConstraint(fixIndex, fix):
     flightLevel = str(fix[1:])
     if str(flightLevel).isdigit():
         constraintFound = True
-        print ("----------- FLight Level constraint found -----------")
+        logging.warn ( "ConstraintsFile ----------- Flight Level constraint found after fix with index = {0} - constraint = {1} ".format(fixIndex, fix))
         levelConstraint = LevelConstraint ( fixIndex = fixIndex ,  level = flightLevel, units = 'FL')
     else:
         constraintFound = False
@@ -246,6 +247,7 @@ class Constraints(object):
         if fixIndex == 0:
             print ( self.className + ' constraint is applicable after Take Off or first fix' )
     
+    
 class SpeedConstraint(Constraints):
     '''
     the speed constraints defines the target value to achieve
@@ -289,11 +291,12 @@ class LevelConstraint(Constraints):
         if units == 'feet':
             self.targetLevelMeters = (float(level) / 100.0 ) * feet2Meters
             self.targetFlightLevel = float(level) / 100.0
+            
         elif units == 'FL':
             self.targetLevelMeters = float(level) * 100.0 * feet2Meters
             self.targetFlightLevel = float(level) 
 
-        print ( self.className + ': level constraints after fixIndex= {0} - level= {1:.2f} meters - level= {2:.2f} feet'.format(self.fixIndex,
+        logging.warn ( self.className + ' - level constraints after fixIndex= {0} - level= {1:.2f} meters - level= {2:.2f} feet'.format(self.fixIndex,
                                                                                                          self.targetLevelMeters,
                                                                                                          self.targetLevelMeters * Meters2Feet) )
     def getLevelConstraintUnits(self):

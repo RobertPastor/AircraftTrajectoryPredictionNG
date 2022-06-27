@@ -36,20 +36,20 @@ from Home.BadaAircraftPerformance.BadaAircraftMassFile import AircraftMass
 from Home.BadaAircraftPerformance.BadaGroundMovementFile import GroundMovement
 from Home.BadaAircraftPerformance.BadaTransitionAltitudeFile import TransitionAltitude
 
-from Home.BadaAircraftPerformance.BadaFlightEnvelopeFile import FlightEnvelope
+from Home.BadaAircraftPerformance.BadaFlightEnvelopeFile import FlightEnvelope,\
+    Feet2Meter
 
 from Home.Environment.Atmosphere import Atmosphere
 from Home.Environment.Earth import Earth
 
-Knots2MetersPerSecond = 0.514444444
-Meter2Feet = 3.2808
-Feet2Meter = 0.3048
-MeterSecond2Knots = 1.9438444924406
-Meter2NauticalMiles = 0.000539956803
-Kilogram2Pounds = 2.20462262 # 1 kilogram = 2.204 lbs
+from Home.Environment.Constants import Knots2MetersPerSecond
+from Home.Environment.Constants import Meter2Feet
+from Home.Environment.Constants import MeterSecond2Knots
+from Home.Environment.Constants import Meter2NauticalMiles
+from Home.Environment.Constants import MaxRateOfClimbFeetPerMinutes
+from Home.Environment.Constants import MaxRateOfDescentFeetPerMinutes
+from Home.Environment.Constants import ApproachGlideSlopeAngleDegrees
 
-
-NauticalMiles2Meters = 1852. # meters
 ThreeDegreesGlideSlope = 3
 GlideSlopeStart2TouchDownNauticalMiles = 5 # 5 nautical miles from start of glide slope to runway touch down
 
@@ -710,7 +710,7 @@ class AircraftConfiguration(FlightEnvelope):
 #             self.setCruiseConfiguration(elapsedTimeSeconds)
 
     def computeDescentDecelerationMeterPerSquareSeconds(self, trueAirSpeedMetersSecond):
-        descentDecelerationMeterPerSquareSeconds = -0.01
+        descentDecelerationMeterPerSquareSeconds = -1.01
         return  descentDecelerationMeterPerSquareSeconds
 
     def computeDescentToApproachDecelerationMeterPerSquareSeconds(self,
@@ -787,6 +787,15 @@ class AircraftConfiguration(FlightEnvelope):
 
     def isCruiseSpeedReached(self):
         return self.cruiseSpeedReached
+    
+    def computeROCD(self, deltaTimeSeconds, thrustNewtons, dragNewtons, trueAirSpeedMetersSecond, aircraftMassKilograms, gravityCenter, ESF):
+        ROCD  = ( ((thrustNewtons - dragNewtons) * trueAirSpeedMetersSecond) / ( aircraftMassKilograms * gravityCenter ) ) * ESF 
+        if ( ROCD > 0.0 ) and ( ( ( ( ROCD / deltaTimeSeconds ) * 60.0 ) * Meter2Feet ) > MaxRateOfClimbFeetPerMinutes ):
+            ROCD = ( MaxRateOfClimbFeetPerMinutes * Feet2Meter ) / 60.0
+        if ( ROCD < 0.0 ) and ( ( ( ( ROCD / deltaTimeSeconds) * 60.0 ) * Meter2Feet ) < MaxRateOfDescentFeetPerMinutes ):
+            ROCD = ( MaxRateOfDescentFeetPerMinutes * Feet2Meter ) / 60.0
+        return ROCD
+
 
     def fly(self, 
             elapsedTimeSeconds, 
@@ -867,7 +876,8 @@ class AircraftConfiguration(FlightEnvelope):
             ESF = self.energyShareFactor.computeEnergyShareFactor(mach)
             
             ''' compute Altitude change '''
-            ROCD  = ( ((thrustNewtons - dragNewtons) * trueAirSpeedMetersSecond) / ( aircraftMassKilograms * gravityCenter ) ) * ESF 
+            #ROCD  = ( ((thrustNewtons - dragNewtons) * trueAirSpeedMetersSecond) / ( aircraftMassKilograms * gravityCenter ) ) * ESF 
+            ROCD = self.computeROCD(deltaTimeSeconds, thrustNewtons, dragNewtons, trueAirSpeedMetersSecond, aircraftMassKilograms, gravityCenter, ESF)
             deltaAltitudeMeters = ROCD * deltaTimeSeconds
             altitudeMeanSeaLevelMeters += deltaAltitudeMeters
             
@@ -900,7 +910,9 @@ class AircraftConfiguration(FlightEnvelope):
             
             ESF = self.energyShareFactor.computeEnergyShareFactor(mach)
             ''' compute Altitude change '''
-            ROCD  = ( ((thrustNewtons - dragNewtons) * trueAirSpeedMetersSecond) / ( aircraftMassKilograms * gravityCenter ) ) * ESF 
+            #ROCD  = ( ((thrustNewtons - dragNewtons) * trueAirSpeedMetersSecond) / ( aircraftMassKilograms * gravityCenter ) ) * ESF 
+            ROCD = self.computeROCD(deltaTimeSeconds, thrustNewtons, dragNewtons, trueAirSpeedMetersSecond, aircraftMassKilograms, gravityCenter, ESF)
+
             deltaAltitudeMeters = ROCD * deltaTimeSeconds
             altitudeMeanSeaLevelMeters += deltaAltitudeMeters
             
@@ -940,7 +952,9 @@ class AircraftConfiguration(FlightEnvelope):
             ESF = self.energyShareFactor.computeEnergyShareFactor(mach)
             
             ''' compute Altitude change '''
-            ROCD  = ( ((thrustNewtons - dragNewtons) * trueAirSpeedMetersSecond) / ( aircraftMassKilograms * gravityCenter ) ) * ESF 
+            #ROCD  = ( ((thrustNewtons - dragNewtons) * trueAirSpeedMetersSecond) / ( aircraftMassKilograms * gravityCenter ) ) * ESF 
+            ROCD = self.computeROCD(deltaTimeSeconds, thrustNewtons, dragNewtons, trueAirSpeedMetersSecond, aircraftMassKilograms, gravityCenter, ESF)
+
             deltaAltitudeMeters = ROCD * deltaTimeSeconds
             altitudeMeanSeaLevelMeters += deltaAltitudeMeters
             
@@ -954,8 +968,8 @@ class AircraftConfiguration(FlightEnvelope):
 
             ''' check if target cruise altitude is reached '''
             if ( altitudeMeanSeaLevelMeters >= (self.getTargetCruiseFlightLevelMeters() - 10.0)):
-                print ( ''' ============> target cruise altitude reached ''' )
-                logging.warning ( self.className + ': altitudeMeanSeaLevelMeters = {0:.2f} meters - Target Cruise FLight Level Meters= {1:.2f} meters'.format(altitudeMeanSeaLevelMeters, self.getTargetCruiseFlightLevelMeters() ) )
+                logging.warn ( self.className + ''' ============> target cruise altitude reached ''' )
+                logging.warn ( self.className + ': altitudeMeanSeaLevelMeters = {0:.2f} feet - Target Cruise FLight Level Meters= {1:.2f} feet'.format(altitudeMeanSeaLevelMeters * Meter2Feet, self.getTargetCruiseFlightLevelMeters() * Meter2Feet ) )
 
                 if self.cruiseLevelReached == False:
                     logging.info ( self.className + ': cruise level reached= {0:.2f} meters = {1:.2f} feet'.format(altitudeMeanSeaLevelMeters, altitudeMeanSeaLevelMeters * Meter2Feet) )
@@ -973,7 +987,7 @@ class AircraftConfiguration(FlightEnvelope):
         
         
         elif self.isCruise():
-            logging.info (''' =======> cruise altitude is reached {0:.2f} meters - {1:.2f} feet'''.format(altitudeMeanSeaLevelMeters, altitudeMeanSeaLevelMeters * Meter2Feet))
+            #logging.warn (self.className + ''' =======> cruise altitude is reached {0:.2f} meters - {1:.2f} feet'''.format(altitudeMeanSeaLevelMeters, altitudeMeanSeaLevelMeters * Meter2Feet))
             ''' all energy is used to reach or maintain Mach '''
             mach = self.atmosphere.tas2mach(tas = trueAirSpeedMetersSecond,
                                   altitude = altitudeMeanSeaLevelMeters,
@@ -987,8 +1001,8 @@ class AircraftConfiguration(FlightEnvelope):
             ESF = self.energyShareFactor.computeEnergyShareFactor(mach)
             
             ''' compute Altitude change '''
-            if ( altitudeMeanSeaLevelMeters > (altitudeMeanSeaLevelMeters + 100.0) ):
-                    logging.info ("=======> need to descend from {0} to new Target Flight Level {1}".format(altitudeMeanSeaLevelMeters, altitudeMeanSeaLevelMeters))
+            if ( altitudeMeanSeaLevelMeters > (self.getTargetCruiseFlightLevelMeters() + 100.0) ):
+                    logging.info (self.className + "=======> need to descend from {0} to new Target Flight Level {1}".format(altitudeMeanSeaLevelMeters, altitudeMeanSeaLevelMeters))
                     self.setDescentConfiguration(elapsedTimeSeconds + deltaTimeSeconds)
                     
                     ''' delta distance flown '''
@@ -1002,7 +1016,9 @@ class AircraftConfiguration(FlightEnvelope):
                     deltaAltitudeMeters = 0.0
                 else:
                     ''' continue climbing '''
-                    ROCD  = ( ((thrustNewtons - dragNewtons) * trueAirSpeedMetersSecond) / ( aircraftMassKilograms * gravityCenter ) ) * ESF 
+                    #ROCD  = ( ((thrustNewtons - dragNewtons) * trueAirSpeedMetersSecond) / ( aircraftMassKilograms * gravityCenter ) ) * ESF 
+                    ROCD = self.computeROCD(deltaTimeSeconds, thrustNewtons, dragNewtons, trueAirSpeedMetersSecond, aircraftMassKilograms, gravityCenter, ESF)
+
                     deltaAltitudeMeters = ROCD * deltaTimeSeconds
                     altitudeMeanSeaLevelMeters += deltaAltitudeMeters
                 
@@ -1024,10 +1040,10 @@ class AircraftConfiguration(FlightEnvelope):
                     self.cruiseSpeedReached = False
 
 
-        # descent to new Target Flight Level
+        # 20th June 2022 - descent to new Target Flight Level
         elif self.isDescent():
-            deltaTimeSeconds = 0.1
-            print ("=============> phase is Descent to new Target Flight Level ")
+            deltaTimeSeconds = 1.0
+            #logging.info (self.className + "=============> phase is Descent to new Target Flight Level ")
             
             ''' descent at constant Mach '''
             ''' as aircraft configuration is clean , this phase transforms potential energy in kinetic energy to maintain a Mach '''
@@ -1040,13 +1056,15 @@ class AircraftConfiguration(FlightEnvelope):
             deltaDistanceMeters = trueAirSpeedMetersSecond * math.cos(math.radians(flightPathAngleDegrees))* deltaTimeSeconds
             
             ''' compute Altitude change '''
-            ROCD  = ( ((thrustNewtons - dragNewtons) * trueAirSpeedMetersSecond) / ( aircraftMassKilograms * gravityCenter ) ) * ESF 
+            #ROCD  = ( ((thrustNewtons - dragNewtons) * trueAirSpeedMetersSecond) / ( aircraftMassKilograms * gravityCenter ) ) * ESF 
+            ROCD = self.computeROCD(deltaTimeSeconds, thrustNewtons, dragNewtons, trueAirSpeedMetersSecond, aircraftMassKilograms, gravityCenter, ESF)
+
             deltaAltitudeMeters = ROCD * deltaTimeSeconds
             altitudeMeanSeaLevelMeters += deltaAltitudeMeters
 
             ''' compute configuration change '''
             if ( altitudeMeanSeaLevelMeters > (self.getTargetCruiseFlightLevelMeters() + 100.0) ):
-                    print ("=======> need to descend to new Target Flight Level")
+                    logging.warn ("=======> need to descend to new Target Flight Level - current altitude = {0} - new target level = {1}".format(altitudeMeanSeaLevelMeters*Meter2Feet, self.getTargetCruiseFlightLevelMeters()*Meter2Feet))
                     self.setDescentConfiguration(elapsedTimeSeconds + deltaTimeSeconds)
                     
             else:
@@ -1088,7 +1106,7 @@ class AircraftConfiguration(FlightEnvelope):
                 ''' patch Robert : 17th May 2015 '''
                 distanceToTargetApproachFixMeters = distanceToLastFixMeters
                 deltaAltitudeToTargetApproachFixMeters = self.approachWayPoint.getAltitudeMeanSeaLevelMeters() - 20.0 - altitudeMeanSeaLevelMeters
-                approachGlideSlopeDegrees = -3.0
+                approachGlideSlopeDegrees = ApproachGlideSlopeAngleDegrees
                 if distanceToTargetApproachFixMeters > 0.0:
                     approachGlideSlopeDegrees = math.degrees(math.atan(deltaAltitudeToTargetApproachFixMeters / distanceToTargetApproachFixMeters))
                 else:
@@ -1197,7 +1215,6 @@ class AircraftConfiguration(FlightEnvelope):
                 logging.info ( self.className +': taxi speed reached => end of simulation' )
                 endOfSimulation = True
             
- 
         else:
             raise ValueError('not yet implemented')
             

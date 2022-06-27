@@ -57,10 +57,10 @@ from Home.Guidance.WayPointFile import WayPoint
 from Home.BadaAircraftPerformance.BadaAircraftFile import BadaAircraft
 from Home.Guidance.GraphFile import Graph
 
+from Home.Environment.Constants import EarthMeanRadiusMeters 
+from Home.Environment.Constants import Meter2Feet 
+from Home.Environment.Constants import Meter2NauticalMiles 
 
-EarthMeanRadiusMeters = 6378135.0 # earth’s radius in meters
-Meter2Feet = 3.2808399 # one meter approx == 3 feet (3 feet 3⅜ inches)
-Meter2NauticalMiles = 0.000539956803 # nautical mile
 
 class GreatCircleRoute(Graph):
     
@@ -140,11 +140,11 @@ class GreatCircleRoute(Graph):
                 logging.info ( self.className + ': initial way-point= {0}'.format(self.initialWayPoint) )
                 intermediateWayPoint = self.initialWayPoint
             
-            if self.aircraft.isCruiseSpeedReached():
-                ''' speed up the computation => step = 10 seconds '''
-                deltaTimeSeconds = 10.0
-            else:
-                deltaTimeSeconds = initialDeltaTimeSeconds
+            #if self.aircraft.isCruiseSpeedReached():
+            #    ''' speed up the computation => step = 10 seconds '''
+            #    deltaTimeSeconds = 10.0
+            #else:
+            #    deltaTimeSeconds = initialDeltaTimeSeconds
                 
             ''' fly => increase in true air speed '''
             endOfSimulation, deltaDistanceMeters , altitudeMeanSeaLevelMeters = self.aircraft.fly(

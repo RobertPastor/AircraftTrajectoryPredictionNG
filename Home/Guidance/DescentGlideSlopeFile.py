@@ -36,9 +36,8 @@ from Home.Guidance.GraphFile import Graph
 from Home.Guidance.WayPointFile import WayPoint, Airport
 from Home.BadaAircraftPerformance.BadaAircraftFile import BadaAircraft
 
-
-NauticalMiles2Meters = 1852. # meters
-Meter2NauticalMiles = 0.000539956803
+from Home.Environment.Constants import NauticalMiles2Meters
+from Home.Environment.Constants import Meter2NauticalMiles
 
 NumberOfSlopeParts = 100 # dimension less number (number of elementary legs in the slope)
 

@@ -1,0 +1,59 @@
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC SYNONYM.NEW CCCCCCCCCCCCCCC/
+CC                                                                    /
+CC                BADA SYNONYM FILE                                   /
+CC                                                                    /
+CC                                                                    /
+CC      File_name: SYNONYM.NEW                                        /
+CC                                                                    /
+CC      Creation_date: Apr 30 2002                                    /
+CC                                                                    /
+CC      Modification_date: Nov 24 2010                                /
+CC                                                                    /
+CC                                                                    /
+CC====== Aircraft List ===============================================/
+CC                                                                    /
+CC   A/C    MANUFACTURER        NAME OR MODEL             FILE   OLD  /
+CC   CODE                                                        CODE /
+CC                                                                    /
+CD - A306   AIRBUS              A300B4-600               A306__  A306 /
+CD - A30B   AIRBUS              A300B4-200               A30B__  A300 /
+CD - A310   AIRBUS              A310                     A310__  EA31 /
+CD - A318   AIRBUS              A318                     A318__  A318 /
+CD - A319   AIRBUS              A319                     A319__  A319 /
+CD - A320   AIRBUS              A320                     A320__  EA32 /
+CD - A321   AIRBUS              A321                     A321__  A321 /
+CD - A332   AIRBUS              A330-200                 A332__  A332 /
+CD - A333   AIRBUS              A330-300                 A333__  A330 /
+CD * A342   AIRBUS              A340-200                 A343__  A342 /
+CD - A343   AIRBUS              A340-300                 A343__  A340 /
+CD - A345   AIRBUS              A340-500                 A345__  A345 /
+CD - A346   AIRBUS              A340-600                 A346__  A346 /
+CD - A388   AIRBUS              A380-800                 A388__  A388 /
+CD * B731   BOEING              737-100                  T134__  T43A /
+CD - B732   BOEING              737-200                  B732__  B73A /
+CD - B733   BOEING              737-300                  B733__  B73B /
+CD - B734   BOEING              737-400                  B734__  B73F /
+CD - B735   BOEING              737-500                  B735__  B73V /
+CD - B736   BOEING              737-600                  B736__  B736 /
+CD - B737   BOEING              737-700                  B737__  B737 /
+CD - B738   BOEING              737-800                  B738__  B73C /
+CD - B739   BOEING              737-900                  B739__  B739 /
+CD * B741   BOEING              747-100                  B743__  E4A  /
+CD - B742   BOEING              747-200                  B742__  B74A /
+CD - B743   BOEING              747-300                  B743__  B743 /
+CD - B744   BOEING              747-400                  B744__  B74B /
+CD * B748   BOEING              747-800                  B743__  B748 /
+CD * B74D   BOEING              747-400 DOMESTIC         B744__  B74F /
+CD * B74R   BOEING              747SR                    B743__  B74R /
+CD * B74S   BOEING              747-SP                   B742__  B74S /
+CD - B752   BOEING              757-200                  B752__  B757 /
+CD - B753   BOEING              757-300                  B753__  B753 /
+CD - B762   BOEING              767-200                  B762__  B767 /
+CD - B763   BOEING              767-300                  B763__  B763 /
+CD - B764   BOEING              767-400                  B764__  B764 /
+CD - B772   BOEING              777-200 ER               B772__  B777 /
+CD - B773   BOEING              777-300                  B773__  B773 /
+CD - B77L   BOEING              777-200 LRF              B77L__  B77L /
+CD - B77W   BOEING              777-300 ER               B77W__  B77W /
+CC ===================================================================/
+FI                                                                    /

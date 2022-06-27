@@ -58,6 +58,7 @@ Sample entries
 '''
 import os
 import csv
+import logging
 
 from Home.Guidance.WayPointFile import Airport
 
@@ -83,9 +84,9 @@ class AirportsDatabase(object):
         
         self.airportsFilesFolder = os.path.dirname(__file__)
 
-        print ( self.className + ': file folder= {0}'.format(self.airportsFilesFolder) )
+        logging.info ( self.className + ': file folder= {0}'.format(self.airportsFilesFolder) )
         self.FilePath = (self.airportsFilesFolder + os.path.sep + self.FilePath)
-        print ( self.className + ': file path= {0}'.format(self.FilePath) )
+        logging.info ( self.className + ': file path= {0}'.format(self.FilePath) )
 
     def read(self):
         try:

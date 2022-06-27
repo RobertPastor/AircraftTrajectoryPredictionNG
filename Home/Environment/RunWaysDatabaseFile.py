@@ -28,6 +28,8 @@ Created on 8 avr. 2015
 '''
 
 import os
+import logging
+
 from xlrd import open_workbook
 from Home.Environment.RunWayFile import RunWay
 
@@ -52,9 +54,9 @@ class RunWayDataBase(object):
         #self.FilesFolder = os.getcwd()
         self.FilesFolder = os.path.dirname(__file__)
 
-        print ( self.className + ': file folder= {0}'.format(self.FilesFolder) )
+        logging.info ( self.className + ': file folder= {0}'.format(self.FilesFolder) )
         self.FilePath = os.path.abspath(self.FilesFolder+ os.path.sep + self.FilePath)
-        print ( self.className + ': file path= {0}'.format(self.FilePath) )
+        logging.info ( self.className + ': file path= {0}'.format(self.FilePath) )
 
         #self.runWaysDb = {}
         
@@ -190,7 +192,7 @@ class RunWayDataBase(object):
         
     def read(self):
         ''' this method does not read the whole file - only the headers '''
-        print (self.FilePath)
+        logging.info (self.FilePath)
         assert len(self.FilePath)>0 and os.path.isfile(self.FilePath) 
         book = open_workbook(self.FilePath, formatting_info=True)
         ''' assert there is only one sheet '''
@@ -202,7 +204,7 @@ class RunWayDataBase(object):
                 index = 0
                 for column in rowValues:
                     if column not in fieldNames:
-                        print ( self.className + ': ERROR - expected runway column name= {0} not in field names'.format(column) )
+                        logging.warn ( self.className + ': ERROR - expected runway column name= {0} not in field names'.format(column) )
                         return False
                     else:
                         self.ColumnNames[column] = index
@@ -213,7 +215,7 @@ class RunWayDataBase(object):
     
     
     def __str__(self):
-        print ( self.className + ':RunWay DataBase= {0}'.format(self.FilePath) )
+        logging.info ( self.className + ':RunWay DataBase= {0}'.format(self.FilePath) )
         
         
     def getFilteredRunWays(self, airportICAOcode, runwayName = ''):
