@@ -1,10 +1,9 @@
 # AircraftTrajectoryPredictionNG
 
-Open source free software to compute airline aircraft/jet trajectories.
+Open source free software to compute airline aircraft/jet trajectories.  
+Based upon BADA from Eurocontrol.
 
-Port of the Aircraft Trajectory Prediction from Python 2. to Python 3.7
-of 
-https://github.com/RobertPastor/AircraftTrajectoryPredictor/
+You will need a SYNONYM file and a performance file for the aircraft used in the computation.
 
 # Documentation (in French and in English)
 https://trajectoire-predict.monsite-orange.fr/index.html 
