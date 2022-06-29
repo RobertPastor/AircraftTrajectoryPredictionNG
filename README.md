@@ -16,16 +16,13 @@ xlrd
 
 # Unit testing
 
-There are 64 unit tests. In the Eclipse IDE, click on the project and perform right click Run Python Unit-tests
+There are more than 64 unit tests. In the Eclipse IDE, click on the project and perform right click Run Python Unit-tests
 
-# Regression
-
-Unfortunately, I did not have time yet to check all the results.
-Hence there might regressions since the code needed some changes to adapt for Python 3.7.
 
 # Further Enhancements
 
-Implement a "french gabarit" i.e. a manhattan of constraints along the planned path. Constraints are speed constraints, level constraints to achieve a speed, a level, etc. before, after, on, a geo POINT.
+Implement a "french gabarit" i.e. a manhattan of constraints along the planned path. Constraints are speed constraints, level constraints to achieve a speed, a level, etc. before, after, on, a geo point.
+
 
 Manage a set of Abaquus for the continuous descending phase.
 Need a strategy here to decide to descent slowly from a big distance to the convergence point, or descent quickly.
