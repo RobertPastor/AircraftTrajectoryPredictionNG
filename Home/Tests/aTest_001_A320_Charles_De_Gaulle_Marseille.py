@@ -51,7 +51,7 @@ class Test_Route(unittest.TestCase):
         #strRoute = 'ADEP/LFPG/08R-LATRA-LAMUT-LAKOB-OBEPA-LERGA-ADES/LFML/31R'
         flightPath = FlightPath(route = strRoute, 
                                 aircraftICAOcode = 'A320',
-                                RequestedFlightLevel = 330, 
+                                RequestedFlightLevel = 250, 
                                 cruiseMach = 0.82, 
                                 takeOffMassKilograms = 68000.0)
         '''
